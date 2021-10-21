@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { initDarkTheme } from "./utils/dark-theme";
+import HelloWorld from './components/HelloWorld.vue';
+import { initDarkTheme } from './utils/dark-theme';
 
 initDarkTheme();
 </script>
