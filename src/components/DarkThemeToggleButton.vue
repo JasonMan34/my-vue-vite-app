@@ -9,5 +9,9 @@ watchEffect(() => toggleDarkTheme(isDark.value));
 </script>
 
 <template>
-  <IconButton @click="isDark = !isDark" :icon="isDark ? faSun : faMoon" />
+  <IconButton
+    @click="isDark = !isDark"
+    :icon="isDark ? faSun : faMoon"
+    :tooltip="`Turn the light ${isDark ? 'on' : 'off'}`"
+  />
 </template>

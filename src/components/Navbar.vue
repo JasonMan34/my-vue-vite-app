@@ -8,9 +8,9 @@ import DarkThemeToggleButton from './DarkThemeToggleButton.vue';
       flex
       items-center
       justify-start
-      px-4
+      px-64
       bg-blue-400
-      dark:bg-blue-800
+      dark:bg-blue-900
       min-h-[48px]
       rounded-b-2xl
     "

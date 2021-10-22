@@ -2,12 +2,24 @@
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-defineProps<{ icon: IconDefinition }>();
+defineProps<{ icon: IconDefinition; tooltip?: string }>();
 defineEmits<{ (e: 'click'): void }>();
 </script>
 
 <template>
-  <button class="icon-button" @click="$emit('click')">
+  <button
+    class="
+      rounded-3xl
+      min-h-[32px] min-w-[32px]
+      hover:bg-black hover:bg-opacity-20
+      dark:hover:bg-black dark:hover:bg-opacity-20
+      focus:outline-none
+      transition-all
+      ease-linear
+      duration-75
+    "
+    @click="$emit('click')"
+  >
     <FontAwesomeIcon :icon="icon" />
   </button>
 </template>
