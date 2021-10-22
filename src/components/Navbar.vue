@@ -5,10 +5,11 @@ import DarkThemeToggleButton from './DarkThemeToggleButton.vue';
 <template>
   <div
     class="
-      bg-white
-      border-b-2 border-gray-200
-      dark:border-none dark:bg-blue-900
       rounded-b-2xl
+      border-b-2
+      bg-white
+      border-gray-200
+      dark:bg-blue-900 dark:border-none
     "
   >
     <div
