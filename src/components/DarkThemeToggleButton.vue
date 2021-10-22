@@ -1,17 +1,13 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { initDarkTheme } from '../utils/dark-theme';
+import { ref, watchEffect } from 'vue';
+import { isDarkTheme, toggleDarkTheme } from '../utils/dark-theme';
+import IconButton from './IconButton.vue';
+import { faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
 
-initDarkTheme();
-const boolRef = ref(false);
+const isDark = ref(isDarkTheme());
+watchEffect(() => toggleDarkTheme(isDark.value));
 </script>
 
 <template>
-  <button @click="boolRef = !boolRef" class="rounded-3xl">
-    <FAIcon :icon="boolRef ? 'sun' : 'moon'" />
-  </button>
+  <IconButton @click="isDark = !isDark" :icon="isDark ? faSun : faMoon" />
 </template>
-
-<script></script>
-
-<style></style>
