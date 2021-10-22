@@ -13,9 +13,7 @@ defineEmits<{ (e: 'click'): void }>();
       min-h-[32px] min-w-[32px]
       hover:bg-black hover:bg-opacity-20
       dark:hover:bg-black dark:hover:bg-opacity-20
-      transition-all
-      ease-linear
-      duration-75
+      fast-transition
     "
     @click="$emit('click')"
   >

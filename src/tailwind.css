@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.fast-transition {
+  @apply transition-all ease-linear duration-75;
+}

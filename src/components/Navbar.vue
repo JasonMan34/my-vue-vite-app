@@ -3,7 +3,14 @@ import DarkThemeToggleButton from './DarkThemeToggleButton.vue';
 </script>
 
 <template>
-  <div class="bg-blue-400 dark:bg-blue-900 rounded-b-2xl">
+  <div
+    class="
+      bg-white
+      border-b-2 border-gray-200
+      dark:border-none dark:bg-blue-900
+      rounded-b-2xl
+    "
+  >
     <div
       class="
         flex
