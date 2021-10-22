@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from '@vue/reactivity';
+import { ref } from 'vue';
 import { initDarkTheme } from '../utils/dark-theme';
 
 initDarkTheme();
