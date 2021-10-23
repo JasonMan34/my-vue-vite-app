@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import DarkThemeToggleButton from './DarkThemeToggleButton.vue';
+import SelectLocale from './SelectLocale.vue';
 </script>
 
 <template>
@@ -22,6 +23,7 @@ import DarkThemeToggleButton from './DarkThemeToggleButton.vue';
         min-h-[48px]
       "
     >
+      <SelectLocale />
       <DarkThemeToggleButton class="ml-auto" />
     </div>
   </div>
