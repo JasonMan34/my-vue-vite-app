@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
-
 const onClick = () => {
   alert('What did you think would happen?');
 };
@@ -22,14 +19,14 @@ const onClick = () => {
         @click="onClick"
         class="bg-blue-600 font-semibold p-4 rounded-lg text-white"
       >
-        Click Me! <FontAwesomeIcon class="ml-2" :icon="faChevronRight" />
+        Click Me! <span class="ml-2">></span>
       </button>
 
       <button
         @click="onClick"
         class="bg-blue-600 font-semibold p-4 rounded-lg text-white flex-1"
       >
-        Or Me!!!! <FontAwesomeIcon class="ml-2" :icon="faChevronRight" />
+        Or Me!!!!
       </button>
     </div>
   </div>

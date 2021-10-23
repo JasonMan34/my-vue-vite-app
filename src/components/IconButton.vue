@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { IconDefinition } from '@fortawesome/fontawesome-common-types';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-
-defineProps<{ icon: IconDefinition; tooltip?: string }>();
+defineProps<{ icon: string; tooltip?: string }>();
 defineEmits<{ (e: 'click'): void }>();
 </script>
 
@@ -17,7 +14,7 @@ defineEmits<{ (e: 'click'): void }>();
     "
     @click="$emit('click')"
   >
-    <FontAwesomeIcon :icon="icon" />
+    <span>{{ icon }}</span>
   </button>
 </template>
 

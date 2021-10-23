@@ -2,7 +2,6 @@
 import { ref, watchEffect } from 'vue';
 import { isDarkTheme, toggleDarkTheme } from '../utils/dark-theme';
 import IconButton from './IconButton.vue';
-import { faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
 
 const isDark = ref(isDarkTheme());
 watchEffect(() => toggleDarkTheme(isDark.value));
@@ -11,7 +10,7 @@ watchEffect(() => toggleDarkTheme(isDark.value));
 <template>
   <IconButton
     @click="isDark = !isDark"
-    :icon="isDark ? faSun : faMoon"
+    :icon="isDark ? 'sun' : 'moon'"
     :tooltip="`Turn the light ${isDark ? 'on' : 'off'}`"
   />
   <!-- TODO: Tooltip -->
