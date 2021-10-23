@@ -1,5 +1,5 @@
 <template>
-  <select @change="asd" class="locale-select">
+  <select @change="asd" class="locale-select" :value="i18n.locale.value">
     <option
       v-for="option in localeOptions"
       :key="`locale-${option.locale}`"
@@ -26,25 +26,30 @@ export default defineComponent({
     const i18n = useI18n();
 
     const asd = (e: Event) => {
-      console.log((e.target as HTMLSelectElement).value);
+      const newLocale = (e.target as HTMLSelectElement).value;
+      i18n.locale.value = newLocale;
     };
 
-    const localeOptions = [
+    const localeOptions: LocaleSelect[] = [
       {
-        locale: 'en',
+        locale: 'en-US',
         name: 'English',
         flag: '',
       },
       {
-        locale: 'he',
+        locale: 'he-IL',
         name: 'עברית',
         flag: '',
       },
     ];
 
-    return { localeOptions, i18n, asd };
+    return { localeOptions, asd, i18n };
   },
 });
 </script>
 
-<style></style>
+<style>
+.locale-select {
+  @apply bg-transparent;
+}
+</style>
