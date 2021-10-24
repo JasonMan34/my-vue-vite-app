@@ -7,10 +7,11 @@ defineEmits<{ (e: 'click'): void }>();
   <div class="relative group">
     <button
       class="
-        rounded-3xl
-        min-h-[32px] min-w-[32px]
+        rounded-full
+        p-3
+        leading-none
         hover:bg-black hover:bg-opacity-20
-        dark:hover:bg-black dark:hover:bg-opacity-20
+        dark:hover:bg-opacity-40
         fast-transition
       "
       @click="$emit('click')"

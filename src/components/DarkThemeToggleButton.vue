@@ -12,5 +12,6 @@ watchEffect(() => toggleDarkTheme(isDark.value));
     @click="isDark = !isDark"
     :icon="isDark ? 'fa-sun' : 'fa-moon'"
     :tooltip="`Turn the light ${isDark ? 'on' : 'off'}`"
+    class="text-xl"
   />
 </template>
