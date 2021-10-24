@@ -13,5 +13,4 @@ watchEffect(() => toggleDarkTheme(isDark.value));
     :icon="isDark ? 'fa-sun' : 'fa-moon'"
     :tooltip="`Turn the light ${isDark ? 'on' : 'off'}`"
   />
-  <!-- TODO: Tooltip -->
 </template>
