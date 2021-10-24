@@ -1,49 +1,75 @@
 <template>
-  <select @change="asd" class="locale-select" :value="i18n.locale.value">
+  <select v-model="locale" class="locale-select">
     <option
       v-for="option in localeOptions"
       :key="`locale-${option.locale}`"
       :value="option.locale"
     >
-      {{ option.name }}
+      {{ option.name }} {{ option.flag }}
     </option>
   </select>
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/runtime-core';
+import { useLocalStorage } from '@vueuse/core';
+import { defineComponent, watch, watchEffect } from '@vue/runtime-core';
 import { useI18n } from 'vue-i18n';
 
 interface LocaleSelect {
   locale: string;
   name: string;
   flag: string;
+  country: string;
+  rtl?: boolean;
 }
 
 export default defineComponent({
   name: 'SelectLocale',
   setup() {
-    const i18n = useI18n();
-
-    const asd = (e: Event) => {
-      const newLocale = (e.target as HTMLSelectElement).value;
-      i18n.locale.value = newLocale;
-    };
-
     const localeOptions: LocaleSelect[] = [
       {
         locale: 'en-US',
         name: 'English',
-        flag: '',
+        flag: '🇺🇸',
+        country: 'USA',
       },
       {
         locale: 'he-IL',
         name: 'עברית',
-        flag: '',
+        flag: '🇮🇱',
+        country: 'Israel',
+        rtl: true,
       },
     ];
 
-    return { localeOptions, asd, i18n };
+    const i18n = useI18n();
+    const locale = useLocalStorage('locale', i18n.locale.value, {
+      listenToStorageChanges: true,
+    });
+
+    const syncLocale = () => {
+      // Sync i18n.locale from localStorage
+      i18n.locale.value = locale.value;
+
+      // Handle RTL
+      const localeOption = localeOptions.find(
+        option => option.locale === locale.value
+      );
+
+      if (localeOption) {
+        if (localeOption.rtl) {
+          document.documentElement.setAttribute('dir', 'rtl');
+        } else {
+          document.documentElement.setAttribute('dir', 'ltr');
+        }
+      }
+    };
+
+    // Run on first render, then watch for changes
+    syncLocale();
+    watch(locale, syncLocale);
+
+    return { localeOptions, locale };
   },
 });
 </script>

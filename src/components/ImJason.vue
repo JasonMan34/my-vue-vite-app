@@ -9,12 +9,12 @@
     <p class="text-lg dark:text-gray-400">
       {{ t('text.main') }} <span class="italic">{{ t('text.me') }}.</span>
     </p>
-    <div class="flex flex-row justify-start space-x-16">
+    <div class="flex flex-row justify-start space-s-16">
       <button
         @click="onClick"
         class="bg-blue-600 font-semibold p-4 rounded-lg text-white"
       >
-        {{ t('clickMe') }}! <span class="ml-2">></span>
+        {{ t('clickMe') }}! <span class="ms-2">></span>
       </button>
 
       <button

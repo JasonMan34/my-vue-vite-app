@@ -22,9 +22,10 @@ import SelectLocale from './SelectLocale.vue';
         max-w-[1200px]
         min-h-[48px]
       "
+      dir="ltr"
     >
       <SelectLocale />
-      <DarkThemeToggleButton class="ml-auto" />
+      <DarkThemeToggleButton class="ms-auto" />
     </div>
   </div>
 </template>
