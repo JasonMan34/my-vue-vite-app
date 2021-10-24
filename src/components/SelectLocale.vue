@@ -1,5 +1,5 @@
 <template>
-  <select v-model="locale" class="locale-select">
+  <select v-model="locale" class="bg-transparent">
     <option
       v-for="option in localeOptions"
       :key="`locale-${option.locale}`"
@@ -73,9 +73,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style>
-.locale-select {
-  @apply bg-transparent;
-}
-</style>
