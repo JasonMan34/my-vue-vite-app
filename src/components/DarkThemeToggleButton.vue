@@ -1,12 +1,3 @@
-<script setup lang="ts">
-import { ref, watchEffect } from 'vue';
-import { isDarkTheme, toggleDarkTheme } from '../utils/dark-theme';
-import IconButton from './IconButton.vue';
-
-const isDark = ref(isDarkTheme());
-watchEffect(() => toggleDarkTheme(isDark.value));
-</script>
-
 <template>
   <IconButton
     @click="isDark = !isDark"
@@ -15,3 +6,19 @@ watchEffect(() => toggleDarkTheme(isDark.value));
     class="text-xl"
   />
 </template>
+
+<script lang="ts">
+import { useDarkTheme } from '../utils/dark-theme';
+import IconButton from './IconButton.vue';
+import { defineComponent, watch } from '@vue/runtime-core';
+
+export default defineComponent({
+  name: 'DarkThemeToggleButton',
+  setup() {
+    const isDark = useDarkTheme();
+
+    return { isDark };
+  },
+  components: { IconButton },
+});
+</script>
