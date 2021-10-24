@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import { useLocalStorage } from '@vueuse/core';
-import { defineComponent, watch, watchEffect } from '@vue/runtime-core';
+import { defineComponent, watch } from '@vue/runtime-core';
 import { useI18n } from 'vue-i18n';
 
 interface LocaleSelect {
