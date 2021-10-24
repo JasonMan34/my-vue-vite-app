@@ -66,8 +66,8 @@ export default defineComponent({
       "myWebsite": "וזה האתר שלי"
     },
     "text": {
-      // "main": "Hello there, dear visitor. You might be asking yourself, what is this text? Well, this text is nothing but filler of course. In fact, the purpose of this text isn't even known to",
-      "me": "אני"
+      "main": "שלום לך, אורח יקר. אתה כנראה שאתה שואל את עצמך, מה זה הטקסט הזה? ובכן, הטקסט הזה אינו אלא ממלא מקום כמובן. למעשה, מטרת הטקסט הזה אפילו לא ידועה ",
+      "me": "לי"
     },
     "clickMe": "לחץ עלי",
     "orMe": "או עלי"
