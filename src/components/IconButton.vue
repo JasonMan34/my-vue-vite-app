@@ -44,5 +44,3 @@ defineEmits<{ (e: 'click'): void }>();
     </span>
   </div>
 </template>
-
-<script lang="ts"></script>
