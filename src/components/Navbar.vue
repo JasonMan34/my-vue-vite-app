@@ -32,5 +32,3 @@ import SelectLocale from './SelectLocale.vue';
 </template>
 
 <script></script>
-
-<style></style>
