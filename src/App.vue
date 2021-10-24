@@ -15,6 +15,6 @@ import MainPage from './components/MainPage.vue';
     "
   >
     <Navbar />
-    <MainPage class="flex-1" />
+    <MainPage class="flex-1 px-4 md:px-0" />
   </div>
 </template>

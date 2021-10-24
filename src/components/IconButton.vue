@@ -25,8 +25,9 @@ defineEmits<{ (e: 'click'): void }>();
         min-w-max
         p-2
         top-12
-        left-1/2
-        -translate-x-1/2
+        left-full
+        -translate-x-full
+        xl:left-1/2 xl:-translate-x-1/2
         rounded-md
         shadow-md
         dark:bg-gray-900 dark:text-white

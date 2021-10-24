@@ -16,6 +16,7 @@ import SelectLocale from './SelectLocale.vue';
     <div
       class="
         flex
+        px-2
         justify-start
         items-center
         mx-auto
