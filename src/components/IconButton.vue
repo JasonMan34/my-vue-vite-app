@@ -14,7 +14,7 @@ defineEmits<{ (e: 'click'): void }>();
     "
     @click="$emit('click')"
   >
-    <span>{{ icon }}</span>
+    <i :class="`fas ${icon}`"></i>
   </button>
 </template>
 
