@@ -89,10 +89,4 @@
   .paper {
     @apply p-2 shadow-md rounded-lg;
   }
-
-  .button {
-    @apply p-2
-    hover:bg-black hover:bg-opacity-20
-        dark:hover:bg-opacity-40;
-  }
 }

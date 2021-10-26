@@ -2,7 +2,14 @@
   <div>
     <DoughnutChart ref="chartRef" :chartData="testData" :options="options" />
     <div class="flex flex-row justify-between">
-      <div class="rounded-xl button">
+      <div
+        class="
+          rounded-xl
+          p-2
+          hover:bg-black hover:bg-opacity-20
+          dark:hover:bg-opacity-40
+        "
+      >
         <button @click="newData">Roll data</button>
       </div>
       <select @change="" class="bg-transparent">

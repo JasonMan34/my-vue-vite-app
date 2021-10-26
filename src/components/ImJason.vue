@@ -10,19 +10,8 @@
       {{ t('text.main') }} <span class="italic">{{ t('text.me') }}.</span>
     </p>
     <div class="flex flex-row justify-between space-s-16">
-      <button
-        @click="onClick"
-        class="bg-blue-600 font-semibold p-4 rounded-lg text-white w-44"
-      >
-        {{ t('clickMe') }}!
-      </button>
-
-      <button
-        @click="onClick"
-        class="bg-blue-600 font-semibold p-4 rounded-lg text-white w-44"
-      >
-        {{ t('orMe') }}!!!
-      </button>
+      <button @click="onClick" class="button">{{ t('clickMe') }}!</button>
+      <button @click="onClick" class="button">{{ t('orMe') }}!!!</button>
     </div>
   </div>
 </template>
@@ -43,6 +32,19 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+.button {
+  @apply bg-blue-600
+          hover:bg-blue-800
+          font-semibold
+          rounded-lg
+          p-4
+          text-white
+          w-[40%]
+          md:w-44;
+}
+</style>
 
 <i18n lang="json">
 {

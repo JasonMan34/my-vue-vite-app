@@ -19,7 +19,6 @@ export default defineComponent({
 
     toggleDarkTheme(isDark.value);
     watch(isDark, () => {
-      console.log('changed!');
       toggleDarkTheme(isDark.value);
     });
 
