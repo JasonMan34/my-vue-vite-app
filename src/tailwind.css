@@ -87,6 +87,6 @@
   }
 
   .paper {
-    @apply p-2 m-2 shadow-md rounded-lg;
+    @apply p-2 shadow-md rounded-lg;
   }
 }

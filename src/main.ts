@@ -1,4 +1,5 @@
 import './tailwind.css';
+import 'chart.js/auto';
 import { createApp } from 'vue';
 import App from './App.vue';
 import { createI18n } from 'vue-i18n';

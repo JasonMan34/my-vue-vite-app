@@ -1,5 +1,5 @@
 <template>
-  <div class="paper flex-fixed-8">
+  <div class="paper">
     <p>Hello world!</p>
     <hr />
     <p>
