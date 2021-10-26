@@ -85,4 +85,8 @@
     @apply bg-white text-gray-900
     dark:bg-gray-800 dark:text-white;
   }
+
+  .paper {
+    @apply p-2 m-2 shadow-md rounded-lg;
+  }
 }
