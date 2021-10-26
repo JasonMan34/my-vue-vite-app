@@ -6,14 +6,7 @@ defineEmits<{ (e: 'click'): void }>();
 <template>
   <div class="relative group">
     <button
-      class="
-        rounded-full
-        p-3
-        leading-none
-        hover:bg-black hover:bg-opacity-20
-        dark:hover:bg-opacity-40
-        fast-transition
-      "
+      class="rounded-full leading-none button p-3 fast-transition"
       @click="$emit('click')"
     >
       <i :class="`fas ${icon}`"></i>

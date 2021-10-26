@@ -24,8 +24,6 @@ export const useDarkTheme = () => {
   const isDark = useLocalStorage('is-dark-theme', isDarkTheme(), {
     listenToStorageChanges: true,
   });
-  toggleDarkTheme(isDark.value);
-  watch(isDark, () => toggleDarkTheme(isDark.value));
 
   return isDark;
 };

@@ -1,22 +1,41 @@
 <template>
   <div>
-    <DoughnutChart ref="doughnutRef" :chartData="testData" :options="options" />
-    <button @click="newData">Roll data</button>
+    <DoughnutChart ref="chartRef" :chartData="testData" :options="options" />
+    <div class="flex flex-row justify-between">
+      <div class="rounded-xl button">
+        <button @click="newData">Roll data</button>
+      </div>
+      <select @change="" class="bg-transparent">
+        <option>Doughnut</option>
+      </select>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref } from 'vue';
-import { DoughnutChart } from 'vue-chart-3';
+import { ChartData, ChartOptions } from 'chart.js';
+import {
+  computed,
+  defineComponent,
+  onMounted,
+  reactive,
+  ref,
+  watch,
+} from 'vue';
+import { DoughnutChart, ExtractComponentData } from 'vue-chart-3';
 
 export default defineComponent({
   name: 'Home',
   components: { DoughnutChart },
   setup() {
+    const chartRef = ref<ExtractComponentData<typeof DoughnutChart>>();
     const data = ref([0, 0, 0, 0]);
-    const doughnutRef = ref();
 
-    const options = ref({
+    watch(data, () => {
+      console.log(chartRef.value.chartInstance);
+    });
+
+    const options = reactive<ChartOptions>({
       responsive: true,
       plugins: {
         legend: { position: 'top' },
@@ -27,12 +46,13 @@ export default defineComponent({
       },
     });
 
-    const testData = computed(() => ({
+    const testData = computed<ChartData>(() => ({
       labels: ['Vue', 'React', 'Angular', 'Svelte'],
       datasets: [
         {
           data: data.value,
           backgroundColor: ['#42B883', '#61DBFB', '#DD1B16', '#D7B4F3'],
+          color: '#000',
         },
       ],
     }));
@@ -48,11 +68,9 @@ export default defineComponent({
       data.value = newData;
     };
 
-    onMounted(() => {
-      newData();
-    });
+    onMounted(newData);
 
-    return { testData, newData, doughnutRef, options };
+    return { testData, newData, options, chartRef };
   },
 });
 </script>
