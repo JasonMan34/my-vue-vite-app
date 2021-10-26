@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div>
     <DoughnutChart ref="chartRef" :chartData="testData" :options="options" />
     <div class="flex flex-row justify-between">
@@ -80,4 +80,4 @@ export default defineComponent({
     return { testData, newData, options, chartRef };
   },
 });
-</script>
+</script> -->
