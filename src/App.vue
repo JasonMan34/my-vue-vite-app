@@ -4,14 +4,8 @@ import MainPage from './components/MainPage.vue';
 </script>
 
 <template>
-  <div
-    class="
-      min-h-screen
-      flex flex-col
-      dark-compliant
-    "
-  >
+  <div class="min-h-screen flex flex-col dark-compliant">
     <Navbar />
-    <MainPage class="flex-1 px-4 md:px-0" />
+    <MainPage class="flex-1 px-4" />
   </div>
 </template>
