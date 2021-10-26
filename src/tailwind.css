@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-.fast-transition {
-  @apply transition-all ease-linear duration-75;
+@layer utilities {
+  .fast-transition {
+    @apply transition-all ease-linear duration-75;
+  }
+}
+
+@layer components {
+  .dark-compliant {
+    @apply bg-white text-gray-900
+    dark:bg-gray-800 dark:text-white;
+  }
 }

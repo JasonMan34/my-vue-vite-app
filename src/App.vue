@@ -8,10 +8,7 @@ import MainPage from './components/MainPage.vue';
     class="
       min-h-screen
       flex flex-col
-      bg-white
-      dark:bg-gray-800
-      text-gray-900
-      dark:text-white
+      dark-compliant
     "
   >
     <Navbar />

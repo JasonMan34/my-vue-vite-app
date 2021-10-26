@@ -4,6 +4,7 @@
       v-for="option in localeOptions"
       :key="`locale-${option.locale}`"
       :value="option.locale"
+      class="dark-compliant"
     >
       {{ option.name }} {{ option.flag }}
     </option>
