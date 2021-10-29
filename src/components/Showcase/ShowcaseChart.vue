@@ -1,6 +1,6 @@
-<!-- <template>
+<template>
   <div>
-    <DoughnutChart ref="chartRef" :chartData="testData" :options="options" />
+    <DoughnutChart ref="chartRef" :chartData="chartData" :options="options" />
     <div class="flex flex-row justify-between">
       <div
         class="
@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { ChartData, ChartOptions } from 'chart.js';
+import { ChartData, ChartOptions, ChartType } from 'chart.js';
 import {
   computed,
   defineComponent,
@@ -31,15 +31,77 @@ import {
 } from 'vue';
 import { DoughnutChart, ExtractComponentData } from 'vue-chart-3';
 
+// https://stackoverflow.com/a/18194993
+const shuffleArrays = (...args: any[]) => {
+  let arrLength = 0;
+  let argsLength = args.length;
+  let rnd, tmp;
+
+  for (let index = 0; index < argsLength; index += 1) {
+    if (!Array.isArray(args[index])) {
+      throw new TypeError('Argument is not an array.');
+    }
+
+    if (index === 0) {
+      arrLength = args[0].length;
+    }
+
+    if (arrLength !== args[index].length) {
+      throw new RangeError('Array lengths do not match.');
+    }
+  }
+
+  while (arrLength) {
+    rnd = Math.floor(Math.random() * arrLength);
+    arrLength -= 1;
+    for (let index = 0; index < argsLength; index += 1) {
+      tmp = args[index][arrLength];
+      args[index][arrLength] = args[index][rnd];
+      args[index][rnd] = tmp;
+    }
+  }
+};
+
+const MY_SKILLS = [
+  'Vue',
+  'Vite',
+  'React',
+  'Redux',
+  'Material UI',
+  'JavaScript',
+  'TypeScript',
+  'GraphQL',
+  'REST',
+  'NodeJS',
+  'SQL',
+  'PostgreSQL',
+  'Oracle',
+  'C#',
+  'Linux',
+];
+
 export default defineComponent({
-  name: 'Home',
+  name: 'ShowcaseChart',
   components: { DoughnutChart },
   setup() {
     const chartRef = ref<ExtractComponentData<typeof DoughnutChart>>();
-    const data = ref([0, 0, 0, 0]);
-
-    watch(data, () => {
-      console.log(chartRef.value.chartInstance);
+    const chartData = reactive<ChartData<'doughnut', number[]>>({
+      datasets: [
+        {
+          data: new Array(8).fill(0),
+          backgroundColor: [
+            '#003f5c',
+            '#2f4b7c',
+            '#665191',
+            '#a05195',
+            '#d45087',
+            '#f95d6a',
+            '#ff7c43',
+            '#ffa600',
+          ],
+        },
+      ],
+      labels: MY_SKILLS.slice(0, 8),
     });
 
     const options = reactive<ChartOptions>({
@@ -53,31 +115,28 @@ export default defineComponent({
       },
     });
 
-    const testData = computed<ChartData>(() => ({
-      labels: ['Vue', 'React', 'Angular', 'Svelte'],
-      datasets: [
-        {
-          data: data.value,
-          backgroundColor: ['#42B883', '#61DBFB', '#DD1B16', '#D7B4F3'],
-          color: '#000',
-        },
-      ],
-    }));
-
     const newData = () => {
-      const newData: number[] = [];
-
-      data.value.forEach(() => {
-        const value = Math.floor(Math.random() * 100);
-        newData.push(value);
+      const { labels } = chartData;
+      const { data, backgroundColor } = chartData.datasets[0];
+      data.forEach((_, index) => {
+        data[index] = Math.floor(Math.random() * 100);
       });
 
-      data.value = newData;
+      data.sort((a, b) => b - a);
+
+      // idfk the types maan... this always returns true for me
+      if (labels && Array.isArray(backgroundColor)) {
+        shuffleArrays(MY_SKILLS);
+        labels.forEach((_, index) => {
+          labels[index] = MY_SKILLS[index];
+        });
+        shuffleArrays(labels, backgroundColor);
+      }
     };
 
     onMounted(newData);
 
-    return { testData, newData, options, chartRef };
+    return { chartData, newData, options, chartRef };
   },
 });
-</script> -->
+</script>

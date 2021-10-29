@@ -6,6 +6,6 @@ import ShowcaseChart from './ShowcaseChart.vue';
 <template>
   <div class="flex flex-row flex-wrap space-x-8">
     <ShowcaseCard class="xl:max-w-[40%] h-full" />
-    <!-- <ShowcaseChart /> -->
+    <ShowcaseChart />
   </div>
 </template>
