@@ -12,7 +12,7 @@
       >
         <button @click="newData">Roll data</button>
       </div>
-      <select @change="" class="bg-transparent">
+      <select class="bg-transparent">
         <option>Doughnut</option>
       </select>
     </div>
@@ -20,16 +20,10 @@
 </template>
 
 <script lang="ts">
-import { ChartData, ChartOptions, ChartType } from 'chart.js';
-import {
-  computed,
-  defineComponent,
-  onMounted,
-  reactive,
-  ref,
-  watch,
-} from 'vue';
+import { ChartData, ChartOptions } from 'chart.js';
+import { computed, defineComponent, reactive, ref } from 'vue';
 import { DoughnutChart, ExtractComponentData } from 'vue-chart-3';
+import { useDarkTheme } from '../../utils/dark-theme';
 
 // https://stackoverflow.com/a/18194993
 const shuffleArrays = (...args: any[]) => {
@@ -95,6 +89,7 @@ export default defineComponent({
   name: 'ShowcaseChart',
   components: { DoughnutChart },
   setup() {
+    const isDark = useDarkTheme(true);
     const chartRef = ref<ExtractComponentData<typeof DoughnutChart>>();
     const chartData = reactive<ChartData<'doughnut', number[]>>({
       datasets: [
@@ -106,15 +101,20 @@ export default defineComponent({
       labels: MY_SKILLS.slice(0, 8),
     });
 
-    const options = reactive<ChartOptions>({
-      responsive: true,
-      plugins: {
-        legend: { position: 'top' },
-        title: {
-          display: true,
-          text: 'Lorem ipsum',
+    const options = computed<ChartOptions>(() => {
+      const textColor = isDark.value ? '#DDD' : '#666';
+      return {
+        color: textColor,
+        responsive: true,
+        plugins: {
+          legend: { position: 'top' },
+          title: {
+            color: textColor,
+            display: true,
+            text: 'Some of my skills (and random numbers)',
+          },
         },
-      },
+      };
     });
 
     const newData = () => {
@@ -136,7 +136,7 @@ export default defineComponent({
       chartData.datasets[0].backgroundColor = newBackgroundColors;
     };
 
-    onMounted(newData);
+    newData();
 
     return { chartData, newData, options, chartRef };
   },
