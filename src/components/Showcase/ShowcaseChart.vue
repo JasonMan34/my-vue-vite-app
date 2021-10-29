@@ -80,6 +80,17 @@ const MY_SKILLS = [
   'Linux',
 ];
 
+const COLORS = [
+  '#003f5c',
+  '#2f4b7c',
+  '#665191',
+  '#a05195',
+  '#d45087',
+  '#f95d6a',
+  '#ff7c43',
+  '#ffa600',
+];
+
 export default defineComponent({
   name: 'ShowcaseChart',
   components: { DoughnutChart },
@@ -89,16 +100,7 @@ export default defineComponent({
       datasets: [
         {
           data: new Array(8).fill(0),
-          backgroundColor: [
-            '#003f5c',
-            '#2f4b7c',
-            '#665191',
-            '#a05195',
-            '#d45087',
-            '#f95d6a',
-            '#ff7c43',
-            '#ffa600',
-          ],
+          backgroundColor: COLORS,
         },
       ],
       labels: MY_SKILLS.slice(0, 8),
@@ -116,22 +118,22 @@ export default defineComponent({
     });
 
     const newData = () => {
-      const { labels } = chartData;
-      const { data, backgroundColor } = chartData.datasets[0];
-      data.forEach((_, index) => {
-        data[index] = Math.floor(Math.random() * 100);
-      });
+      shuffleArrays(MY_SKILLS);
+      shuffleArrays(COLORS);
 
-      data.sort((a, b) => b - a);
+      const newDataLength = 4 + Math.floor(Math.random() * 5);
 
-      // idfk the types maan... this always returns true for me
-      if (labels && Array.isArray(backgroundColor)) {
-        shuffleArrays(MY_SKILLS);
-        labels.forEach((_, index) => {
-          labels[index] = MY_SKILLS[index];
-        });
-        shuffleArrays(labels, backgroundColor);
-      }
+      const newLabels = MY_SKILLS.slice(0, newDataLength);
+      const newBackgroundColors = COLORS.slice(0, newDataLength);
+      const newData = new Array(newDataLength)
+        .fill(0)
+        .map(() => Math.floor(Math.random() * 100))
+        .sort((a, b) => b - a);
+
+      chartData.labels = newLabels;
+      chartData.datasets[0];
+      chartData.datasets[0].data = newData;
+      chartData.datasets[0].backgroundColor = newBackgroundColors;
     };
 
     onMounted(newData);
