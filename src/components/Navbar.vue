@@ -20,7 +20,7 @@ import SelectLocale from './SelectLocale.vue';
         justify-start
         items-center
         mx-auto
-        max-w-[1200px]
+        max-w-[1400px]
         min-h-[48px]
       "
       dir="ltr"

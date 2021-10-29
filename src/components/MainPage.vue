@@ -10,7 +10,7 @@ import Showcase from './Showcase/Showcase.vue';
       md:space-x-8
       items-center
       mx-auto
-      max-w-[1200px]
+      max-w-[1400px]
     "
   >
     <ImJason
