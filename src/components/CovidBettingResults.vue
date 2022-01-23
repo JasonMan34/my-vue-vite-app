@@ -1,6 +1,9 @@
 <template>
   <div>
-    <BarChart :chart-data="chartData" :options="options" />
+    <BarChart
+      :chart-data="originalScoringData"
+      :options="originalScoringOptions"
+    />
   </div>
 </template>
 
@@ -20,8 +23,34 @@ export default defineComponent({
   components: { BarChart },
   setup() {
     const isDark = useDarkTheme(true);
-    const chartRef = ref<ExtractComponentData<typeof BarChart>>();
-    const chartData = reactive<ChartData<'bar', number[]>>({
+
+    const getChartOptions = (title: string) =>
+      computed<ChartOptions>(() => {
+        const textColor = isDark.value ? '#EEE' : '#333';
+        const gridColor = isDark.value ? '#333' : '#EEE';
+
+        return {
+          color: textColor,
+          responsive: true,
+
+          scales: {
+            y: { ticks: { color: textColor }, grid: { color: gridColor } },
+            x: { ticks: { color: textColor }, grid: { color: gridColor } },
+          },
+          plugins: {
+            legend: { display: false },
+            title: {
+              color: textColor,
+              padding: 24,
+              font: { size: 14 },
+              display: true,
+              text: title,
+            },
+          },
+        };
+      });
+
+    const originalScoringData = reactive<ChartData<'bar', number[]>>({
       datasets: [
         {
           data: scores,
@@ -31,40 +60,12 @@ export default defineComponent({
       labels: people.map(person => peopleTranslator(person)),
     });
 
-    const options = computed<ChartOptions>(() => {
-      const textColor = isDark.value ? '#EEE' : '#333';
-      return {
-        color: textColor,
-        responsive: true,
-        scales: {
-          y: {
-            ticks: {
-              color: textColor,
-            },
-          },
-          x: {
-            ticks: {
-              color: textColor,
-            },
-          },
-        },
-        plugins: {
-          legend: {
-            position: 'top',
-            labels: {
-              color: textColor,
-            },
-          },
-          title: {
-            color: textColor,
-            display: true,
-            text: 'לא יודע עוד',
-          },
-        },
-      };
-    });
+    const originalScoringOptions = getChartOptions('תוצאות לפי ניקוד מקורי');
 
-    return { chartData, options, chartRef };
+    return {
+      originalScoringData,
+      originalScoringOptions,
+    };
   },
 });
 </script>
