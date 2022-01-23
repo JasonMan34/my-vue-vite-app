@@ -1,8 +1,3 @@
-<script setup lang="ts">
-import DarkThemeToggleButton from './DarkThemeToggleButton.vue';
-import SelectLocale from './SelectLocale.vue';
-</script>
-
 <template>
   <div
     class="
@@ -25,10 +20,26 @@ import SelectLocale from './SelectLocale.vue';
       "
       dir="ltr"
     >
-      <SelectLocale />
+      <SelectLocale v-if="routeName !== 'CovidBetResults'" />
       <DarkThemeToggleButton class="ms-auto" />
     </div>
   </div>
 </template>
 
-<script></script>
+<script lang="ts">
+import { computed, defineComponent } from 'vue';
+import { useRoute } from 'vue-router';
+import DarkThemeToggleButton from './DarkThemeToggleButton.vue';
+import SelectLocale from './SelectLocale.vue';
+
+export default defineComponent({
+  name: 'ShowcaseChart',
+  components: { DarkThemeToggleButton, SelectLocale },
+  setup() {
+    const route = useRoute();
+    const routeName = computed(() => route.name);
+
+    return { routeName };
+  },
+});
+</script>
