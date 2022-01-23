@@ -102,7 +102,7 @@ export default defineComponent({
     });
 
     const options = computed<ChartOptions>(() => {
-      const textColor = isDark.value ? '#DDD' : '#666';
+      const textColor = isDark.value ? '#EEE' : '#333';
       return {
         color: textColor,
         responsive: true,
