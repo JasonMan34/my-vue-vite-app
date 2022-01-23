@@ -1,16 +1,20 @@
 <template>
-  <div>
-    <BarChart
-      :chart-data="originalScoringData"
-      :options="originalScoringOptions"
-    />
+  <div class="flex flex-col items-center">
+    <div class="w-full max-w-screen-lg">
+      <BarChart
+        class="h-full"
+        :chart-data="originalScoringData"
+        :options="originalScoringOptions"
+        :height="800"
+      />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { ChartData, ChartOptions } from 'chart.js';
 import { computed, defineComponent, reactive, ref } from 'vue';
-import { BarChart, ExtractComponentData } from 'vue-chart-3';
+import { BarChart } from 'vue-chart-3';
 import { calculateResults, getColors, peopleTranslator } from '../results';
 import { useDarkTheme } from '../utils/dark-theme';
 
@@ -32,17 +36,23 @@ export default defineComponent({
         return {
           color: textColor,
           responsive: true,
-
+          indexAxis: 'y',
           scales: {
-            y: { ticks: { color: textColor }, grid: { color: gridColor } },
-            x: { ticks: { color: textColor }, grid: { color: gridColor } },
+            y: {
+              ticks: { color: textColor, font: { size: 18 } },
+              grid: { color: gridColor },
+            },
+            x: {
+              ticks: { color: textColor, font: { size: 18 } },
+              grid: { color: gridColor },
+            },
           },
           plugins: {
             legend: { display: false },
             title: {
               color: textColor,
               padding: 24,
-              font: { size: 14 },
+              font: { weight: '500', size: 18 },
               display: true,
               text: title,
             },
