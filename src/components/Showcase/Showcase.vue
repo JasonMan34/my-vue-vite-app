@@ -4,7 +4,7 @@ import ShowcaseChart from './ShowcaseChart.vue';
 </script>
 
 <template>
-  <div class="flex flex-row flex-wrap space-x-8">
+  <div class="flex flex-row flex-wrap space-s-8">
     <ShowcaseCard class="xl:max-w-[40%] h-full" />
     <ShowcaseChart />
   </div>

@@ -18,7 +18,7 @@
       "
       dir="ltr"
     >
-      <SelectLocale v-if="routeName !== 'CovidBetResults'" />
+      <SelectLocale v-if="routeName !== 'CovidBetResults' || true" />
       <DarkThemeToggleButton class="ms-auto" />
     </div>
   </div>
