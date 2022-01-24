@@ -1,5 +1,5 @@
 <template>
-  <div class="paper dark:border-2 dark:border-gray-400">
+  <div class="paper dark:border-2 dark:border-gray-400" dir="ltr">
     <p>Hello world!</p>
     <hr />
     <p>
