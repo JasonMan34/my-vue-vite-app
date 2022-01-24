@@ -5,7 +5,7 @@
       border-b-2
       bg-white
       border-gray-200
-      dark:bg-blue-900 dark:border-none
+      dark:bg-blue-900 dark:border-transparent
     "
   >
     <div
