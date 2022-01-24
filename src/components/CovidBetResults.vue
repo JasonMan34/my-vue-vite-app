@@ -126,9 +126,9 @@ export default defineComponent({
         positives: getPositives(1),
       },
       {
-        title: 'סבב ראשון - ניקוד משוקלל',
+        title: 'סבב ראשון - ניקוד משקלי',
         data: getChartData(wPeople, wScores),
-        options: getChartOptions('סבב ראשון - ניקוד משוקלל', 1, true),
+        options: getChartOptions('סבב ראשון - ניקוד משקלי', 1, true),
         positives: getPositives(1),
       },
       {
@@ -138,9 +138,9 @@ export default defineComponent({
         positives: getPositives(2),
       },
       {
-        title: 'סבב שני - ניקוד משוקלל',
+        title: 'סבב שני - ניקוד משקלי',
         data: getChartData(wPeopleRoundTwo, wScoresRoundTwo),
-        options: getChartOptions('סבב שני - ניקוד משוקלל', 2, true),
+        options: getChartOptions('סבב שני - ניקוד משקלי', 2, true),
         positives: getPositives(2),
       },
     ]);
