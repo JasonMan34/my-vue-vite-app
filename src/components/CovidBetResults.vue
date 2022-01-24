@@ -41,11 +41,13 @@ import {
   DARK_BLUE,
   getPositives,
   Person,
+  getMaxScore,
 } from '../results';
 import { useDarkTheme } from '../utils/dark-theme';
 import Tabs from './Tabs/Tabs.vue';
 import Tab from './Tabs/Tab.vue';
 import TabPanel from './Tabs/TabPanel.vue';
+import { CovidBetResultsTooltip } from './CovidBetResultsTooltip';
 
 export default defineComponent({
   name: 'CovidBettingResults',
@@ -71,7 +73,7 @@ export default defineComponent({
       return getColors(people.length, DARK_GREEN, DARK_BLUE);
     });
 
-    const getChartOptions = (title: string) =>
+    const getChartOptions = (title: string, max: number) =>
       computed<ChartOptions>(() => {
         const textColor = isDark.value ? '#EEE' : '#333';
         const gridColor = isDark.value ? '#333' : '#EEE';
@@ -86,6 +88,7 @@ export default defineComponent({
               grid: { color: gridColor },
             },
             x: {
+              max,
               ticks: { color: textColor, font: { size: 18 } },
               grid: { color: gridColor },
             },
@@ -98,6 +101,10 @@ export default defineComponent({
               font: { weight: '500', size: 18 },
               display: true,
               text: title,
+            },
+            tooltip: {
+              enabled: false,
+              external: CovidBetResultsTooltip,
             },
           },
         };
@@ -120,38 +127,56 @@ export default defineComponent({
       {
         title: 'סבב ראשון - ניקוד מקורי',
         data: getChartData(people, scores),
-        options: getChartOptions('סבב ראשון - ניקוד מקורי'),
+        options: getChartOptions(
+          'סבב ראשון - ניקוד מקורי',
+          getMaxScore(1, false)
+        ),
         positives: getPositives(1),
       },
       {
         title: 'סבב ראשון - ניקוד משוקלל',
         data: getChartData(wPeople, wScores),
-        options: getChartOptions('סבב ראשון - ניקוד משוקלל'),
+        options: getChartOptions(
+          'סבב ראשון - ניקוד משוקלל',
+          getMaxScore(1, true)
+        ),
         positives: getPositives(1),
       },
 
       {
         title: 'סבב שני - ניקוד מקורי',
         data: getChartData(peopleRoundTwo, scoresRoundTwo),
-        options: getChartOptions('סבב שני - ניקוד מקורי'),
+        options: getChartOptions(
+          'סבב שני - ניקוד מקורי',
+          getMaxScore(2, false)
+        ),
         positives: getPositives(2),
       },
       {
         title: 'סבב שני - ניקוד משוקלל',
         data: getChartData(wPeopleRoundTwo, wScoresRoundTwo),
-        options: getChartOptions('סבב שני - ניקוד משוקלל'),
+        options: getChartOptions(
+          'סבב שני - ניקוד משוקלל',
+          getMaxScore(2, true)
+        ),
         positives: getPositives(2),
       },
       {
         title: 'סבב שלישי - ניקוד מקורי',
         data: getChartData(peopleRoundThree, scoresRoundThree),
-        options: getChartOptions('סבב שלישי - ניקוד מקורי'),
+        options: getChartOptions(
+          'סבב שלישי - ניקוד מקורי',
+          getMaxScore(3, false)
+        ),
         positives: getPositives(3),
       },
       {
         title: 'סבב שלישי - ניקוד משוקלל',
         data: getChartData(wPeopleRoundThree, wScoresRoundThree),
-        options: getChartOptions('סבב שלישי - ניקוד משוקלל'),
+        options: getChartOptions(
+          'סבב שלישי - ניקוד משוקלל',
+          getMaxScore(3, true)
+        ),
         positives: getPositives(3),
       },
     ]);

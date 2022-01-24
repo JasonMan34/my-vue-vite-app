@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import Navbar from './components/Navbar.vue';
-import MainPage from './components/MainPage.vue';
-import CovidBettingResults from './components/CovidBetResults.vue';
 </script>
 
 <template>

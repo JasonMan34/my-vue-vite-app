@@ -33,7 +33,7 @@ export const positivesRoundTwo: Person[] = [...positives, 'Liron'];
 
 export const positivesRoundThree: Person[] = [...positivesRoundTwo, 'Elor'];
 
-const guesses: Record<string, Person[]> = {
+export const guesses: Record<string, Person[]> = {
   Nurit: [
     'Elor',
     'Guy',
@@ -367,4 +367,32 @@ const nameDict: Record<Person, string> = {
   Yonatan: 'יונתן',
 };
 
-export const peopleTranslator = (name: Person) => nameDict[name] || name;
+const reverseNameDict = Object.keys(nameDict).reduce(
+  (all, curr) => ({
+    ...all,
+    [(nameDict as any)[curr]]: curr,
+  }),
+  {} as Record<Person, string>
+);
+
+export const peopleTranslator = (name: Person) =>
+  nameDict[name] || reverseNameDict[name] || name;
+
+const maxScoreDict = {
+  normal: {
+    1: 63,
+    2: 68,
+    3: 72,
+  },
+
+  weighted: {
+    1: 76,
+    2: 79,
+    3: 81,
+  },
+};
+
+export const getMaxScore = (round: 1 | 2 | 3, weighted = false) => {
+  if (weighted) return maxScoreDict.weighted[round];
+  return maxScoreDict.normal[round];
+};
