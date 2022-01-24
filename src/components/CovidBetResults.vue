@@ -75,11 +75,7 @@ export default defineComponent({
       return getColors(people.length, DARK_GREEN, DARK_BLUE);
     });
 
-    const getChartOptions = (
-      title: string,
-      round: 1 | 2 | 3,
-      weighted: boolean
-    ) =>
+    const getChartOptions = (title: string, round: 1 | 2, weighted: boolean) =>
       computed<ChartOptions>(() => {
         const textColor = isDark.value ? '#EEE' : '#333';
         const gridColor = isDark.value ? '#333' : '#EEE';

@@ -23,7 +23,7 @@ interface TooltipContext {
 }
 
 export const getCovidBetResultsTooltip =
-  (round: 1 | 2 | 3) => (context: TooltipContext) => {
+  (round: 1 | 2) => (context: TooltipContext) => {
     // Tooltip Element
     let tooltipEl = document.getElementById('chartjs-tooltip');
 

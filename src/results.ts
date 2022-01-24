@@ -295,7 +295,7 @@ const positivesDict: Record<number, Person[]> = {
 
 export const getPositives = (round: number) => positivesDict[round];
 
-export const isPositive = (round: 1 | 2 | 3, person: Person) =>
+export const isPositive = (round: 1 | 2, person: Person) =>
   getPositives(round).includes(person);
 
 const getScore = (index: number) => 12 - index;
@@ -382,17 +382,15 @@ const maxScoreDict = {
   normal: {
     1: 63,
     2: 68,
-    3: 72,
   },
 
   weighted: {
     1: 76,
     2: 79,
-    3: 81,
   },
 };
 
-export const getMaxScore = (round: 1 | 2 | 3, weighted = false) => {
+export const getMaxScore = (round: 1 | 2, weighted = false) => {
   if (weighted) return maxScoreDict.weighted[round];
   return maxScoreDict.normal[round];
 };
