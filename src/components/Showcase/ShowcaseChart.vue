@@ -111,7 +111,7 @@ export default defineComponent({
           title: {
             color: textColor,
             display: true,
-            text: 'Some of my skills (and random numbers)',
+            text: 'Wowee',
           },
         },
       };

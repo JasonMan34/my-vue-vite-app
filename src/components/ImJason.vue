@@ -7,11 +7,11 @@
       {{ t('title.myWebsite') }}
     </p>
     <p class="text-lg dark:text-gray-400">
-      {{ t('text.main') }} <span class="italic">{{ t('text.me') }}.</span>
+      {{ t('text') }}
     </p>
     <div class="flex flex-row justify-between space-s-16">
-      <button @click="onClick" class="button">{{ t('clickMe') }}!</button>
-      <button @click="onClick" class="button">{{ t('orMe') }}!!!</button>
+      <button @click="onClick" class="button">{{ t('clickMe') }}</button>
+      <button @click="onClick" class="button">{{ t('orMe') }}!</button>
     </div>
   </div>
 </template>
@@ -25,7 +25,7 @@ export default defineComponent({
   setup() {
     const { t } = useI18n();
     const onClick = () => {
-      alert('What did you think would happen?');
+      alert('TODO: idk something cool');
     };
 
     return { t, onClick };
@@ -52,12 +52,10 @@ export default defineComponent({
     "title": {
       "iAm": "I am",
       "jason": "Jason",
-      "myWebsite": "and this is my website"
+      "myWebsite": "this is my website"
     },
-    "text": {
-      "main": "Hello there, dear visitor. You might be asking yourself, what is this text? Well, this text is nothing but filler of course. In fact, the purpose of this text isn't even known to",
-      "me": "me"
-    },
+    "text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse, inventore officia. Quas, accusamus consectetur? Earum, nostrum, commodi ullam impedit architecto error animi veniam quasi quo praesentium totam incidunt unde corporis?",
+
     "clickMe": "Click Me",
     "orMe": "Or Me"
   },
@@ -65,12 +63,9 @@ export default defineComponent({
     "title": {
       "iAm": "אני",
       "jason": "איתמר",
-      "myWebsite": "וזה האתר שלי"
+      "myWebsite": "זה האתר שלי"
     },
-    "text": {
-      "main": "שלום לך, אורח יקר. אתה כנראה שאתה שואל את עצמך, מה זה הטקסט הזה? ובכן, הטקסט הזה אינו אלא ממלא מקום כמובן. למעשה, מטרת הטקסט הזה אפילו לא ידועה ",
-      "me": "לי"
-    },
+    "text": "שלום לך, אורח יקר. אתה כנראה שאתה שואל את עצמך, מה זה הטקסט הזה? ובכן, הטקסט הזה אינו אלא ממלא מקום כמובן. למעשה, מטרת הטקסט הזה אפילו לא ידועה ",
     "clickMe": "לחץ עלי",
     "orMe": "או עלי"
   }
