@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col px-8 items-center">
+  <div class="flex flex-col items-center">
     <Tabs v-model:activeTab="activeTab">
       <Tab v-for="(chart, key) in charts" :index="key + 1">{{
         chart.title

@@ -7,8 +7,6 @@ import CovidBettingResults from './components/CovidBetResults.vue';
 <template>
   <div class="min-h-screen flex flex-col dark-compliant">
     <Navbar />
-    <router-view class="flex-1 px-x" />
-    <!-- <CovidBettingResults class="flex-1 px-4" /> -->
-    <!-- <MainPage class="flex-1 px-4" /> -->
+    <router-view class="flex-1 px-4" />
   </div>
 </template>
