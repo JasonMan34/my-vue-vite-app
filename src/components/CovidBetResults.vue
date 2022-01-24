@@ -118,40 +118,40 @@ export default defineComponent({
 
     const charts = computed(() => [
       {
-        title: 'סיבוב ראשון - ניקוד מקורי',
+        title: 'סבב ראשון - ניקוד מקורי',
         data: getChartData(people, scores),
-        options: getChartOptions('סיבוב ראשון - ניקוד מקורי'),
+        options: getChartOptions('סבב ראשון - ניקוד מקורי'),
         positives: getPositives(1),
       },
       {
-        title: 'סיבוב ראשון - ניקוד משוקלל',
+        title: 'סבב ראשון - ניקוד משוקלל',
         data: getChartData(wPeople, wScores),
-        options: getChartOptions('סיבוב ראשון - ניקוד משוקלל'),
+        options: getChartOptions('סבב ראשון - ניקוד משוקלל'),
         positives: getPositives(1),
       },
 
       {
-        title: 'סיבוב שני - ניקוד מקורי',
+        title: 'סבב שני - ניקוד מקורי',
         data: getChartData(peopleRoundTwo, scoresRoundTwo),
-        options: getChartOptions('סיבוב שני - ניקוד מקורי'),
+        options: getChartOptions('סבב שני - ניקוד מקורי'),
         positives: getPositives(2),
       },
       {
-        title: 'סיבוב שני - ניקוד משוקלל',
+        title: 'סבב שני - ניקוד משוקלל',
         data: getChartData(wPeopleRoundTwo, wScoresRoundTwo),
-        options: getChartOptions('סיבוב שני - ניקוד משוקלל'),
+        options: getChartOptions('סבב שני - ניקוד משוקלל'),
         positives: getPositives(2),
       },
       {
-        title: 'סיבוב שלישי - ניקוד מקורי',
+        title: 'סבב שלישי - ניקוד מקורי',
         data: getChartData(peopleRoundThree, scoresRoundThree),
-        options: getChartOptions('סיבוב שלישי - ניקוד מקורי'),
+        options: getChartOptions('סבב שלישי - ניקוד מקורי'),
         positives: getPositives(3),
       },
       {
-        title: 'סיבוב שלישי - ניקוד משוקלל',
+        title: 'סבב שלישי - ניקוד משוקלל',
         data: getChartData(wPeopleRoundThree, wScoresRoundThree),
-        options: getChartOptions('סיבוב שלישי - ניקוד משוקלל'),
+        options: getChartOptions('סבב שלישי - ניקוד משוקלל'),
         positives: getPositives(3),
       },
     ]);
