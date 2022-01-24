@@ -298,6 +298,9 @@ const positivesDict: Record<number, Person[]> = {
 
 export const getPositives = (round: number) => positivesDict[round];
 
+export const isPositive = (round: 1 | 2 | 3, person: Person) =>
+  getPositives(round).includes(person);
+
 const getScore = (index: number) => 12 - index;
 
 const weightedScoresDict: Record<number, number> = {
