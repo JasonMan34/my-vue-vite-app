@@ -1,250 +1,269 @@
-export enum Name {
-  ELOR,
-  GUY,
-  ROTEM,
-  YOTAM,
-  LIRON,
-  NIMROD,
-  EREZ,
-  RONI,
-  NAAMA,
-  DORIT,
-  YONATAN,
-}
+export type Person =
+  | 'Nurit'
+  | 'Neta'
+  | 'Yotam'
+  | 'Ratam'
+  | 'Talia'
+  | 'Alon'
+  | 'Matan'
+  | 'Nadav'
+  | 'Itamar'
+  | 'Nimrod'
+  | 'Naama'
+  | 'Rotem'
+  | 'Roni'
+  | 'Elor'
+  | 'Erez'
+  | 'Liron'
+  | 'Guy'
+  | 'Yonatan'
+  | 'Dorit';
 
-export const positives = [
-  Name.GUY,
-  Name.ROTEM,
-  Name.YOTAM,
-  Name.NIMROD,
-  Name.EREZ,
-  Name.RONI,
-  Name.YONATAN,
+export const positives: Person[] = [
+  'Guy',
+  'Rotem',
+  'Yotam',
+  'Nimrod',
+  'Erez',
+  'Roni',
+  'Yonatan',
 ];
 
-const guesses: Record<string, number[]> = {
+export const positivesRoundTwo: Person[] = [...positives, 'Liron'];
+
+export const positivesRoundThree: Person[] = [...positivesRoundTwo, 'Elor'];
+
+const guesses: Record<string, Person[]> = {
   Nurit: [
-    Name.ELOR,
-    Name.GUY,
-    Name.ROTEM,
-    Name.YOTAM,
-    Name.LIRON,
-    Name.NIMROD,
-    Name.EREZ,
-    Name.RONI,
-    Name.NAAMA,
-    Name.DORIT,
-    Name.YONATAN,
+    'Elor',
+    'Guy',
+    'Rotem',
+    'Yotam',
+    'Liron',
+    'Nimrod',
+    'Erez',
+    'Roni',
+    'Naama',
+    'Dorit',
+    'Yonatan',
   ],
   Neta: [
-    Name.ELOR,
-    Name.YOTAM,
-    Name.ROTEM,
-    Name.GUY,
-    Name.LIRON,
-    Name.EREZ,
-    Name.NIMROD,
-    Name.RONI,
-    Name.DORIT,
-    Name.NAAMA,
-    Name.YONATAN,
+    'Elor',
+    'Yotam',
+    'Rotem',
+    'Guy',
+    'Liron',
+    'Erez',
+    'Nimrod',
+    'Roni',
+    'Dorit',
+    'Naama',
+    'Yonatan',
   ],
   Yotam: [
-    Name.ELOR,
-    Name.RONI,
-    Name.GUY,
-    Name.EREZ,
-    Name.NIMROD,
-    Name.LIRON,
-    Name.NAAMA,
-    Name.ROTEM,
-    Name.DORIT,
-    Name.YONATAN,
-    Name.YOTAM,
+    'Elor',
+    'Roni',
+    'Guy',
+    'Erez',
+    'Nimrod',
+    'Liron',
+    'Naama',
+    'Rotem',
+    'Dorit',
+    'Yonatan',
+    'Yotam',
   ],
   Ratam: [
-    Name.ROTEM,
-    Name.GUY,
-    Name.RONI,
-    Name.YOTAM,
-    Name.LIRON,
-    Name.NAAMA,
-    Name.EREZ,
-    Name.NIMROD,
-    Name.ELOR,
-    Name.DORIT,
-    Name.YONATAN,
+    'Rotem',
+    'Guy',
+    'Roni',
+    'Yotam',
+    'Liron',
+    'Naama',
+    'Erez',
+    'Nimrod',
+    'Elor',
+    'Dorit',
+    'Yonatan',
   ],
   Talia: [
-    Name.GUY,
-    Name.ROTEM,
-    Name.EREZ,
-    Name.YOTAM,
-    Name.RONI,
-    Name.ELOR,
-    Name.NAAMA,
-    Name.LIRON,
-    Name.NIMROD,
-    Name.DORIT,
-    Name.YONATAN,
+    'Guy',
+    'Rotem',
+    'Erez',
+    'Yotam',
+    'Roni',
+    'Elor',
+    'Naama',
+    'Liron',
+    'Nimrod',
+    'Dorit',
+    'Yonatan',
   ],
   Alon: [
-    Name.YOTAM,
-    Name.ELOR,
-    Name.GUY,
-    Name.ROTEM,
-    Name.RONI,
-    Name.LIRON,
-    Name.EREZ,
-    Name.NIMROD,
-    Name.NAAMA,
-    Name.DORIT,
-    Name.YONATAN,
+    'Yotam',
+    'Elor',
+    'Guy',
+    'Rotem',
+    'Roni',
+    'Liron',
+    'Erez',
+    'Nimrod',
+    'Naama',
+    'Dorit',
+    'Yonatan',
   ],
   Matan: [
-    Name.YOTAM,
-    Name.ROTEM,
-    Name.GUY,
-    Name.NIMROD,
-    Name.ELOR,
-    Name.LIRON,
-    Name.NAAMA,
-    Name.EREZ,
-    Name.RONI,
-    Name.YONATAN,
-    Name.DORIT,
+    'Yotam',
+    'Rotem',
+    'Guy',
+    'Nimrod',
+    'Elor',
+    'Liron',
+    'Naama',
+    'Erez',
+    'Roni',
+    'Yonatan',
+    'Dorit',
   ],
   Nadav: [
-    Name.ROTEM,
-    Name.ELOR,
-    Name.EREZ,
-    Name.RONI,
-    Name.GUY,
-    Name.NAAMA,
-    Name.YOTAM,
-    Name.LIRON,
-    Name.NIMROD,
-    Name.YONATAN,
-    Name.DORIT,
+    'Rotem',
+    'Elor',
+    'Erez',
+    'Roni',
+    'Guy',
+    'Naama',
+    'Yotam',
+    'Liron',
+    'Nimrod',
+    'Yonatan',
+    'Dorit',
   ],
   Itamar: [
-    Name.GUY,
-    Name.ROTEM,
-    Name.YOTAM,
-    Name.LIRON,
-    Name.ELOR,
-    Name.NIMROD,
-    Name.DORIT,
-    Name.YONATAN,
-    Name.NAAMA,
-    Name.EREZ,
-    Name.RONI,
+    'Guy',
+    'Rotem',
+    'Yotam',
+    'Liron',
+    'Elor',
+    'Nimrod',
+    'Dorit',
+    'Yonatan',
+    'Naama',
+    'Erez',
+    'Roni',
   ],
   Nimrod: [
-    Name.ELOR,
-    Name.ROTEM,
-    Name.YOTAM,
-    Name.GUY,
-    Name.LIRON,
-    Name.RONI,
-    Name.EREZ,
-    Name.NAAMA,
-    Name.NIMROD,
-    Name.DORIT,
-    Name.YONATAN,
+    'Elor',
+    'Rotem',
+    'Yotam',
+    'Guy',
+    'Liron',
+    'Roni',
+    'Erez',
+    'Naama',
+    'Nimrod',
+    'Dorit',
+    'Yonatan',
   ],
   Naama: [
-    Name.YOTAM,
-    Name.LIRON,
-    Name.ELOR,
-    Name.ROTEM,
-    Name.EREZ,
-    Name.NIMROD,
-    Name.GUY,
-    Name.YONATAN,
-    Name.DORIT,
-    Name.RONI,
-    Name.NAAMA,
+    'Yotam',
+    'Liron',
+    'Elor',
+    'Rotem',
+    'Erez',
+    'Nimrod',
+    'Guy',
+    'Yonatan',
+    'Dorit',
+    'Roni',
+    'Naama',
   ],
   Rotem: [
-    Name.ELOR,
-    Name.GUY,
-    Name.ROTEM,
-    Name.RONI,
-    Name.EREZ,
-    Name.YOTAM,
-    Name.LIRON,
-    Name.NIMROD,
-    Name.NAAMA,
-    Name.DORIT,
-    Name.YONATAN,
+    'Elor',
+    'Guy',
+    'Rotem',
+    'Roni',
+    'Erez',
+    'Yotam',
+    'Liron',
+    'Nimrod',
+    'Naama',
+    'Dorit',
+    'Yonatan',
   ],
   Roni: [
-    Name.ELOR,
-    Name.RONI,
-    Name.YOTAM,
-    Name.LIRON,
-    Name.NIMROD,
-    Name.ROTEM,
-    Name.GUY,
-    Name.EREZ,
-    Name.NAAMA,
-    Name.DORIT,
-    Name.YONATAN,
+    'Elor',
+    'Roni',
+    'Yotam',
+    'Liron',
+    'Nimrod',
+    'Rotem',
+    'Guy',
+    'Erez',
+    'Naama',
+    'Dorit',
+    'Yonatan',
   ],
   Elor: [
-    Name.ELOR,
-    Name.RONI,
-    Name.LIRON,
-    Name.YOTAM,
-    Name.ROTEM,
-    Name.EREZ,
-    Name.NIMROD,
-    Name.GUY,
-    Name.NAAMA,
-    Name.YONATAN,
-    Name.DORIT,
+    'Elor',
+    'Roni',
+    'Liron',
+    'Yotam',
+    'Rotem',
+    'Erez',
+    'Nimrod',
+    'Guy',
+    'Naama',
+    'Yonatan',
+    'Dorit',
   ],
   Erez: [
-    Name.ELOR,
-    Name.YOTAM,
-    Name.LIRON,
-    Name.GUY,
-    Name.ROTEM,
-    Name.RONI,
-    Name.EREZ,
-    Name.NIMROD,
-    Name.NAAMA,
-    Name.DORIT,
-    Name.YONATAN,
+    'Elor',
+    'Yotam',
+    'Liron',
+    'Guy',
+    'Rotem',
+    'Roni',
+    'Erez',
+    'Nimrod',
+    'Naama',
+    'Dorit',
+    'Yonatan',
   ],
   Liron: [
-    Name.GUY,
-    Name.ELOR,
-    Name.ROTEM,
-    Name.NIMROD,
-    Name.RONI,
-    Name.EREZ,
-    Name.YOTAM,
-    Name.LIRON,
-    Name.NAAMA,
-    Name.YONATAN,
-    Name.DORIT,
+    'Guy',
+    'Elor',
+    'Rotem',
+    'Nimrod',
+    'Roni',
+    'Erez',
+    'Yotam',
+    'Liron',
+    'Naama',
+    'Yonatan',
+    'Dorit',
   ],
   Guy: [
-    Name.GUY,
-    Name.ROTEM,
-    Name.ELOR,
-    Name.YOTAM,
-    Name.LIRON,
-    Name.EREZ,
-    Name.NIMROD,
-    Name.RONI,
-    Name.NAAMA,
-    Name.DORIT,
-    Name.YONATAN,
+    'Guy',
+    'Rotem',
+    'Elor',
+    'Yotam',
+    'Liron',
+    'Erez',
+    'Nimrod',
+    'Roni',
+    'Naama',
+    'Dorit',
+    'Yonatan',
   ],
 };
+
+export type RGB = [number, number, number];
+
+export const LIGHT_GREEN: RGB = [13, 177, 90];
+export const LIGHT_BLUE: RGB = [30, 83, 207];
+
+export const DARK_GREEN: RGB = [10, 157, 80];
+export const DARK_BLUE: RGB = [27, 73, 187];
 
 const lerp = (start: number, end: number, iteration: number, total: number) =>
   start + ((end - start) * iteration) / (total - 1);
@@ -254,14 +273,10 @@ const componentToHex = (c: number) => {
   return hex.length == 1 ? '0' + hex : hex;
 };
 
-const rgbToHex = ([r, g, b]: number[]) =>
+const rgbToHex = ([r, g, b]: RGB) =>
   '#' + componentToHex(r) + componentToHex(g) + componentToHex(b);
 
-export const getColors = (
-  amount: number,
-  start = [13, 177, 90],
-  end = [30, 83, 207]
-) => {
+export const getColors = (amount: number, start: RGB, end: RGB) => {
   const colors: string[] = [];
 
   for (let i = 0; i < amount; i++) {
@@ -269,65 +284,57 @@ export const getColors = (
     const g = Math.floor(lerp(start[1], end[1], i, amount));
     const b = Math.floor(lerp(start[2], end[2], i, amount));
 
-    const color = [r, g, b];
-    colors.push(rgbToHex(color));
+    colors.push(rgbToHex([r, g, b]));
   }
 
   return colors;
 };
 
-const getScore = (index: number) => 12 - index;
-
-export const getResults = (): [string[], number[]] => {
-  const tempResults: [string, number][] = [];
-
-  Object.keys(guesses).forEach(person => {
-    let score = 0;
-    guesses[person].forEach((currGuess, index) => {
-      if (positives.includes(currGuess)) {
-        score += getScore(index);
-      }
-    });
-
-    tempResults.push([person, score]);
-  });
-
-  tempResults.sort((a, b) => b[1] - a[1]);
-
-  const people = tempResults.map(a => a[0]);
-  const results = tempResults.map(a => a[1]);
-
-  return [people, results];
+const positivesDict: Record<number, Person[]> = {
+  1: positives,
+  2: positivesRoundTwo,
+  3: positivesRoundThree,
 };
+
+export const getPositives = (round: number) => positivesDict[round];
+
+const getScore = (index: number) => 12 - index;
 
 const weightedScoresDict: Record<number, number> = {
   0: 25,
-  1: 18,
-  2: 13,
-  3: 10,
-  4: 8,
-  5: 6,
-  6: 5,
-  7: 4,
-  8: 3,
-  9: 2,
-  10: 1,
+  1: 16,
+  2: 12,
+  3: 8,
+  4: 6,
+  5: 5,
+  6: 4,
+  7: 3,
+  8: 2,
+  9: 1,
+  10: 0,
 };
 
 const getWeightedScore = (index: number) => weightedScoresDict[index];
 
-export const getWeightedResults = (): [string[], number[]] => {
-  const tempResults: [string, number][] = [];
+export const getResults = (
+  round = 1,
+  weighted = false
+): [Person[], number[]] => {
+  const tempResults: [Person, number][] = [];
 
   Object.keys(guesses).forEach(person => {
     let score = 0;
     guesses[person].forEach((currGuess, index) => {
-      if (positives.includes(currGuess)) {
-        score += getWeightedScore(index);
+      if (positivesDict[round].includes(currGuess)) {
+        if (weighted) {
+          score += getWeightedScore(index);
+        } else {
+          score += getScore(index);
+        }
       }
     });
 
-    tempResults.push([person, score]);
+    tempResults.push([person as Person, score]);
   });
 
   tempResults.sort((a, b) => b[1] - a[1]);
@@ -338,7 +345,7 @@ export const getWeightedResults = (): [string[], number[]] => {
   return [people, results];
 };
 
-const nameDict: Record<string, string> = {
+const nameDict: Record<Person, string> = {
   Nurit: 'נורית',
   Neta: 'נטע',
   Yotam: 'יותם',
@@ -356,6 +363,8 @@ const nameDict: Record<string, string> = {
   Erez: 'ארז',
   Liron: 'לירון',
   Guy: 'גיא',
+  Dorit: 'דורית',
+  Yonatan: 'יונתן',
 };
 
-export const peopleTranslator = (name: string) => nameDict[name] || name;
+export const peopleTranslator = (name: Person) => nameDict[name] || name;

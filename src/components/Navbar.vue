@@ -2,9 +2,7 @@
   <div
     class="
       rounded-b-2xl
-      border-b-2
-      bg-white
-      border-gray-200
+      border-b-4 border-gray-200
       dark:bg-blue-900 dark:border-transparent
     "
   >

@@ -27,7 +27,7 @@ export default defineComponent({
     const isActive = computed(() => index === activeTab.value);
 
     const tabClass = computed(() => {
-      const classes: string[] = [];
+      const classes: string[] = ['active:bg-blue-900'];
 
       if (isActive.value) {
         classes.push('bg-blue-900');
@@ -39,7 +39,7 @@ export default defineComponent({
       return classes.join(' ');
     });
 
-    const onClick = () => changeTab!(index);
+    const onClick = () => changeTab(index);
 
     return { isActive, tabClass, onClick };
   },

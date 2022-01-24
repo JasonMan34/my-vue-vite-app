@@ -1,54 +1,51 @@
 <template>
-  <div class="flex flex-col items-center">
+  <div class="flex flex-col px-8 items-center">
     <Tabs v-model:activeTab="activeTab">
       <Tab v-for="(chart, key) in charts" :index="key + 1">{{
         chart.title
       }}</Tab>
     </Tabs>
-    <div class="w-full max-w-screen-lg">
-      <TabPanel
-        v-for="(chart, key) in charts"
-        :index="key + 1"
-        :active-tab="activeTab"
-      >
+    <TabPanel
+      v-for="(chart, key) in charts"
+      :index="key + 1"
+      :active-tab="activeTab"
+    >
+      <div class="w-full max-w-screen-lg">
         <BarChart
           class="h-full"
           :chart-data="chart.data"
           :options="chart.options.value"
-          :height="800"
+          :height="canvasHeight"
         />
-      </TabPanel>
-    </div>
+      </div>
+
+      <div class="px-4 py-4" dir="rtl">
+        חיוביים בסבב:
+        {{ chart.positives.map(a => peopleTranslator(a)).join(', ') }}
+      </div>
+    </TabPanel>
   </div>
 </template>
 
 <script lang="ts">
 import { ChartData, ChartOptions } from 'chart.js';
-import {
-  computed,
-  defineComponent,
-  provide,
-  reactive,
-  ref,
-  watch,
-  watchEffect,
-} from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import { BarChart } from 'vue-chart-3';
 import {
   getResults,
   getColors,
   peopleTranslator,
-  getWeightedResults,
+  LIGHT_GREEN,
+  LIGHT_BLUE,
+  DARK_GREEN,
+  DARK_BLUE,
+  getPositives,
+  Person,
 } from '../results';
 import { useDarkTheme } from '../utils/dark-theme';
 import Tabs from './Tabs/Tabs.vue';
 import Tab from './Tabs/Tab.vue';
 import TabPanel from './Tabs/TabPanel.vue';
-
-const [people, scores] = getResults();
-const [wPeople, wScores] = getWeightedResults();
-
-const colors = getColors(people.length);
 
 export default defineComponent({
   name: 'CovidBettingResults',
@@ -56,6 +53,23 @@ export default defineComponent({
   setup() {
     const activeTab = ref(1);
     const isDark = useDarkTheme(true);
+
+    const [people, scores] = getResults(1);
+    const [wPeople, wScores] = getResults(1, true);
+
+    const [peopleRoundTwo, scoresRoundTwo] = getResults(2);
+    const [wPeopleRoundTwo, wScoresRoundTwo] = getResults(2, true);
+
+    const [peopleRoundThree, scoresRoundThree] = getResults(3);
+    const [wPeopleRoundThree, wScoresRoundThree] = getResults(3, true);
+
+    const colors = computed(() => {
+      if (isDark.value) {
+        return getColors(people.length, LIGHT_GREEN, LIGHT_BLUE);
+      }
+
+      return getColors(people.length, DARK_GREEN, DARK_BLUE);
+    });
 
     const getChartOptions = (title: string) =>
       computed<ChartOptions>(() => {
@@ -89,32 +103,69 @@ export default defineComponent({
         };
       });
 
-    const getChartData = (people: string[], scores: number[]) => ({
+    const getChartData = (
+      people: Person[],
+      scores: number[]
+    ): ChartData<'bar'> => ({
       datasets: [
         {
           data: scores,
-          backgroundColor: colors,
+          backgroundColor: colors.value,
         },
       ],
       labels: people.map(person => peopleTranslator(person)),
     });
 
-    const charts = [
+    const charts = computed(() => [
       {
-        title: 'ניקוד מקורי',
+        title: 'סיבוב ראשון - ניקוד מקורי',
         data: getChartData(people, scores),
-        options: getChartOptions('תוצאות לפי ניקוד מקורי'),
+        options: getChartOptions('סיבוב ראשון - ניקוד מקורי'),
+        positives: getPositives(1),
       },
       {
-        title: 'ניקוד משוקלל',
+        title: 'סיבוב ראשון - ניקוד משוקלל',
         data: getChartData(wPeople, wScores),
-        options: getChartOptions('תוצאות לפי ניקוד משוקלל'),
+        options: getChartOptions('סיבוב ראשון - ניקוד משוקלל'),
+        positives: getPositives(1),
       },
-    ];
+
+      {
+        title: 'סיבוב שני - ניקוד מקורי',
+        data: getChartData(peopleRoundTwo, scoresRoundTwo),
+        options: getChartOptions('סיבוב שני - ניקוד מקורי'),
+        positives: getPositives(2),
+      },
+      {
+        title: 'סיבוב שני - ניקוד משוקלל',
+        data: getChartData(wPeopleRoundTwo, wScoresRoundTwo),
+        options: getChartOptions('סיבוב שני - ניקוד משוקלל'),
+        positives: getPositives(2),
+      },
+      {
+        title: 'סיבוב שלישי - ניקוד מקורי',
+        data: getChartData(peopleRoundThree, scoresRoundThree),
+        options: getChartOptions('סיבוב שלישי - ניקוד מקורי'),
+        positives: getPositives(3),
+      },
+      {
+        title: 'סיבוב שלישי - ניקוד משוקלל',
+        data: getChartData(wPeopleRoundThree, wScoresRoundThree),
+        options: getChartOptions('סיבוב שלישי - ניקוד משוקלל'),
+        positives: getPositives(3),
+      },
+    ]);
+
+    const canvasHeight = window.matchMedia('screen and (max-width: 1024px)')
+      .matches
+      ? 800
+      : 700;
 
     return {
       charts,
       activeTab,
+      peopleTranslator,
+      canvasHeight,
     };
   },
 });
