@@ -1,29 +1,34 @@
 <template>
-  <div class="flex flex-col items-center">
-    <Tabs v-model:activeTab="activeTab">
-      <Tab v-for="(chart, key) in charts" :index="key + 1">{{
-        chart.title
-      }}</Tab>
-    </Tabs>
-    <TabPanel
-      v-for="(chart, key) in charts"
-      :index="key + 1"
-      :active-tab="activeTab"
-    >
-      <div class="w-full max-w-screen-lg">
-        <BarChart
-          class="h-full"
-          :chart-data="chart.data"
-          :options="chart.options.value"
-          :height="canvasHeight"
-        />
+  <div class="flex flex-row justify-center">
+    <div class="flex flex-col w-full max-w-screen-lg">
+      <div class="pt-4 text-4xl text-center" dir="rtl">
+        תוצאות הימורי קורונה מלדיבים 2022!!
       </div>
+      <Tabs v-model:activeTab="activeTab" class="px-4 pb-2">
+        <Tab v-for="(chart, key) in charts" :index="key + 1">{{
+          chart.title
+        }}</Tab>
+      </Tabs>
+      <TabPanel
+        v-for="(chart, key) in charts"
+        :index="key + 1"
+        :active-tab="activeTab"
+      >
+        <div>
+          <BarChart
+            class="h-full"
+            :chart-data="chart.data"
+            :options="chart.options.value"
+            :height="canvasHeight"
+          />
+        </div>
 
-      <div class="px-4 py-4" dir="rtl">
-        חיוביים בסבב:
-        {{ chart.positives.map(a => peopleTranslator(a)).join(', ') }}
-      </div>
-    </TabPanel>
+        <div class="px-4 py-4" dir="rtl">
+          חיוביים בסבב:
+          {{ chart.positives.map(a => peopleTranslator(a)).join(', ') }}
+        </div>
+      </TabPanel>
+    </div>
   </div>
 </template>
 
@@ -99,13 +104,6 @@ export default defineComponent({
           },
           plugins: {
             legend: { display: false },
-            title: {
-              color: textColor,
-              padding: 24,
-              font: { weight: '500', size: 18 },
-              display: true,
-              text: title,
-            },
             tooltip: {
               enabled: false,
               external: getCovidBetResultsTooltip(round),
@@ -140,7 +138,6 @@ export default defineComponent({
         options: getChartOptions('סבב ראשון - ניקוד משוקלל', 1, true),
         positives: getPositives(1),
       },
-
       {
         title: 'סבב שני - ניקוד מקורי',
         data: getChartData(peopleRoundTwo, scoresRoundTwo),
@@ -170,7 +167,7 @@ export default defineComponent({
     const canvasHeight = window.matchMedia('screen and (max-width: 1024px)')
       .matches
       ? 800
-      : 700;
+      : 690;
 
     return {
       charts,
