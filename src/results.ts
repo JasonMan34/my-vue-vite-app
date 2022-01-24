@@ -31,8 +31,6 @@ export const positives: Person[] = [
 
 export const positivesRoundTwo: Person[] = [...positives, 'Liron'];
 
-export const positivesRoundThree: Person[] = [...positivesRoundTwo, 'Elor'];
-
 export const guesses: Record<string, Person[]> = {
   Nurit: [
     'Elor',
@@ -293,7 +291,6 @@ export const getColors = (amount: number, start: RGB, end: RGB) => {
 const positivesDict: Record<number, Person[]> = {
   1: positives,
   2: positivesRoundTwo,
-  3: positivesRoundThree,
 };
 
 export const getPositives = (round: number) => positivesDict[round];

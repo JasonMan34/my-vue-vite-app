@@ -67,9 +67,6 @@ export default defineComponent({
     const [peopleRoundTwo, scoresRoundTwo] = getResults(2);
     const [wPeopleRoundTwo, wScoresRoundTwo] = getResults(2, true);
 
-    const [peopleRoundThree, scoresRoundThree] = getResults(3);
-    const [wPeopleRoundThree, wScoresRoundThree] = getResults(3, true);
-
     const colors = computed(() => {
       if (isDark.value) {
         return getColors(people.length, LIGHT_GREEN, LIGHT_BLUE);
@@ -149,18 +146,6 @@ export default defineComponent({
         data: getChartData(wPeopleRoundTwo, wScoresRoundTwo),
         options: getChartOptions('סבב שני - ניקוד משוקלל', 2, true),
         positives: getPositives(2),
-      },
-      {
-        title: 'סבב שלישי - ניקוד מקורי',
-        data: getChartData(peopleRoundThree, scoresRoundThree),
-        options: getChartOptions('סבב שלישי - ניקוד מקורי', 3, false),
-        positives: getPositives(3),
-      },
-      {
-        title: 'סבב שלישי - ניקוד משוקלל',
-        data: getChartData(wPeopleRoundThree, wScoresRoundThree),
-        options: getChartOptions('סבב שלישי - ניקוד משוקלל', 3, true),
-        positives: getPositives(3),
       },
     ]);
 
