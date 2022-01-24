@@ -1,31 +1,60 @@
 <template>
   <div class="flex flex-col items-center">
+    <Tabs v-model:activeTab="activeTab">
+      <Tab v-for="(chart, key) in charts" :index="key + 1">{{
+        chart.title
+      }}</Tab>
+    </Tabs>
     <div class="w-full max-w-screen-lg">
-      <BarChart
-        class="h-full"
-        :chart-data="originalScoringData"
-        :options="originalScoringOptions"
-        :height="800"
-      />
+      <TabPanel
+        v-for="(chart, key) in charts"
+        :index="key + 1"
+        :active-tab="activeTab"
+      >
+        <BarChart
+          class="h-full"
+          :chart-data="chart.data"
+          :options="chart.options.value"
+          :height="800"
+        />
+      </TabPanel>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { ChartData, ChartOptions } from 'chart.js';
-import { computed, defineComponent, reactive, ref } from 'vue';
+import {
+  computed,
+  defineComponent,
+  provide,
+  reactive,
+  ref,
+  watch,
+  watchEffect,
+} from 'vue';
 import { BarChart } from 'vue-chart-3';
-import { calculateResults, getColors, peopleTranslator } from '../results';
+import {
+  getResults,
+  getColors,
+  peopleTranslator,
+  getWeightedResults,
+} from '../results';
 import { useDarkTheme } from '../utils/dark-theme';
+import Tabs from './Tabs/Tabs.vue';
+import Tab from './Tabs/Tab.vue';
+import TabPanel from './Tabs/TabPanel.vue';
 
-const [people, scores] = calculateResults();
+const [people, scores] = getResults();
+const [wPeople, wScores] = getWeightedResults();
 
 const colors = getColors(people.length);
 
 export default defineComponent({
   name: 'CovidBettingResults',
-  components: { BarChart },
+  components: { BarChart, Tabs, Tab, TabPanel },
   setup() {
+    const activeTab = ref(1);
     const isDark = useDarkTheme(true);
 
     const getChartOptions = (title: string) =>
@@ -60,7 +89,7 @@ export default defineComponent({
         };
       });
 
-    const originalScoringData = reactive<ChartData<'bar', number[]>>({
+    const getChartData = (people: string[], scores: number[]) => ({
       datasets: [
         {
           data: scores,
@@ -70,11 +99,22 @@ export default defineComponent({
       labels: people.map(person => peopleTranslator(person)),
     });
 
-    const originalScoringOptions = getChartOptions('תוצאות לפי ניקוד מקורי');
+    const charts = [
+      {
+        title: 'ניקוד מקורי',
+        data: getChartData(people, scores),
+        options: getChartOptions('תוצאות לפי ניקוד מקורי'),
+      },
+      {
+        title: 'ניקוד משוקלל',
+        data: getChartData(wPeople, wScores),
+        options: getChartOptions('תוצאות לפי ניקוד משוקלל'),
+      },
+    ];
 
     return {
-      originalScoringData,
-      originalScoringOptions,
+      charts,
+      activeTab,
     };
   },
 });

@@ -278,7 +278,7 @@ export const getColors = (
 
 const getScore = (index: number) => 12 - index;
 
-export const calculateResults = (): [string[], number[]] => {
+export const getResults = (): [string[], number[]] => {
   const tempResults: [string, number][] = [];
 
   Object.keys(guesses).forEach(person => {
@@ -286,6 +286,44 @@ export const calculateResults = (): [string[], number[]] => {
     guesses[person].forEach((currGuess, index) => {
       if (positives.includes(currGuess)) {
         score += getScore(index);
+      }
+    });
+
+    tempResults.push([person, score]);
+  });
+
+  tempResults.sort((a, b) => b[1] - a[1]);
+
+  const people = tempResults.map(a => a[0]);
+  const results = tempResults.map(a => a[1]);
+
+  return [people, results];
+};
+
+const weightedScoresDict: Record<number, number> = {
+  0: 25,
+  1: 18,
+  2: 13,
+  3: 10,
+  4: 8,
+  5: 6,
+  6: 5,
+  7: 4,
+  8: 3,
+  9: 2,
+  10: 1,
+};
+
+const getWeightedScore = (index: number) => weightedScoresDict[index];
+
+export const getWeightedResults = (): [string[], number[]] => {
+  const tempResults: [string, number][] = [];
+
+  Object.keys(guesses).forEach(person => {
+    let score = 0;
+    guesses[person].forEach((currGuess, index) => {
+      if (positives.includes(currGuess)) {
+        score += getWeightedScore(index);
       }
     });
 
