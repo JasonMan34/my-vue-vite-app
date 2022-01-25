@@ -1,7 +1,7 @@
-import MainPage from './components/MainPage.vue';
-import CovidMainPage from './components/CovidMainPage.vue';
-import CovidBetResults from './components/CovidBetResults.vue';
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+const CovidMainPage = () => import('./components/CovidMainPage.vue');
+const MainPage = () => import('./components/MainPage.vue');
+const CovidBetResults = () => import('./components/CovidBetResults.vue');
 
 const IS_COVID = import.meta.env.VITE_IS_COVID === 'true';
 
