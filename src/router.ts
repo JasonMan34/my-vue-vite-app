@@ -1,7 +1,26 @@
+import { defineAsyncComponent } from 'vue';
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
-const CovidMainPage = () => import('./components/CovidMainPage.vue');
-const MainPage = () => import('./components/MainPage.vue');
-const CovidBetResults = () => import('./components/CovidBetResults.vue');
+import Loading from './components/Loading.vue';
+
+const AsyncComponent = (route: string) =>
+  defineAsyncComponent({
+    // The component to load (should be a Promise)
+    loader: () => import(`./components/${route}.vue`),
+    // A component to use while the async component is loading
+    loadingComponent: Loading,
+    // A component to use if the load fails
+    // error: ErrorComponent,
+
+    // Delay before showing the loading component. Default: 200ms.
+    delay: 200,
+    // The error component will be displayed if a timeout is
+    // provided and exceeded. Default: Infinity.
+    // timeout: 3000,
+  });
+
+const CovidMainPage = AsyncComponent('CovidMainPage');
+const MainPage = AsyncComponent('MainPage');
+const CovidBetResults = AsyncComponent('CovidBetResults');
 
 const IS_COVID = import.meta.env.VITE_IS_COVID === 'true';
 
