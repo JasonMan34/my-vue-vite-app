@@ -1,13 +1,13 @@
 <script setup lang="ts">
 defineProps<{ icon: string; tooltip?: string }>();
-defineEmits<{ (e: 'click'): void }>();
+const emit = defineEmits<{ (e: 'click'): void }>();
 </script>
 
 <template>
   <div class="relative group">
     <button
       class="rounded-full leading-none button p-3 fast-transition"
-      @click="$emit('click')"
+      @click="emit('click')"
     >
       <i :class="`fas ${icon}`"></i>
     </button>

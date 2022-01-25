@@ -1,7 +1,16 @@
 <template>
   <div class="flex flex-col items-center">
     <button
-      class="rounded-3xl font-bold bg-green-400 p-4 md:p-6 big-text mt-[10%]"
+      class="
+        rounded-3xl
+        font-bold
+        bg-green-500
+        text-white
+        p-4
+        md:p-6
+        big-text
+        mt-[10%]
+      "
       @click="router.push('/covid-bet-results')"
     >
       לתוצאות ההימורים
