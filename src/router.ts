@@ -1,6 +1,9 @@
 import MainPage from './components/MainPage.vue';
+import CovidMainPage from './components/CovidMainPage.vue';
 import CovidBetResults from './components/CovidBetResults.vue';
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+
+const IS_COVID = import.meta.env.VITE_IS_COVID === 'true';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -20,6 +23,17 @@ const routes: RouteRecordRaw[] = [
     component: CovidBetResults,
   },
 ];
+
+if (IS_COVID) {
+  routes[0] = {
+    path: '/',
+    name: 'Home',
+    meta: {
+      title: 'הימורי קורונה',
+    },
+    component: CovidMainPage,
+  };
+}
 
 const router = createRouter({
   history: createWebHistory(),

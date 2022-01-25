@@ -89,4 +89,8 @@
   .paper {
     @apply p-2 shadow-md rounded-lg;
   }
+
+  .big-text {
+    font-size: min(14vw, 16vh);
+  }
 }
