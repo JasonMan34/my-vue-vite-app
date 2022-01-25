@@ -7,6 +7,7 @@ import Showcase from './Showcase/Showcase.vue';
   <div
     class="
       flex flex-row flex-wrap
+      px-4
       md:space-s-8
       items-center
       mx-auto

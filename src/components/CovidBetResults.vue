@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-row justify-center">
+  <div class="flex flex-row justify-center flex-1 px-4">
     <div class="flex flex-col w-full max-w-screen-lg">
       <div class="pt-4 text-4xl text-center" dir="rtl">
         תוצאות הימורי קורונה מלדיבים 2022!!
