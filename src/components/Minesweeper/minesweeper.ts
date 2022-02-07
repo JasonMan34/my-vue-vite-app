@@ -12,7 +12,12 @@ export const getRandomBoard = () => {
   for (let row = 0; row < HEIGHT; row++) {
     board[row] = [];
     for (let col = 0; col < WIDTH; col++) {
-      board[row][col] = { isMine: false, value: 0 };
+      board[row][col] = {
+        row,
+        col,
+        isMine: false,
+        value: 0,
+      };
       allPoints.push({ x: row, y: col });
     }
   }
@@ -66,3 +71,60 @@ export const getRandomBoard = () => {
 
   return board;
 };
+
+const clickZero = (
+  board: Tile[][],
+  row: number,
+  col: number,
+  beenOver: Tile[]
+) => {
+  const tile = board[row][col];
+  if (beenOver.includes(tile)) return;
+
+  tile.revealed = true;
+
+  beenOver.push(tile);
+
+  if (board[row - 1]) {
+    innerClickTile(board, row - 1, col, beenOver);
+    if (board[row - 1][col - 1]) {
+      innerClickTile(board, row - 1, col - 1, beenOver);
+    }
+    if (board[row - 1][col + 1]) {
+      innerClickTile(board, row - 1, col + 1, beenOver);
+    }
+  }
+
+  if (board[row][col - 1]) {
+    innerClickTile(board, row, col - 1, beenOver);
+  }
+  if (board[row][col + 1]) {
+    innerClickTile(board, row, col + 1, beenOver);
+  }
+
+  if (board[row + 1]) {
+    innerClickTile(board, row + 1, col, beenOver);
+    if (board[row + 1][col - 1]) {
+      innerClickTile(board, row + 1, col - 1, beenOver);
+    }
+    if (board[row + 1][col + 1]) {
+      innerClickTile(board, row + 1, col + 1, beenOver);
+    }
+  }
+};
+
+const innerClickTile = (
+  board: Tile[][],
+  row: number,
+  col: number,
+  beenOver: Tile[]
+) => {
+  const tile = board[row][col];
+  if (tile.value === 0 && !tile.isMine)
+    return clickZero(board, row, col, beenOver);
+
+  tile.revealed = true;
+};
+
+export const clickTile = (board: Tile[][], row: number, col: number) =>
+  innerClickTile(board, row, col, []);

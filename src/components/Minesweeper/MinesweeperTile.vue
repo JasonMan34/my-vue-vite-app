@@ -1,10 +1,10 @@
 <template>
-  <div class="minesweeper-tile">
-    <div v-if="tile.revealed" :class="tileClass">
+  <div :class="`minesweeper-tile${tile.revealed ? ' revealed' : ''}`">
+    <div v-if="tile.revealed" :class="textClass">
       <span v-if="tile.isMine">💣</span>
       <span v-else-if="tile.value !== 0">{{ tile.value }}</span>
     </div>
-    <div v-else class="h-full" @click="onClick"></div>
+    <div v-else class="h-full" @click="$emit('click')"></div>
   </div>
 </template>
 
@@ -22,8 +22,8 @@ export default defineComponent({
     },
   },
   emits: ['click'],
-  setup({ tile }, context) {
-    const tileClass = (() => {
+  setup({ tile }) {
+    const textClass = (() => {
       if (tile.value === 0) return 'text-black';
       if (tile.value === 1) return 'text-blue-700';
       if (tile.value === 2) return 'text-green-700';
@@ -35,14 +35,7 @@ export default defineComponent({
       if (tile.value === 8) return 'text-black';
     })();
 
-    const onClick = () => {
-      if (!tile.revealed) {
-        tile.revealed = true;
-        context.emit('click');
-      }
-    };
-
-    return { tileClass, onClick };
+    return { textClass };
   },
 });
 </script>
@@ -53,6 +46,6 @@ export default defineComponent({
 }
 
 .minesweeper-tile.revealed {
-  @apply bg-gray-300;
+  @apply bg-gray-400;
 }
 </style>

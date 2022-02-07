@@ -23,7 +23,7 @@
               <Tile
                 v-for="(tile, colIndex) in row"
                 :tile="tile"
-                @click="start"
+                @click="onTileClick(rowIndex, colIndex)"
               />
             </div>
           </div>
@@ -35,7 +35,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref } from 'vue';
-import { getRandomBoard, MINE_COUNT } from './minesweeper';
+import { clickTile, getRandomBoard, MINE_COUNT } from './minesweeper';
 import useStopwatch from './use-stopwatch';
 import Tile from './MinesweeperTile.vue';
 
@@ -47,7 +47,16 @@ export default defineComponent({
     const { start, stop, time } = useStopwatch();
     const board = reactive(getRandomBoard());
 
-    return { board, start, time, minesLeft };
+    const gameOver = (row: number, col: number) => {
+      stop();
+      alert('You lose!');
+    };
+
+    const onTileClick = (row: number, col: number) => {
+      clickTile(board, row, col);
+    };
+
+    return { board, start, time, minesLeft, onTileClick };
   },
 });
 </script>

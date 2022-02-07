@@ -9,6 +9,8 @@ type SafeTile = {
 };
 
 export type Tile = (MineTile | SafeTile) & {
+  row: number;
+  col: number;
   revealed?: true;
 };
 
