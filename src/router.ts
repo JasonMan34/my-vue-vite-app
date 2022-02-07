@@ -1,6 +1,7 @@
 import { defineAsyncComponent } from 'vue';
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import Loading from './components/Loading.vue';
+import Minesweeper from './components/Minesweeper/Minesweeper.vue';
 
 const AsyncComponent = (route: string) =>
   defineAsyncComponent({
@@ -40,6 +41,14 @@ const routes: RouteRecordRaw[] = [
       title: 'הימורי קורונה',
     },
     component: CovidBetResults,
+  },
+  {
+    path: '/minesweeper',
+    name: 'Minesweeper',
+    meta: {
+      title: 'Minesweeper',
+    },
+    component: Minesweeper,
   },
 ];
 
