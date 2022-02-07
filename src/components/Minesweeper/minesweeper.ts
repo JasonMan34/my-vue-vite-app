@@ -1,9 +1,9 @@
 import shuffleArray from 'shuffle-array';
 import { Point, Tile } from './minesweeper-tile';
 
-const HEIGHT = 16;
-const WIDTH = 30;
-const MINE_COUNT = 99;
+export const HEIGHT = 16;
+export const WIDTH = 30;
+export const MINE_COUNT = 99;
 
 export const getRandomBoard = () => {
   const board: Tile[][] = [];
@@ -22,6 +22,46 @@ export const getRandomBoard = () => {
 
   minePoints.forEach(point => {
     board[point.x][point.y].isMine = true;
+  });
+
+  board.forEach((row, rowIndex) => {
+    row.forEach((tile, colIndex) => {
+      if (tile.isMine) return;
+
+      let value = 0;
+      if (board[rowIndex - 1]) {
+        if (board[rowIndex - 1][colIndex - 1]?.isMine) {
+          value++;
+        }
+        if (board[rowIndex - 1][colIndex].isMine) {
+          value++;
+        }
+        if (board[rowIndex - 1][colIndex + 1]?.isMine) {
+          value++;
+        }
+      }
+
+      if (board[rowIndex][colIndex - 1]?.isMine) {
+        value++;
+      }
+      if (board[rowIndex][colIndex + 1]?.isMine) {
+        value++;
+      }
+
+      if (board[rowIndex + 1]) {
+        if (board[rowIndex + 1][colIndex - 1]?.isMine) {
+          value++;
+        }
+        if (board[rowIndex + 1][colIndex].isMine) {
+          value++;
+        }
+        if (board[rowIndex + 1][colIndex + 1]?.isMine) {
+          value++;
+        }
+      }
+
+      tile.value = value;
+    });
   });
 
   return board;

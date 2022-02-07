@@ -1,5 +1,3 @@
-type TileValue = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
-
 type MineTile = {
   isMine: true;
   value: 'mine';
@@ -7,10 +5,12 @@ type MineTile = {
 
 type SafeTile = {
   isMine: false;
-  value: TileValue;
+  value: number;
 };
 
-export type Tile = MineTile | SafeTile;
+export type Tile = (MineTile | SafeTile) & {
+  revealed?: true;
+};
 
 export type Point = {
   x: number;
