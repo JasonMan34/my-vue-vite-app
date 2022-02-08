@@ -2,9 +2,17 @@
   <div :class="`minesweeper-tile${tile.revealed ? ' revealed' : ''}`">
     <div v-if="tile.revealed" :class="textClass">
       <span v-if="tile.isMine">💣</span>
-      <span v-else-if="tile.value !== 0">{{ tile.value }}</span>
+      <span v-else-if="tile.value !== 0" @click="$emit('click')">{{
+        tile.value
+      }}</span>
     </div>
-    <div v-else class="h-full" @click="$emit('click')"></div>
+    <div v-else-if="tile.flagged" @contextmenu="flag">🚩</div>
+    <div
+      v-else
+      class="h-full"
+      @click="$emit('click')"
+      @contextmenu="flag"
+    ></div>
   </div>
 </template>
 
@@ -22,8 +30,8 @@ export default defineComponent({
       type: Object as PropType<UnwrapNestedRefs<MinesweeperTile>>,
     },
   },
-  emits: ['click'],
-  setup({ tile }) {
+  emits: ['click', 'flag'],
+  setup({ tile }, context) {
     const textClass = (() => {
       if (tile.value === 0) return 'text-black';
       if (tile.value === 1) return 'text-blue-700';
@@ -36,7 +44,12 @@ export default defineComponent({
       if (tile.value === 8) return 'text-black';
     })();
 
-    return { textClass };
+    const flag = (e: Event) => {
+      e.preventDefault();
+      context.emit('flag');
+    };
+
+    return { textClass, flag };
   },
 });
 </script>

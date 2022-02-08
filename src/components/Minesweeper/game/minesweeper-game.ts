@@ -1,44 +1,6 @@
 import shuffleArray from 'shuffle-array';
 import { MinesweeperTile } from './minesweeper-tile';
 
-const placeMines = (
-  board: MinesweeperTile[][],
-  mineCount: number,
-  firstTile: MinesweeperTile
-) => {
-  const mines: MinesweeperTile[] = [];
-  const potentialMines = board.flat().filter(tile => tile !== firstTile);
-
-  shuffleArray(potentialMines);
-  const minePoints = potentialMines.slice(0, mineCount);
-
-  minePoints.forEach(tile => {
-    tile.isMine = true;
-    mines.push(tile);
-  });
-
-  potentialMines.forEach(tile => tile.calculateValue());
-  firstTile.calculateValue();
-
-  return mines;
-};
-
-const getBoard = (game: MinesweeperGame) => {
-  const board: MinesweeperTile[][] = [];
-  const allTiles: MinesweeperTile[] = [];
-
-  for (let row = 0; row < game.HEIGHT; row++) {
-    board[row] = [];
-    for (let col = 0; col < game.WIDTH; col++) {
-      const tile = new MinesweeperTile(row, col, game);
-      board[row][col] = tile;
-      allTiles.push(tile);
-    }
-  }
-
-  return { board, allTiles };
-};
-
 export class MinesweeperGame {
   public readonly HEIGHT: number;
   public readonly WIDTH: number;
@@ -47,6 +9,7 @@ export class MinesweeperGame {
   public board: MinesweeperTile[][];
   private mines: MinesweeperTile[];
   private allTiles: MinesweeperTile[];
+  private initiated: boolean = false;
 
   constructor(width: number, height: number, mineCount: number) {
     if (!Number.isInteger(width) || width <= 0) {
@@ -65,19 +28,53 @@ export class MinesweeperGame {
     this.HEIGHT = height;
     this.MINE_COUNT = mineCount;
 
-    const { board, allTiles } = getBoard(this);
+    const { board, allTiles } = this.getBoard();
     this.board = board;
     this.allTiles = allTiles;
     this.mines = [];
   }
 
+  private getBoard() {
+    const board: MinesweeperTile[][] = [];
+    const allTiles: MinesweeperTile[] = [];
+
+    for (let row = 0; row < this.HEIGHT; row++) {
+      board[row] = [];
+      for (let col = 0; col < this.WIDTH; col++) {
+        const tile = new MinesweeperTile(row, col, this);
+        board[row][col] = tile;
+        allTiles.push(tile);
+      }
+    }
+
+    return { board, allTiles };
+  }
+
   initBoard(row: number, col: number) {
-    const mines = placeMines(this.board, this.MINE_COUNT, this.board[row][col]);
+    const firstTile = this.board[row][col];
+    const mines: MinesweeperTile[] = [];
+    const potentialMines = this.board.flat().filter(tile => tile !== firstTile);
+
+    shuffleArray(potentialMines);
+    const minePoints = potentialMines.slice(0, this.MINE_COUNT);
+
+    minePoints.forEach(tile => {
+      tile.isMine = true;
+      mines.push(tile);
+    });
+
+    potentialMines.forEach(tile => tile.calculateValue());
+    firstTile.calculateValue();
+
     this.mines = mines;
-    this.allTiles.forEach(tile => tile.calculateValue());
+    this.initiated = true;
   }
 
   click(row: number, col: number) {
+    if (!this.initiated) {
+      this.initBoard(row, col);
+    }
+
     this.board[row][col].click();
   }
 }

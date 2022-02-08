@@ -1,7 +1,12 @@
 <template>
   <div class="minesweeper-board">
     <div v-for="row in game.board" class="flex flex-row justify-center">
-      <Tile v-for="tile in row" :tile="tile" @click="tile.click()" />
+      <Tile
+        v-for="tile in row"
+        :tile="tile"
+        @click="tile.click()"
+        @flag="tile.flag()"
+      />
     </div>
   </div>
 </template>

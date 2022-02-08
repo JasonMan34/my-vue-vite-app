@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-row justify-center flex-1 px-4">
     <div class="flex flex-col justify-center">
-      <div class="minesweeper-container">
+      <div class="minesweeper-container" @contextmenu="$event.preventDefault()">
         <div class="minesweeper-inner">
           <div class="minesweeper-score-header">
             <div class="minesweeper-score">
