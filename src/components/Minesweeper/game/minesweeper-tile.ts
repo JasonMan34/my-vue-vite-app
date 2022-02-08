@@ -108,6 +108,10 @@ export class MinesweeperTile {
   }
 
   public click() {
+    if (!this.game.initiated) {
+      this.game.initBoard(this.row, this.col);
+    }
+
     this.innerClick([]);
   }
 

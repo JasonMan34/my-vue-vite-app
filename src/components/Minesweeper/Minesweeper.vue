@@ -8,7 +8,7 @@
               {{ minesLeft.toString().padStart(3, '0') }}
             </div>
             <div class="minesweeper-new-game-wrapper">
-              <button>🙂</button>
+              <button @click="newGame">🙂</button>
             </div>
             <div class="minesweeper-score">
               {{ time.toString().padStart(3, '0') }}
@@ -39,16 +39,20 @@ export default defineComponent({
   setup() {
     const minesLeft = ref(MINE_COUNT);
     const { start, stop, time } = useStopwatch();
-    const board = reactive(new MinesweeperGame(WIDTH, HEIGHT, MINE_COUNT));
-
-    board.initBoard(0, 0);
+    const board = ref<MinesweeperGame>();
 
     const gameOver = (row: number, col: number) => {
       stop();
       alert('You lose!');
     };
 
-    return { board, time, minesLeft };
+    const newGame = () => {
+      board.value = new MinesweeperGame(WIDTH, HEIGHT, MINE_COUNT);
+    };
+
+    newGame();
+
+    return { board, time, minesLeft, newGame };
   },
 });
 </script>

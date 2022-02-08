@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { computed, defineComponent, PropType } from 'vue';
 import { UnwrapNestedRefs } from '@vue/reactivity';
 import { MinesweeperTile } from './game/minesweeper-tile';
 
@@ -32,7 +32,7 @@ export default defineComponent({
   },
   emits: ['click', 'flag'],
   setup({ tile }, context) {
-    const textClass = (() => {
+    const textClass = computed(() => {
       if (tile.value === 0) return 'text-black';
       if (tile.value === 1) return 'text-blue-700';
       if (tile.value === 2) return 'text-green-700';
@@ -42,7 +42,7 @@ export default defineComponent({
       if (tile.value === 6) return 'text-blue-900';
       if (tile.value === 7) return 'text-gray-800';
       if (tile.value === 8) return 'text-black';
-    })();
+    });
 
     const flag = (e: Event) => {
       e.preventDefault();
