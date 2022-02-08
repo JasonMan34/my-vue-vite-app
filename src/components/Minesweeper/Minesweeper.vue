@@ -15,7 +15,7 @@
             </div>
           </div>
 
-          <MinesweeperBoard :game="board" />
+          <MinesweeperBoard :game="board!" />
         </div>
       </div>
     </div>

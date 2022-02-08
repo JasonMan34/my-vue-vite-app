@@ -1,18 +1,15 @@
 <template>
-  <div :class="`minesweeper-tile${tile.revealed ? ' revealed' : ''}`">
+  <div
+    :class="`minesweeper-tile${tile.revealed ? ' revealed' : ''}`"
+    @click="onClick"
+    @contextmenu="onRightClick"
+  >
     <div v-if="tile.revealed" :class="textClass">
-      <span v-if="tile.isMine">💣</span>
-      <span v-else-if="tile.value !== 0" @click="$emit('click')">{{
-        tile.value
-      }}</span>
+      {{ tile.isMine ? '💣' : '' }}
+      {{ !tile.isMine && tile.value !== 0 ? tile.value : '' }}
     </div>
-    <div v-else-if="tile.flagged" @contextmenu="flag">🚩</div>
-    <div
-      v-else
-      class="h-full"
-      @click="$emit('click')"
-      @contextmenu="flag"
-    ></div>
+    <div v-else-if="tile.flagged">🚩</div>
+    <div v-else class="h-full"></div>
   </div>
 </template>
 
@@ -44,12 +41,21 @@ export default defineComponent({
       if (tile.value === 8) return 'text-black';
     });
 
-    const flag = (e: Event) => {
+    const onRightClick = (e: Event) => {
       e.preventDefault();
-      context.emit('flag');
+
+      if (!tile.revealed) {
+        context.emit('flag');
+      }
     };
 
-    return { textClass, flag };
+    const onClick = (e: Event) => {
+      if (!tile.flagged) {
+        context.emit('click');
+      }
+    };
+
+    return { textClass, onRightClick, onClick };
   },
 });
 </script>
