@@ -1,10 +1,6 @@
 <template>
-  <div
-    :class="`minesweeper-tile${tile.revealed ? ' revealed' : ''}`"
-    @click="onClick"
-    @contextmenu="onRightClick"
-  >
-    <div v-if="tile.revealed" :class="textClass()">
+  <div :class="tileClass" @click="onClick" @contextmenu="onRightClick">
+    <div v-if="tile.revealed" :class="textClass">
       {{ tile.isMine ? '💣' : '' }}
       {{ !tile.isMine && tile.value !== 0 ? tile.value : '' }}
     </div>
@@ -14,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { computed, defineComponent, PropType } from 'vue';
 import { MinesweeperTile } from './game/minesweeper-tile';
 
 export default defineComponent({
@@ -28,7 +24,7 @@ export default defineComponent({
   },
   emits: ['click', 'flag'],
   setup(props, context) {
-    const textClass = () => {
+    const textClass = computed(() => {
       if (props.tile.value === 1) return 'text-blue-700';
       if (props.tile.value === 2) return 'text-green-700';
       if (props.tile.value === 3) return 'text-red-700';
@@ -38,7 +34,15 @@ export default defineComponent({
       if (props.tile.value === 7) return 'text-gray-800';
 
       return 'text-black';
-    };
+    });
+
+    const tileClass = computed(() => {
+      const classes = ['minesweeper-tile'];
+      if (props.tile.revealed) classes.push('revealed');
+      if (props.tile.isLosingTile) classes.push('losing-tile');
+
+      return classes.join(' ');
+    });
 
     const onRightClick = (e: Event) => {
       e.preventDefault();
@@ -54,7 +58,7 @@ export default defineComponent({
       }
     };
 
-    return { textClass, onRightClick, onClick };
+    return { textClass, onRightClick, onClick, tileClass };
   },
 });
 </script>
@@ -66,5 +70,9 @@ export default defineComponent({
 
 .minesweeper-tile.revealed {
   @apply bg-gray-400;
+}
+
+.minesweeper-tile.revealed.losing-tile {
+  @apply bg-red-600;
 }
 </style>

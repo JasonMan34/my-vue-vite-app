@@ -10,6 +10,7 @@ export class MinesweeperGame {
   private mines: MinesweeperTile[];
   private allTiles: MinesweeperTile[];
   public initiated: boolean = false;
+  public isGameOver: boolean = false;
 
   constructor(width: number, height: number, mineCount: number) {
     if (!Number.isInteger(width) || width <= 0) {
@@ -72,5 +73,10 @@ export class MinesweeperGame {
 
   click(row: number, col: number) {
     this.board[row][col].click();
+  }
+
+  gameOver(losingTile: MinesweeperTile) {
+    this.isGameOver = true;
+    this.mines.forEach(mine => mine.reveal());
   }
 }

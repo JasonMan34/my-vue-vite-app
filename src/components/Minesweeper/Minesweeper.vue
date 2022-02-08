@@ -41,9 +41,7 @@ export default defineComponent({
     const board = ref<MinesweeperGame>();
 
     const newGame = () => {
-      board.value = reactive(
-        new MinesweeperGame(WIDTH, HEIGHT, MINE_COUNT)
-      ) as any;
+      board.value = new MinesweeperGame(WIDTH, HEIGHT, MINE_COUNT);
     };
 
     newGame();
@@ -55,7 +53,7 @@ export default defineComponent({
 
 <style>
 .minesweeper-container {
-  @apply bg-gray-200 p-4;
+  @apply bg-gray-200 p-4 select-none;
 }
 
 .minesweeper-inner {

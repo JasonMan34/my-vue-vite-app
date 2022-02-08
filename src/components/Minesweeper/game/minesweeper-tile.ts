@@ -4,11 +4,17 @@ import type { MinesweeperGame } from './minesweeper-game';
 export class MinesweeperTile {
   row: number;
   col: number;
-  revealed: boolean = false;
   flagged: boolean = false;
   value: number = 0;
   isMine: boolean = false;
   game: MinesweeperGame;
+  isLosingTile: boolean = false;
+
+  private _revealed: boolean = false;
+
+  public get revealed() {
+    return this._revealed;
+  }
 
   constructor(row: number, col: number, game: MinesweeperGame) {
     this.row = row;
@@ -74,48 +80,61 @@ export class MinesweeperTile {
     );
   }
 
-  private innerClick(handled: MinesweeperTile[]) {
+  public reveal() {
+    this._revealed = true;
+
+    if (!this.game.isGameOver && this.isMine) {
+      this.isLosingTile = true;
+      this.game.gameOver(this);
+    }
+  }
+
+  private revealAdjacent(handled: MinesweeperTile[]) {
+    this.forAdjacent(tile => {
+      // Only click if we haven't been over it already
+      if (!handled.includes(tile)) {
+        handled.push(tile);
+
+        if (tile.flagged) return;
+
+        if (!tile.revealed) {
+          tile.reveal();
+
+          if (tile.value === 0 && !tile.isMine) {
+            tile.revealAdjacent(handled);
+          }
+        }
+      }
+    });
+  }
+
+  public click() {
+    if (this.game.isGameOver) return;
+
+    if (!this.game.initiated) {
+      this.game.initBoard(this.row, this.col);
+    }
+
     // Clicking on a flag does nothing
     if (this.flagged) return;
 
     // Reveal self, and mark that we've handled ourself
     const wasRevealed = this.revealed;
-    this.revealed = true;
-    handled.push(this);
+    const handled = [this];
+    this.reveal();
 
-    // If we're not a mine and value is 0, click all adjacent tiles recursively
-    if (this.value === 0 && !this.isMine) {
-      this.forAdjacent(tile => {
-        // Only click if we haven't been over it already
-        if (!handled.includes(tile)) {
-          tile.innerClick(handled);
-        }
-      });
+    // If we're not a mine and value is 0, reveal adjacent
+    // If we're clicking a fully flagged number, reveal adjacent
+    if (
+      (this.value === 0 && !this.isMine) ||
+      (wasRevealed && this.flagCount === this.value)
+    ) {
+      this.revealAdjacent(handled);
     }
-
-    // If we're clicking a fully flagged number, reveal all adjacent tiles
-    if (wasRevealed && this.flagCount === this.value) {
-      this.forAdjacent(tile => {
-        if (tile.flagged) return;
-
-        if (tile.value === 0 && !handled.includes(tile)) {
-          tile.innerClick(handled);
-        } else {
-          tile.revealed = true;
-        }
-      });
-    }
-  }
-
-  public click() {
-    if (!this.game.initiated) {
-      this.game.initBoard(this.row, this.col);
-    }
-
-    this.innerClick([]);
   }
 
   public flag() {
+    if (this.game.isGameOver) return;
     this.flagged = !this.flagged;
   }
 }
