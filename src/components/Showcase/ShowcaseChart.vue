@@ -1,6 +1,6 @@
 <template>
   <div>
-    <DoughnutChart ref="chartRef" :chartData="chartData" :options="options" />
+    <DoughnutChart ref="chartRef" :chart-data="chartData" :options="options" />
     <div class="flex flex-row justify-between">
       <div
         class="
@@ -28,8 +28,9 @@ import { useDarkTheme } from '../../utils/dark-theme';
 // https://stackoverflow.com/a/18194993
 const shuffleArrays = (...args: any[]) => {
   let arrLength = 0;
-  let argsLength = args.length;
-  let rnd, tmp;
+  const argsLength = args.length;
+  let rnd;
+  let tmp;
 
   for (let index = 0; index < argsLength; index += 1) {
     if (!Array.isArray(args[index])) {
@@ -117,7 +118,7 @@ export default defineComponent({
       };
     });
 
-    const newData = () => {
+    const generateNewData = () => {
       shuffleArrays(MY_SKILLS);
       shuffleArrays(COLORS);
 
@@ -131,14 +132,13 @@ export default defineComponent({
         .sort((a, b) => b - a);
 
       chartData.labels = newLabels;
-      chartData.datasets[0];
       chartData.datasets[0].data = newData;
       chartData.datasets[0].backgroundColor = newBackgroundColors;
     };
 
-    newData();
+    generateNewData();
 
-    return { chartData, newData, options, chartRef };
+    return { chartData, newData: generateNewData, options, chartRef };
   },
 });
 </script>

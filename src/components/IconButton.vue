@@ -12,27 +12,8 @@ const emit = defineEmits<{ (e: 'click'): void }>();
       <i :class="`fas ${icon}`"></i>
     </button>
     <span
-      class="
-        absolute
-        w-auto
-        min-w-max
-        p-2
-        top-12
-        left-full
-        -translate-x-full
-        xl:left-1/2 xl:-translate-x-1/2
-        rounded-md
-        shadow-md
-        dark:bg-gray-900 dark:text-white
-        text-sm
-        font-bold
-        transition-all
-        dureation-100
-        scale-0
-        group-hover:scale-100
-        origin-top
-      "
       v-if="!!tooltip"
+      class="absolute w-auto min-w-max p-2 top-12 left-full -translate-x-full xl:left-1/2 xl:-translate-x-1/2 rounded-md shadow-md dark:bg-gray-900 dark:text-white text-sm font-bold transition-all dureation-100 scale-0 group-hover:scale-100 origin-top"
     >
       {{ tooltip }}
     </span>

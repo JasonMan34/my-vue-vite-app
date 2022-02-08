@@ -4,7 +4,7 @@
     @click="onClick"
     @contextmenu="onRightClick"
   >
-    <div v-if="tile.revealed" :class="textClass">
+    <div v-if="tile.revealed" :class="textClass()">
       {{ tile.isMine ? '💣' : '' }}
       {{ !tile.isMine && tile.value !== 0 ? tile.value : '' }}
     </div>
@@ -14,8 +14,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from 'vue';
-import { UnwrapNestedRefs } from '@vue/reactivity';
+import { defineComponent, PropType } from 'vue';
 import { MinesweeperTile } from './game/minesweeper-tile';
 
 export default defineComponent({
@@ -24,33 +23,33 @@ export default defineComponent({
   props: {
     tile: {
       required: true,
-      type: Object as PropType<UnwrapNestedRefs<MinesweeperTile>>,
+      type: Object as PropType<MinesweeperTile>,
     },
   },
   emits: ['click', 'flag'],
-  setup({ tile }, context) {
-    const textClass = computed(() => {
-      if (tile.value === 0) return 'text-black';
-      if (tile.value === 1) return 'text-blue-700';
-      if (tile.value === 2) return 'text-green-700';
-      if (tile.value === 3) return 'text-red-700';
-      if (tile.value === 4) return 'text-blue-700';
-      if (tile.value === 5) return 'text-red-900';
-      if (tile.value === 6) return 'text-blue-900';
-      if (tile.value === 7) return 'text-gray-800';
-      if (tile.value === 8) return 'text-black';
-    });
+  setup(props, context) {
+    const textClass = () => {
+      if (props.tile.value === 1) return 'text-blue-700';
+      if (props.tile.value === 2) return 'text-green-700';
+      if (props.tile.value === 3) return 'text-red-700';
+      if (props.tile.value === 4) return 'text-blue-700';
+      if (props.tile.value === 5) return 'text-red-900';
+      if (props.tile.value === 6) return 'text-blue-900';
+      if (props.tile.value === 7) return 'text-gray-800';
+
+      return 'text-black';
+    };
 
     const onRightClick = (e: Event) => {
       e.preventDefault();
 
-      if (!tile.revealed) {
+      if (!props.tile.revealed) {
         context.emit('flag');
       }
     };
 
-    const onClick = (e: Event) => {
-      if (!tile.flagged) {
+    const onClick = () => {
+      if (!props.tile.flagged) {
         context.emit('click');
       }
     };

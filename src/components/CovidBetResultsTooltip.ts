@@ -48,11 +48,11 @@ export const getCovidBetResultsTooltip =
     // Set HTML & Data
     if (tooltipModel.body) {
       const data = tooltipModel.dataPoints[0];
-      const label = data.label;
+      const { label } = data;
       const value = data.formattedValue.trim();
 
-      const person = peopleTranslator(label as Person);
-      const guess = guesses[person];
+      const englishName = peopleTranslator(label as Person);
+      const guess = guesses[englishName];
 
       const getClass = (person: Person) =>
         isPositive(round, person) ? '' : 'text-red-800 font-bold';

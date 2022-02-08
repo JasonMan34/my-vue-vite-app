@@ -267,12 +267,12 @@ const lerp = (start: number, end: number, iteration: number, total: number) =>
   start + ((end - start) * iteration) / (total - 1);
 
 const componentToHex = (c: number) => {
-  var hex = c.toString(16);
-  return hex.length == 1 ? '0' + hex : hex;
+  const hex = c.toString(16);
+  return hex.length === 1 ? `0${hex}` : hex;
 };
 
 const rgbToHex = ([r, g, b]: RGB) =>
-  '#' + componentToHex(r) + componentToHex(g) + componentToHex(b);
+  `#${componentToHex(r)}${componentToHex(g)}${componentToHex(b)}`;
 
 export const getColors = (amount: number, start: RGB, end: RGB) => {
   const colors: string[] = [];

@@ -16,7 +16,7 @@ export default defineComponent({
     },
   },
 
-  setup({ index }) {
+  setup(props) {
     const activeTab = inject(ActiveTabKey);
     const changeTab = inject(ChangeTabKey);
 
@@ -24,7 +24,7 @@ export default defineComponent({
       throw new Error('Missing value or changeTab injection');
     }
 
-    const isActive = computed(() => index === activeTab.value);
+    const isActive = computed(() => props.index === activeTab.value);
 
     const tabClass = computed(() => {
       const classes: string[] = ['active:bg-blue-900'];
@@ -39,7 +39,7 @@ export default defineComponent({
       return classes.join(' ');
     });
 
-    const onClick = () => changeTab(index);
+    const onClick = () => changeTab(props.index);
 
     return { isActive, tabClass, onClick };
   },

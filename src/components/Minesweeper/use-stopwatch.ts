@@ -2,7 +2,7 @@ import { ref } from 'vue';
 
 const useStopwatch = () => {
   let timer: number | undefined;
-  let time = ref(0);
+  const time = ref(0);
 
   const start = () => {
     if (!timer) {

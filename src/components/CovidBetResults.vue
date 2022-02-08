@@ -5,12 +5,13 @@
         תוצאות הימורי קורונה מלדיבים 2022!!
       </div>
       <Tabs v-model:activeTab="activeTab" class="px-4 pb-2">
-        <Tab v-for="(chart, key) in charts" :index="key + 1">{{
+        <Tab v-for="(chart, key) in charts" :key="key" :index="key + 1">{{
           chart.title
         }}</Tab>
       </Tabs>
       <TabPanel
         v-for="(chart, key) in charts"
+        :key="key"
         :index="key + 1"
         :active-tab="activeTab"
       >
@@ -61,18 +62,18 @@ export default defineComponent({
     const activeTab = ref(1);
     const isDark = useDarkTheme(true);
 
-    const [people, scores] = getResults(1);
-    const [wPeople, wScores] = getResults(1, true);
+    const [peopleRoundOne, scoresRoundOne] = getResults(1);
+    const [wPeopleRoundOne, wScoresRoundOne] = getResults(1, true);
 
     const [peopleRoundTwo, scoresRoundTwo] = getResults(2);
     const [wPeopleRoundTwo, wScoresRoundTwo] = getResults(2, true);
 
     const colors = computed(() => {
       if (isDark.value) {
-        return getColors(people.length, LIGHT_GREEN, LIGHT_BLUE);
+        return getColors(peopleRoundOne.length, LIGHT_GREEN, LIGHT_BLUE);
       }
 
-      return getColors(people.length, DARK_GREEN, DARK_BLUE);
+      return getColors(peopleRoundOne.length, DARK_GREEN, DARK_BLUE);
     });
 
     const getChartOptions = (title: string, round: 1 | 2, weighted: boolean) =>
@@ -121,13 +122,13 @@ export default defineComponent({
     const charts = computed(() => [
       {
         title: 'סבב ראשון - ניקוד מקורי',
-        data: getChartData(people, scores),
+        data: getChartData(peopleRoundOne, scoresRoundOne),
         options: getChartOptions('סבב ראשון - ניקוד מקורי', 1, false),
         positives: getPositives(1),
       },
       {
         title: 'סבב ראשון - ניקוד משקלי',
-        data: getChartData(wPeople, wScores),
+        data: getChartData(wPeopleRoundOne, wScoresRoundOne),
         options: getChartOptions('סבב ראשון - ניקוד משקלי', 1, true),
         positives: getPositives(1),
       },

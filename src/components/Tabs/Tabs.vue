@@ -11,14 +11,13 @@ import { defineComponent, provide, readonly, ref, watch } from 'vue';
 import { ChangeTabKey, ActiveTabKey } from './keys';
 
 export default defineComponent({
-  emits: ['update:activeTab'],
-
   props: {
     activeTab: {
       type: Number,
       required: true,
     },
   },
+  emits: ['update:activeTab'],
 
   setup(props, context) {
     const innerActiveTab = ref(props.activeTab);
@@ -29,7 +28,9 @@ export default defineComponent({
 
     watch(
       () => props.activeTab,
-      () => (innerActiveTab.value = props.activeTab)
+      () => {
+        innerActiveTab.value = props.activeTab;
+      }
     );
 
     provide(ActiveTabKey, readonly(innerActiveTab));

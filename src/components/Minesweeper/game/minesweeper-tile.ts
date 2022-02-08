@@ -1,5 +1,5 @@
 import { clamp } from '@vueuse/core';
-import { MinesweeperGame } from './minesweeper-game';
+import type { MinesweeperGame } from './minesweeper-game';
 
 export class MinesweeperTile {
   row: number;

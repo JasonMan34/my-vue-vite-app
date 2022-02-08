@@ -1,8 +1,13 @@
 <template>
   <div class="minesweeper-board">
-    <div v-for="row in game.board" class="flex flex-row justify-center">
+    <div
+      v-for="(row, rowIndex) in game.board"
+      :key="rowIndex"
+      class="flex flex-row justify-center"
+    >
       <Tile
-        v-for="tile in row"
+        v-for="(tile, colIndex) in row"
+        :key="colIndex"
         :tile="tile"
         @click="tile.click()"
         @flag="tile.flag()"
@@ -14,7 +19,6 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import Tile from './MinesweeperTile.vue';
-import { UnwrapNestedRefs } from '@vue/reactivity';
 import { MinesweeperGame } from './game/minesweeper-game';
 
 export default defineComponent({
@@ -22,7 +26,7 @@ export default defineComponent({
   components: { Tile },
   props: {
     game: {
-      type: Object as PropType<UnwrapNestedRefs<MinesweeperGame>>,
+      type: Object as PropType<MinesweeperGame>,
       required: true,
     },
   },

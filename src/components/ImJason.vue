@@ -10,14 +10,14 @@
       {{ t('text') }}
     </p>
     <div class="flex flex-row justify-between space-s-16">
-      <button @click="onClick" class="button">{{ t('clickMe') }}</button>
-      <button @click="onClick" class="button">{{ t('orMe') }}!</button>
+      <button class="button" @click="onClick">{{ t('clickMe') }}</button>
+      <button class="button" @click="onClick">{{ t('orMe') }}!</button>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/runtime-core';
+import { defineComponent } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
@@ -25,6 +25,7 @@ export default defineComponent({
   setup() {
     const { t } = useI18n();
     const onClick = () => {
+      // eslint-disable-next-line no-alert
       alert('TODO: idk something cool');
     };
 

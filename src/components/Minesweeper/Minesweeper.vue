@@ -25,7 +25,6 @@
 <script lang="ts">
 import { defineComponent, reactive, ref } from 'vue';
 import useStopwatch from './use-stopwatch';
-import Tile from './MinesweeperTile.vue';
 import MinesweeperBoard from './MinesweeperBoard.vue';
 import { MinesweeperGame } from './game/minesweeper-game';
 
@@ -35,19 +34,16 @@ const MINE_COUNT = 99;
 
 export default defineComponent({
   name: 'Minesweeper',
-  components: { Tile, MinesweeperBoard },
+  components: { MinesweeperBoard },
   setup() {
     const minesLeft = ref(MINE_COUNT);
-    const { start, stop, time } = useStopwatch();
+    const { time } = useStopwatch();
     const board = ref<MinesweeperGame>();
 
-    const gameOver = (row: number, col: number) => {
-      stop();
-      alert('You lose!');
-    };
-
     const newGame = () => {
-      board.value = new MinesweeperGame(WIDTH, HEIGHT, MINE_COUNT);
+      board.value = reactive(
+        new MinesweeperGame(WIDTH, HEIGHT, MINE_COUNT)
+      ) as any;
     };
 
     newGame();

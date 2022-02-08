@@ -1,19 +1,20 @@
 <template>
   <IconButton
-    @click="isDark = !isDark"
+    class="text-xl"
     :icon="isDark ? 'fa-sun' : 'fa-moon'"
     :tooltip="`Turn the light ${isDark ? 'on' : 'off'}`"
-    class="text-xl"
+    @click="isDark = !isDark"
   />
 </template>
 
 <script lang="ts">
+import { defineComponent, watch } from 'vue';
 import { toggleDarkTheme, useDarkTheme } from '../utils/dark-theme';
 import IconButton from './IconButton.vue';
-import { defineComponent, watch } from '@vue/runtime-core';
 
 export default defineComponent({
   name: 'DarkThemeToggleButton',
+  components: { IconButton },
   setup() {
     const isDark = useDarkTheme();
 
@@ -24,6 +25,5 @@ export default defineComponent({
 
     return { isDark };
   },
-  components: { IconButton },
 });
 </script>

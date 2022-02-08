@@ -3,9 +3,9 @@
     <Loading
       active
       color="#08f"
-      backgroundColor="#000"
+      background-color="#000"
       :opacity="opacity"
-      :isFullPage="isFullPage"
+      :is-full-page="isFullPage"
     />
   </div>
 </template>
@@ -26,9 +26,7 @@ export default defineComponent({
   },
   setup() {
     const isDark = useDarkTheme();
-    const opacity = computed(() => {
-      return isDark.value ? 0.5 : 0.7;
-    });
+    const opacity = computed(() => (isDark.value ? 0.5 : 0.7));
 
     return { opacity };
   },
