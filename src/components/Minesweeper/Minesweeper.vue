@@ -15,18 +15,7 @@
             </div>
           </div>
 
-          <div class="minesweeper-board">
-            <div
-              v-for="(row, rowIndex) in board"
-              class="flex flex-row justify-center"
-            >
-              <Tile
-                v-for="(tile, colIndex) in row"
-                :tile="tile"
-                @click="onTileClick(rowIndex, colIndex)"
-              />
-            </div>
-          </div>
+          <MinesweeperBoard :game="board" />
         </div>
       </div>
     </div>
@@ -35,28 +24,31 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref } from 'vue';
-import { clickTile, getRandomBoard, MINE_COUNT } from './minesweeper';
 import useStopwatch from './use-stopwatch';
 import Tile from './MinesweeperTile.vue';
+import MinesweeperBoard from './MinesweeperBoard.vue';
+import { MinesweeperGame } from './game/minesweeper-game';
+
+const HEIGHT = 16;
+const WIDTH = 30;
+const MINE_COUNT = 99;
 
 export default defineComponent({
   name: 'Minesweeper',
-  components: { Tile },
+  components: { Tile, MinesweeperBoard },
   setup() {
     const minesLeft = ref(MINE_COUNT);
     const { start, stop, time } = useStopwatch();
-    const board = reactive(getRandomBoard());
+    const board = reactive(new MinesweeperGame(WIDTH, HEIGHT, MINE_COUNT));
+
+    board.initBoard(0, 0);
 
     const gameOver = (row: number, col: number) => {
       stop();
       alert('You lose!');
     };
 
-    const onTileClick = (row: number, col: number) => {
-      clickTile(board, row, col);
-    };
-
-    return { board, start, time, minesLeft, onTileClick };
+    return { board, time, minesLeft };
   },
 });
 </script>
@@ -80,13 +72,5 @@ export default defineComponent({
 
 .minesweeper-new-game-wrapper {
   @apply bg-gray-200 text-2xl p-1;
-}
-
-.minesweeper-board {
-  @apply p-1;
-}
-
-.minesweeper-row {
-  @apply flex flex-row;
 }
 </style>

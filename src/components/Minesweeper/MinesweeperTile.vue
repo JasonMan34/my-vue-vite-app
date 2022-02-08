@@ -9,8 +9,9 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from 'vue';
-import { Tile } from './minesweeper-tile';
+import { defineComponent, PropType } from 'vue';
+import { UnwrapNestedRefs } from '@vue/reactivity';
+import { MinesweeperTile } from './game/minesweeper-tile';
 
 export default defineComponent({
   name: 'MinesweeperTile',
@@ -18,7 +19,7 @@ export default defineComponent({
   props: {
     tile: {
       required: true,
-      type: Object as PropType<Tile>,
+      type: Object as PropType<UnwrapNestedRefs<MinesweeperTile>>,
     },
   },
   emits: ['click'],
