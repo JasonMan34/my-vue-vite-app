@@ -4,16 +4,17 @@ import type { MinesweeperGame } from './minesweeper-game';
 export class MinesweeperTile {
   row: number;
   col: number;
-  flagged: boolean = false;
   value: number = 0;
+  isFlagged: boolean = false;
   isMine: boolean = false;
+  isPeaking: boolean = false;
   game: MinesweeperGame;
   isLosingTile: boolean = false;
 
-  private _revealed: boolean = false;
+  private _isRevealed: boolean = false;
 
-  public get revealed() {
-    return this._revealed;
+  public get isRevealed() {
+    return this._isRevealed;
   }
 
   constructor(row: number, col: number, game: MinesweeperGame) {
@@ -30,7 +31,7 @@ export class MinesweeperTile {
     return this.game.HEIGHT;
   }
 
-  getAdjacent() {
+  getAdjacent(removeRevealed = false) {
     const adjacent: MinesweeperTile[] = [];
 
     // Don't exit matrix coundaries
@@ -47,7 +48,10 @@ export class MinesweeperTile {
         const tile = this.game.board[row][col];
 
         // Don't count self as a tile
-        if (tile !== this) {
+        if (
+          tile !== this &&
+          (!removeRevealed || (removeRevealed && !tile.isRevealed))
+        ) {
           adjacent.push(this.game.board[row][col]);
         }
       }
@@ -58,6 +62,10 @@ export class MinesweeperTile {
 
   forAdjacent(fn: Parameters<Array<MinesweeperTile>['forEach']>[0]) {
     return this.getAdjacent().forEach(fn);
+  }
+
+  forUnrevealedAdjacent(fn: Parameters<Array<MinesweeperTile>['forEach']>[0]) {
+    return this.getAdjacent(true).forEach(fn);
   }
 
   calculateValue() {
@@ -75,13 +83,13 @@ export class MinesweeperTile {
 
   private get flagCount() {
     return this.getAdjacent().reduce(
-      (flagCount, tile) => flagCount + (tile.flagged ? 1 : 0),
+      (flagCount, tile) => flagCount + (tile.isFlagged ? 1 : 0),
       0
     );
   }
 
   public reveal() {
-    this._revealed = true;
+    this._isRevealed = true;
 
     if (!this.game.isGameOver && this.isMine) {
       this.isLosingTile = true;
@@ -95,9 +103,9 @@ export class MinesweeperTile {
       if (!handled.includes(tile)) {
         handled.push(tile);
 
-        if (tile.flagged) return;
+        if (tile.isFlagged) return;
 
-        if (!tile.revealed) {
+        if (!tile.isRevealed) {
           tile.reveal();
 
           if (tile.value === 0 && !tile.isMine) {
@@ -116,12 +124,16 @@ export class MinesweeperTile {
     }
 
     // Clicking on a flag does nothing
-    if (this.flagged) return;
+    if (this.isFlagged) return;
+
+    if (this.isPeaking) this.unpeak();
 
     // Reveal self, and mark that we've handled ourself
-    const wasRevealed = this.revealed;
+    const wasRevealed = this.isRevealed;
     const handled = [this];
-    this.reveal();
+    if (!this.isRevealed) {
+      this.reveal();
+    }
 
     // If we're not a mine and value is 0, reveal adjacent
     // If we're clicking a fully flagged number, reveal adjacent
@@ -135,6 +147,29 @@ export class MinesweeperTile {
 
   public flag() {
     if (this.game.isGameOver) return;
-    this.flagged = !this.flagged;
+    this.isFlagged = !this.isFlagged;
+  }
+
+  public peak() {
+    this.isPeaking = true;
+
+    // If we are revealed, peaking means to also peak the unrevealed adjacent
+    if (this.isRevealed) {
+      const unrevealedAdjacent = this.getAdjacent(true);
+      unrevealedAdjacent.forEach(tile => tile.peak());
+      return unrevealedAdjacent;
+    }
+  }
+
+  public unpeak() {
+    // If we're not revealed, we can only unpeak ourself
+    if (!this.isRevealed) {
+      this.isPeaking = false;
+    } else {
+      // If we are revealed, unpeaking means to unpeak the unrevealed adjacent
+      const unrevealedAdjacent = this.getAdjacent(true);
+      unrevealedAdjacent.forEach(tile => tile.unpeak());
+      return unrevealedAdjacent;
+    }
   }
 }

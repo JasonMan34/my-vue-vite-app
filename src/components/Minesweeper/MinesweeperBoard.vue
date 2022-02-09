@@ -5,13 +5,7 @@
       :key="rowIndex"
       class="flex flex-row justify-center"
     >
-      <Tile
-        v-for="(tile, colIndex) in row"
-        :key="colIndex"
-        :tile="tile"
-        @click="tile.click()"
-        @flag="tile.flag()"
-      />
+      <Tile v-for="(tile, colIndex) in row" :key="colIndex" :tile="tile" />
     </div>
   </div>
 </template>
