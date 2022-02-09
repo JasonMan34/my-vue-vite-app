@@ -1,20 +1,25 @@
 import { clamp } from '@vueuse/core';
 import type { MinesweeperGame } from './minesweeper-game';
 
+type TileStatus = 'hidden' | 'flagged' | 'revealed';
+
 export class MinesweeperTile {
   row: number;
   col: number;
   value: number = 0;
-  isFlagged: boolean = false;
   isMine: boolean = false;
   isPeaking: boolean = false;
   game: MinesweeperGame;
   isLosingTile: boolean = false;
 
-  private _isRevealed: boolean = false;
+  private status: TileStatus = 'hidden';
 
   public get isRevealed() {
-    return this._isRevealed;
+    return this.status === 'revealed';
+  }
+
+  public get isFlagged() {
+    return this.status === 'flagged';
   }
 
   constructor(row: number, col: number, game: MinesweeperGame) {
@@ -31,7 +36,7 @@ export class MinesweeperTile {
     return this.game.HEIGHT;
   }
 
-  getAdjacent(removeRevealed = false) {
+  getAdjacent(...statuses: TileStatus[]) {
     const adjacent: MinesweeperTile[] = [];
 
     // Don't exit matrix coundaries
@@ -50,9 +55,9 @@ export class MinesweeperTile {
         // Don't count self as a tile
         if (
           tile !== this &&
-          (!removeRevealed || (removeRevealed && !tile.isRevealed))
+          (statuses.length === 0 || statuses.includes(tile.status))
         ) {
-          adjacent.push(this.game.board[row][col]);
+          adjacent.push(tile);
         }
       }
     }
@@ -62,10 +67,6 @@ export class MinesweeperTile {
 
   forAdjacent(fn: Parameters<Array<MinesweeperTile>['forEach']>[0]) {
     return this.getAdjacent().forEach(fn);
-  }
-
-  forUnrevealedAdjacent(fn: Parameters<Array<MinesweeperTile>['forEach']>[0]) {
-    return this.getAdjacent(true).forEach(fn);
   }
 
   calculateValue() {
@@ -89,7 +90,7 @@ export class MinesweeperTile {
   }
 
   public reveal() {
-    this._isRevealed = true;
+    this.status = 'revealed';
 
     if (!this.game.isGameOver && this.isMine) {
       this.isLosingTile = true;
@@ -147,7 +148,12 @@ export class MinesweeperTile {
 
   public flag() {
     if (this.game.isGameOver) return;
-    this.isFlagged = !this.isFlagged;
+
+    if (this.isFlagged) {
+      this.status = 'hidden';
+    } else {
+      this.status = 'flagged';
+    }
   }
 
   public peak() {
@@ -155,19 +161,18 @@ export class MinesweeperTile {
 
     // If we are revealed, peaking means to also peak the unrevealed adjacent
     if (this.isRevealed) {
-      const unrevealedAdjacent = this.getAdjacent(true);
+      const unrevealedAdjacent = this.getAdjacent('hidden');
       unrevealedAdjacent.forEach(tile => tile.peak());
       return unrevealedAdjacent;
     }
   }
 
   public unpeak() {
-    // If we're not revealed, we can only unpeak ourself
-    if (!this.isRevealed) {
-      this.isPeaking = false;
-    } else {
+    this.isPeaking = false;
+
+    if (this.isRevealed) {
       // If we are revealed, unpeaking means to unpeak the unrevealed adjacent
-      const unrevealedAdjacent = this.getAdjacent(true);
+      const unrevealedAdjacent = this.getAdjacent('hidden');
       unrevealedAdjacent.forEach(tile => tile.unpeak());
       return unrevealedAdjacent;
     }

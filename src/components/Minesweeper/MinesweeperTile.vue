@@ -121,7 +121,7 @@ export default defineComponent({
 
 <style>
 .minesweeper-tile {
-  @apply bg-gray-200 h-[28px] w-[28px] m-[1px] text-center font-bold text-xl cursor-default;
+  @apply bg-gray-200 h-[28px] w-[28px] text-center font-bold text-xl cursor-default border-[1px] border-black;
 }
 
 .minesweeper-tile.revealed,
