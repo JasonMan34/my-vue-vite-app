@@ -181,8 +181,10 @@ export class MinesweeperTile {
 
     if (this.isFlagged) {
       this._status = 'hidden';
+      this.game.minesLeft++;
     } else {
       this._status = 'flagged';
+      this.game.minesLeft--;
     }
   }
 

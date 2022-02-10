@@ -6,6 +6,7 @@ export class MinesweeperGame {
   public readonly WIDTH: number;
   public readonly MINE_COUNT: number;
 
+  public minesLeft: number;
   public board: MinesweeperTile[][];
   private mines: MinesweeperTile[];
   public initiated: boolean = false;
@@ -24,9 +25,15 @@ export class MinesweeperGame {
       throw new Error('Mine count parameter must be a positive integer');
     }
 
-    this.WIDTH = width;
-    this.HEIGHT = height;
-    this.MINE_COUNT = mineCount;
+    // this.WIDTH = width;
+    // this.HEIGHT = height;
+    // this.MINE_COUNT = mineCount;
+    // this.minesLeft = mineCount;
+
+    this.WIDTH = 5;
+    this.HEIGHT = 4;
+    this.MINE_COUNT = 2;
+    this.minesLeft = 2;
 
     this.board = this.getBoard();
     this.mines = [];
@@ -52,7 +59,13 @@ export class MinesweeperGame {
     const potentialMines = this.board.flat().filter(tile => tile !== firstTile);
 
     shuffleArray(potentialMines);
-    const minePoints = potentialMines.slice(0, this.MINE_COUNT);
+    // const minePoints = potentialMines.slice(0, this.MINE_COUNT);
+    const minePoints = [
+      this.board[3][0],
+      this.board[2][3],
+      this.board[0][0],
+      this.board[0][3],
+    ];
 
     minePoints.forEach(tile => {
       tile.isMine = true;
@@ -64,10 +77,6 @@ export class MinesweeperGame {
 
     this.mines = mines;
     this.initiated = true;
-  }
-
-  click(row: number, col: number) {
-    this.board[row][col].click();
   }
 
   gameOver() {

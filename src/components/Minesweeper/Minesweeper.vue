@@ -11,7 +11,7 @@
         <div class="minesweeper-inner">
           <div class="minesweeper-score-header">
             <div class="minesweeper-score">
-              {{ minesLeft.toString().padStart(3, '0') }}
+              {{ game.minesLeft.toString().padStart(3, '0') }}
             </div>
             <div class="minesweeper-new-game-wrapper">
               <button @click="newGame">🙂</button>
@@ -21,7 +21,7 @@
             </div>
           </div>
 
-          <MinesweeperBoard :game="board!" />
+          <MinesweeperBoard :game="game!" />
         </div>
       </div>
     </div>
@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { computed, defineComponent, Ref, ref } from 'vue';
 import useStopwatch from './use-stopwatch';
 import MinesweeperBoard from './MinesweeperBoard.vue';
 import { MinesweeperGame } from './game/minesweeper-game';
@@ -43,10 +43,11 @@ export default defineComponent({
   name: 'Minesweeper',
   components: { MinesweeperBoard },
   setup() {
-    const minesLeft = ref(MINE_COUNT);
     const { time } = useStopwatch();
-    const game = ref<MinesweeperGame>();
-    const player = ref<AutoPlayer>();
+    const game = ref(
+      new MinesweeperGame(WIDTH, HEIGHT, MINE_COUNT)
+    ) as Ref<MinesweeperGame>;
+    const player = ref(new AutoPlayer(game.value)) as Ref<AutoPlayer>;
 
     const newGame = () => {
       game.value = new MinesweeperGame(WIDTH, HEIGHT, MINE_COUNT);
@@ -54,12 +55,12 @@ export default defineComponent({
     };
 
     const autoPlayOneMove = async () => {
-      await player.value!.autoPlay(100);
+      await player.value.playNextMove();
     };
 
     newGame();
 
-    return { board: game, time, minesLeft, newGame, autoPlayOneMove };
+    return { game, time, newGame, autoPlayOneMove };
   },
 });
 </script>
