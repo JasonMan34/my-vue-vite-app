@@ -1,7 +1,7 @@
 import { clamp } from '@vueuse/core';
 import type { MinesweeperGame } from './minesweeper-game';
 
-type TileStatus = 'hidden' | 'flagged' | 'revealed';
+export type TileStatus = 'hidden' | 'flagged' | 'revealed';
 
 export class MinesweeperTile {
   row: number;
@@ -12,14 +12,33 @@ export class MinesweeperTile {
   game: MinesweeperGame;
   isLosingTile: boolean = false;
 
-  private status: TileStatus = 'hidden';
+  private _status: TileStatus = 'hidden';
+
+  public get status() {
+    return this._status;
+  }
 
   public get isRevealed() {
-    return this.status === 'revealed';
+    return this._status === 'revealed';
   }
 
   public get isFlagged() {
-    return this.status === 'flagged';
+    return this._status === 'flagged';
+  }
+
+  public get BOARD_WIDTH() {
+    return this.game.WIDTH;
+  }
+
+  public get BOARD_HEIGHT() {
+    return this.game.HEIGHT;
+  }
+
+  private get flagCount() {
+    return this.getAdjacent().reduce(
+      (flagCount, tile) => flagCount + (tile.isFlagged ? 1 : 0),
+      0
+    );
   }
 
   constructor(row: number, col: number, game: MinesweeperGame) {
@@ -28,15 +47,7 @@ export class MinesweeperTile {
     this.game = game;
   }
 
-  get BOARD_WIDTH() {
-    return this.game.WIDTH;
-  }
-
-  get BOARD_HEIGHT() {
-    return this.game.HEIGHT;
-  }
-
-  getAdjacent(...statuses: TileStatus[]) {
+  public getAdjacent(...statuses: TileStatus[]) {
     const adjacent: MinesweeperTile[] = [];
 
     // Don't exit matrix coundaries
@@ -55,7 +66,7 @@ export class MinesweeperTile {
         // Don't count self as a tile
         if (
           tile !== this &&
-          (statuses.length === 0 || statuses.includes(tile.status))
+          (statuses.length === 0 || statuses.includes(tile._status))
         ) {
           adjacent.push(tile);
         }
@@ -65,11 +76,11 @@ export class MinesweeperTile {
     return adjacent;
   }
 
-  forAdjacent(fn: Parameters<Array<MinesweeperTile>['forEach']>[0]) {
+  public forAdjacent(fn: Parameters<Array<MinesweeperTile>['forEach']>[0]) {
     return this.getAdjacent().forEach(fn);
   }
 
-  calculateValue() {
+  public calculateValue() {
     if (this.isMine) return;
 
     let value = 0;
@@ -82,19 +93,12 @@ export class MinesweeperTile {
     this.value = value;
   }
 
-  private get flagCount() {
-    return this.getAdjacent().reduce(
-      (flagCount, tile) => flagCount + (tile.isFlagged ? 1 : 0),
-      0
-    );
-  }
-
   public reveal() {
-    this.status = 'revealed';
+    this._status = 'revealed';
 
     if (!this.game.isGameOver && this.isMine) {
       this.isLosingTile = true;
-      this.game.gameOver(this);
+      this.game.gameOver();
     }
   }
 
@@ -150,9 +154,9 @@ export class MinesweeperTile {
     if (this.game.isGameOver) return;
 
     if (this.isFlagged) {
-      this.status = 'hidden';
+      this._status = 'hidden';
     } else {
-      this.status = 'flagged';
+      this._status = 'flagged';
     }
   }
 

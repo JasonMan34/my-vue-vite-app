@@ -1,5 +1,5 @@
 import shuffleArray from 'shuffle-array';
-import { MinesweeperTile } from './minesweeper-tile';
+import { MinesweeperTile, TileStatus } from './minesweeper-tile';
 
 export class MinesweeperGame {
   public readonly HEIGHT: number;
@@ -8,7 +8,6 @@ export class MinesweeperGame {
 
   public board: MinesweeperTile[][];
   private mines: MinesweeperTile[];
-  private allTiles: MinesweeperTile[];
   public initiated: boolean = false;
   public isGameOver: boolean = false;
 
@@ -29,26 +28,22 @@ export class MinesweeperGame {
     this.HEIGHT = height;
     this.MINE_COUNT = mineCount;
 
-    const { board, allTiles } = this.getBoard();
-    this.board = board;
-    this.allTiles = allTiles;
+    this.board = this.getBoard();
     this.mines = [];
   }
 
   private getBoard() {
     const board: MinesweeperTile[][] = [];
-    const allTiles: MinesweeperTile[] = [];
 
     for (let row = 0; row < this.HEIGHT; row++) {
       board[row] = [];
       for (let col = 0; col < this.WIDTH; col++) {
         const tile = new MinesweeperTile(row, col, this);
         board[row][col] = tile;
-        allTiles.push(tile);
       }
     }
 
-    return { board, allTiles };
+    return board;
   }
 
   initBoard(row: number, col: number) {
@@ -75,8 +70,17 @@ export class MinesweeperGame {
     this.board[row][col].click();
   }
 
-  gameOver(losingTile: MinesweeperTile) {
+  gameOver() {
     this.isGameOver = true;
     this.mines.forEach(mine => mine.reveal());
+  }
+
+  public getTiles(...statuses: TileStatus[]) {
+    const allTiles = this.board.flat();
+    if (statuses.length === 0) {
+      return allTiles;
+    }
+
+    return allTiles.filter(tile => statuses.includes(tile.status));
   }
 }
