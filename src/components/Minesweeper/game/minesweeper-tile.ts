@@ -1,7 +1,10 @@
 import { clamp } from '@vueuse/core';
 import type { MinesweeperGame } from './minesweeper-game';
 
+// Final = Revealed tile, and all adjacent tiles are also revealed / flagged
 export type TileStatus = 'hidden' | 'flagged' | 'revealed';
+// | 'final_revealed'
+// | 'final_flagged';
 
 export class MinesweeperTile {
   row: number;
@@ -24,6 +27,15 @@ export class MinesweeperTile {
 
   public get isFlagged() {
     return this._status === 'flagged';
+  }
+
+  public get isFinal() {
+    return this.getAdjacent('hidden').length === 0;
+
+    // TODO: Not calculate evrey time
+    // return (
+    //   this._status === 'final_revealed' || this._status === 'final_flagged'
+    // );
   }
 
   public get BOARD_WIDTH() {
@@ -93,6 +105,17 @@ export class MinesweeperTile {
     this.value = value;
   }
 
+  private updateFinalStatus() {
+    // const hiddenAdjacent = this.getAdjacent('hidden');
+    // if (hiddenAdjacent.length === 0 && !this.isFinal) {
+    //   this._status =
+    //     this.status === 'flagged' ? 'final_flagged' : 'final_revealed';
+    // } else if (hiddenAdjacent.length !== 0 && this.isFinal) {
+    //   // impossible to have been final and also revealed
+    //   this._status = this.status === 'final_flagged' ? 'flagged' : 'revealed';
+    // }
+  }
+
   public reveal() {
     this._status = 'revealed';
 
@@ -147,6 +170,9 @@ export class MinesweeperTile {
       (wasRevealed && this.flagCount === this.value)
     ) {
       this.revealAdjacent(handled);
+
+      // After we've revealed all tiles this turn, lets see who is finalized
+      handled.forEach(tile => tile.updateFinalStatus());
     }
   }
 

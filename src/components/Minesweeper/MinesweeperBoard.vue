@@ -5,6 +5,7 @@
       :key="rowIndex"
       class="flex flex-row justify-center"
     >
+      {{ rowIndex.toString().padStart(2, '0') }}
       <Tile v-for="(tile, colIndex) in row" :key="colIndex" :tile="tile" />
     </div>
   </div>

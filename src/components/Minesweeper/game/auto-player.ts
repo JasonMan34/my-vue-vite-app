@@ -25,7 +25,8 @@ export class AutoPlayer {
   }
 
   getFlagMove(): FlagMove | undefined {
-    const tileToFlagAdjacent = this.game.getTiles('revealed').find(tile => {
+    const a = this.game.getTiles('revealed');
+    const tileToFlagAdjacent = a.find(tile => {
       const hiddenAdjacent = tile.getAdjacent('hidden').length;
       const flagAdjacent = tile.getAdjacent('flagged').length;
       return tile.value - flagAdjacent === hiddenAdjacent;

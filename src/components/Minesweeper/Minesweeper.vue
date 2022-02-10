@@ -1,6 +1,12 @@
 <template>
-  <div class="flex flex-row justify-center flex-1 px-4">
-    <div class="flex flex-col justify-center">
+  <div class="flex flex-col justify-center">
+    <div class="flex flex-row justify-center px-4 space-x-3">
+      <button
+        class="self-start bg-blue-600 hover:bg-blue-800 font-semibold rounded-lg p-4 text-white;"
+        @click="autoPlayOneMove"
+      >
+        Auto play one move
+      </button>
       <div class="minesweeper-container" @contextmenu="$event.preventDefault()">
         <div class="minesweeper-inner">
           <div class="minesweeper-score-header">
@@ -27,6 +33,7 @@ import { defineComponent, ref } from 'vue';
 import useStopwatch from './use-stopwatch';
 import MinesweeperBoard from './MinesweeperBoard.vue';
 import { MinesweeperGame } from './game/minesweeper-game';
+import { AutoPlayer } from './game/auto-player';
 
 const HEIGHT = 16;
 const WIDTH = 30;
@@ -38,15 +45,21 @@ export default defineComponent({
   setup() {
     const minesLeft = ref(MINE_COUNT);
     const { time } = useStopwatch();
-    const board = ref<MinesweeperGame>();
+    const game = ref<MinesweeperGame>();
+    const player = ref<AutoPlayer>();
 
     const newGame = () => {
-      board.value = new MinesweeperGame(WIDTH, HEIGHT, MINE_COUNT);
+      game.value = new MinesweeperGame(WIDTH, HEIGHT, MINE_COUNT);
+      player.value = new AutoPlayer(game.value);
+    };
+
+    const autoPlayOneMove = () => {
+      player.value!.playNextMove();
     };
 
     newGame();
 
-    return { board, time, minesLeft, newGame };
+    return { board: game, time, minesLeft, newGame, autoPlayOneMove };
   },
 });
 </script>

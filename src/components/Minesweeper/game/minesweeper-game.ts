@@ -76,6 +76,15 @@ export class MinesweeperGame {
   }
 
   public getTiles(...statuses: TileStatus[]) {
+    const allTiles = this.board.flat().filter(tile => !tile.isFinal);
+    if (statuses.length === 0) {
+      return allTiles;
+    }
+
+    return allTiles.filter(tile => statuses.includes(tile.status));
+  }
+
+  public getAllTiles(...statuses: TileStatus[]) {
     const allTiles = this.board.flat();
     if (statuses.length === 0) {
       return allTiles;
