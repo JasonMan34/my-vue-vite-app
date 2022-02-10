@@ -1,6 +1,6 @@
 import { MinesweeperGame } from './minesweeper-game';
 import { MinesweeperTile } from './minesweeper-tile';
-import { arraysAreEqual } from './utils';
+import { arrayContains, arraysAreEqual } from './utils';
 
 const sleep = (ms: number) =>
   new Promise<void>(resolve => {
@@ -58,57 +58,57 @@ export class AutoPlayer {
     }
   }
 
+  /** Smart move. Does not think ahead */
   getSmartMove(): Move | undefined {
     let move: Move | undefined;
 
     const revealed = this.game.getTiles('revealed');
-    revealed.some(tile => {
-      const hiddenTiles = tile.getAdjacent('hidden');
-      const potentialMineCount =
-        tile.value - tile.getAdjacent('flagged').length;
+    revealed.some(source => {
+      const srcHiddenTiles = source.getAdjacent('hidden');
+      const srcPotentialMines =
+        source.value - source.getAdjacent('flagged').length;
 
       // TODO: forAdjacent without finals
-      return tile
+      return source
         .getAdjacent('revealed')
         .filter(a => !a.isFinal)
-        .some(adjTile => {
-          const adjHiddenTiles = adjTile.getAdjacent('hidden');
-          const adjPotentialMineCount =
-            adjTile.value - adjTile.getAdjacent('flagged').length;
+        .some(targetTile => {
+          const targetHiddenTiles = targetTile.getAdjacent('hidden');
+          const targetPotentialMines =
+            targetTile.value - targetTile.getAdjacent('flagged').length;
 
-          // TODO: Efficiency
-          const interesctionTiles = hiddenTiles.filter(hiddenTile =>
-            adjHiddenTiles.includes(hiddenTile)
-          );
+          const targetAndSource: MinesweeperTile[] = [];
+          const targetNotSource: MinesweeperTile[] = [];
 
-          const hiddenButNotAdjacentHidden = hiddenTiles.filter(
-            hiddenTile => !adjHiddenTiles.includes(hiddenTile)
-          );
+          targetHiddenTiles.forEach(targetHidden => {
+            if (srcHiddenTiles.includes(targetHidden)) {
+              targetAndSource.push(targetHidden);
+            } else {
+              targetNotSource.push(targetHidden);
+            }
+          });
 
-          const adjacentHiddenButNotHidden = adjHiddenTiles.filter(
-            adjHiddenTile => !hiddenTiles.includes(adjHiddenTile)
-          );
-
-          if (interesctionTiles.length === 0) {
+          if (targetAndSource.length === 0) {
             // If there is no intersection whatsoever, no information can be realized
-            return;
+            return false;
           }
 
-          // Adjacent hidden contains hidden, but they have the same number of mines. So we can click on the difference
-          if (
-            potentialMineCount === adjPotentialMineCount &&
-            adjacentHiddenButNotHidden.length !== 0
-          ) {
-            const adjacentHiddenContainsHidden = arraysAreEqual(
-              interesctionTiles,
-              hiddenTiles
-            );
+          if (targetNotSource.length !== 0) {
+            // If same number of mines, and target contains tiles not in source, we can click them
+            if (
+              srcPotentialMines === targetPotentialMines &&
+              arrayContains(targetHiddenTiles, srcHiddenTiles)
+            ) {
+              move = { action: 'click', tiles: targetNotSource };
+              return true;
+            }
 
-            if (adjacentHiddenContainsHidden) {
-              move = {
-                action: 'click',
-                tiles: adjacentHiddenButNotHidden,
-              };
+            // targetPotentialMines - srcPotentialMines = The amount of flags we need in targetNotSource
+            if (
+              targetPotentialMines - srcPotentialMines ===
+              targetNotSource.length
+            ) {
+              move = { action: 'flag', tiles: targetNotSource };
               return true;
             }
           }
@@ -121,8 +121,10 @@ export class AutoPlayer {
   }
 
   getNextMove() {
-    // const move = this.getSimpleFlagMove() || this.getSimpleClickMove();
-    const move = this.getSmartMove();
+    const move =
+      this.getSimpleFlagMove() ||
+      this.getSimpleClickMove() ||
+      this.getSmartMove();
 
     return move;
   }

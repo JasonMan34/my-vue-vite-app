@@ -55,7 +55,7 @@ export default defineComponent({
     };
 
     const autoPlayOneMove = async () => {
-      await player.value.playNextMove();
+      await player.value.autoPlay(10);
     };
 
     newGame();
