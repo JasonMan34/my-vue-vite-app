@@ -1,3 +1,4 @@
+import { Information } from './information';
 import { MinesweeperGame } from './minesweeper-game';
 import { MinesweeperTile } from './minesweeper-tile';
 import { arrayContains, arraysAreEqual } from './utils';
@@ -60,64 +61,58 @@ export class AutoPlayer {
 
   /** Smart move. Does not think ahead */
   getSmartMove(): Move | undefined {
-    let move: Move | undefined;
-
     const revealed = this.game.getTiles('revealed');
-    revealed.some(source => {
-      const srcHiddenTiles = source.getAdjacent('hidden');
+    const handled: MinesweeperTile[] = [];
+    const information = new Information();
+
+    const foundMeaningfulData = revealed.some(srcTile => {
+      if (handled.includes(srcTile)) return;
+
+      const srcHiddenTiles = srcTile.getAdjacent('hidden');
       const srcPotentialMines =
-        source.value - source.getAdjacent('flagged').length;
+        srcTile.value - srcTile.getAdjacent('flagged').length;
+      information.add(srcHiddenTiles, srcPotentialMines);
+      handled.push(srcTile);
+
+      if (information.meaningfulData[0]) {
+        return true;
+      }
 
       // TODO: forAdjacent without finals
-      return source
+      return srcTile
         .getAdjacent('revealed')
         .filter(a => !a.isFinal)
         .some(targetTile => {
+          if (handled.includes(targetTile)) return;
+
           const targetHiddenTiles = targetTile.getAdjacent('hidden');
           const targetPotentialMines =
             targetTile.value - targetTile.getAdjacent('flagged').length;
+          information.add(targetHiddenTiles, targetPotentialMines);
+          handled.push(targetTile);
 
-          const targetAndSource: MinesweeperTile[] = [];
-          const targetNotSource: MinesweeperTile[] = [];
-
-          targetHiddenTiles.forEach(targetHidden => {
-            if (srcHiddenTiles.includes(targetHidden)) {
-              targetAndSource.push(targetHidden);
-            } else {
-              targetNotSource.push(targetHidden);
-            }
-          });
-
-          if (targetAndSource.length === 0) {
-            // If there is no intersection whatsoever, no information can be realized
-            return false;
-          }
-
-          if (targetNotSource.length !== 0) {
-            // If same number of mines, and target contains tiles not in source, we can click them
-            if (
-              srcPotentialMines === targetPotentialMines &&
-              arrayContains(targetHiddenTiles, srcHiddenTiles)
-            ) {
-              move = { action: 'click', tiles: targetNotSource };
-              return true;
-            }
-
-            // targetPotentialMines - srcPotentialMines = The amount of flags we need in targetNotSource
-            if (
-              targetPotentialMines - srcPotentialMines ===
-              targetNotSource.length
-            ) {
-              move = { action: 'flag', tiles: targetNotSource };
-              return true;
-            }
+          if (information.meaningfulData[0]) {
+            return true;
           }
 
           return false;
         });
     });
 
-    return move;
+    if (foundMeaningfulData) {
+      const data = information.meaningfulData[0];
+      if (data.mineCount === 0) {
+        return {
+          action: 'click',
+          tiles: data.tiles,
+        };
+      }
+
+      return {
+        action: 'flag',
+        tiles: data.tiles,
+      };
+    }
   }
 
   getNextMove() {
@@ -126,6 +121,9 @@ export class AutoPlayer {
       this.getSimpleClickMove() ||
       this.getSmartMove();
 
+    if (!move) {
+      console.log('No next move');
+    }
     return move;
   }
 
