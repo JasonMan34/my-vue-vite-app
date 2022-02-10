@@ -85,7 +85,5 @@ export class AutoPlayer {
 
       nextMove = this.getNextMove();
     }
-
-    throw new Error('Not yet implemented');
   }
 }

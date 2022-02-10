@@ -5,7 +5,7 @@
         class="self-start bg-blue-600 hover:bg-blue-800 font-semibold rounded-lg p-4 text-white;"
         @click="autoPlayOneMove"
       >
-        Auto play one move
+        Auto play
       </button>
       <div class="minesweeper-container" @contextmenu="$event.preventDefault()">
         <div class="minesweeper-inner">
@@ -53,8 +53,8 @@ export default defineComponent({
       player.value = new AutoPlayer(game.value);
     };
 
-    const autoPlayOneMove = () => {
-      player.value!.playNextMove();
+    const autoPlayOneMove = async () => {
+      await player.value!.autoPlay(100);
     };
 
     newGame();
