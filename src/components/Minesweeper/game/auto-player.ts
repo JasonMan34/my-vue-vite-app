@@ -11,7 +11,7 @@ type FlagMove = {
   tiles: MinesweeperTile[];
 };
 type ClickMove = {
-  action: 'flag';
+  action: 'click';
   tiles: MinesweeperTile[];
 };
 
@@ -24,7 +24,8 @@ export class AutoPlayer {
     this.game = game;
   }
 
-  getFlagMove(): FlagMove | undefined {
+  /** Flag all remaining adjacent tiles a tile that needs it */
+  getSimpleFlagMove(): FlagMove | undefined {
     const a = this.game.getTiles('revealed');
     const tileToFlagAdjacent = a.find(tile => {
       const hiddenAdjacent = tile.getAdjacent('hidden').length;
@@ -42,9 +43,25 @@ export class AutoPlayer {
     }
   }
 
+  // Click a tile that is all flagged up
+  getSimpleClickMove(): ClickMove | undefined {
+    const a = this.game.getTiles('revealed');
+    const tileToClick = a.find(tile => {
+      const flagAdjacent = tile.getAdjacent('flagged').length;
+      return tile.value === flagAdjacent;
+    });
+
+    if (tileToClick) {
+      return {
+        action: 'click',
+        tiles: [tileToClick],
+      };
+    }
+  }
+
   getNextMove() {
-    const move = this.getFlagMove();
-    // TODO: Or click move, or ...
+    const move = this.getSimpleFlagMove() || this.getSimpleClickMove();
+
     return move;
   }
 
