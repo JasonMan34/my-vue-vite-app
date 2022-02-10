@@ -105,16 +105,16 @@ export class MinesweeperTile {
     this.value = value;
   }
 
-  private updateFinalStatus() {
-    // const hiddenAdjacent = this.getAdjacent('hidden');
-    // if (hiddenAdjacent.length === 0 && !this.isFinal) {
-    //   this._status =
-    //     this.status === 'flagged' ? 'final_flagged' : 'final_revealed';
-    // } else if (hiddenAdjacent.length !== 0 && this.isFinal) {
-    //   // impossible to have been final and also revealed
-    //   this._status = this.status === 'final_flagged' ? 'flagged' : 'revealed';
-    // }
-  }
+  // private updateFinalStatus() {
+  // const hiddenAdjacent = this.getAdjacent('hidden');
+  // if (hiddenAdjacent.length === 0 && !this.isFinal) {
+  //   this._status =
+  //     this.status === 'flagged' ? 'final_flagged' : 'final_revealed';
+  // } else if (hiddenAdjacent.length !== 0 && this.isFinal) {
+  //   // impossible to have been final and also revealed
+  //   this._status = this.status === 'final_flagged' ? 'flagged' : 'revealed';
+  // }
+  // }
 
   public reveal() {
     this._status = 'revealed';
@@ -172,7 +172,7 @@ export class MinesweeperTile {
       this.revealAdjacent(handled);
 
       // After we've revealed all tiles this turn, lets see who is finalized
-      handled.forEach(tile => tile.updateFinalStatus());
+      // handled.forEach(tile => tile.updateFinalStatus());
     }
   }
 
