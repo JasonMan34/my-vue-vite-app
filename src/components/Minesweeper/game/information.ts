@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 import { MinesweeperTile } from './minesweeper-tile';
 import {
   arrayContains,
@@ -6,23 +7,51 @@ import {
   arraysAreEqual,
 } from './utils';
 
+type MineDataRelation = 'equals' | 'minimum' | 'maximum';
+
+type MineData = {
+  value: number;
+  relation: MineDataRelation;
+};
+
 export interface DataNode {
   tiles: MinesweeperTile[];
-  mineCount: number;
+  mines: MineData;
 }
+
+/** Returns relation for the difference between two data nodes, if such relation exists */
+const getDifferenceRelation = (
+  node1: DataNode,
+  node2: DataNode
+): MineDataRelation | undefined => {
+  const a = node1.mines;
+  const b = node2.mines;
+
+  if (b.relation === 'equals') return a.relation;
+  if (b.relation === 'maximum' && a.relation !== 'maximum') return a.relation;
+  if (b.relation === 'minimum' && a.relation !== 'minimum') return a.relation;
+};
 
 export class Information {
   data: DataNode[] = [];
   meaningfulData: DataNode[] = [];
 
-  add(tiles: MinesweeperTile[], mineCount: number): void;
-  add(node: DataNode): void;
-  add(tilesOrNode: MinesweeperTile[] | DataNode, mineCount?: number): void {
-    let newNode: DataNode;
-    if (Array.isArray(tilesOrNode)) {
-      newNode = { tiles: tilesOrNode, mineCount: mineCount! };
-    } else {
-      newNode = tilesOrNode;
+  // add(node: DataNode): void;
+  add(tiles: MinesweeperTile[], mines: number | MineData): void {
+    const newNode: DataNode = {
+      tiles,
+      mines:
+        typeof mines === 'number'
+          ? {
+              value: mines,
+              relation: 'equals',
+            }
+          : mines,
+    };
+
+    // Information about 0 tiles is useless
+    if (newNode.tiles.length === 0) {
+      return;
     }
 
     // Check if we already have this information
@@ -52,26 +81,46 @@ export class Information {
         arrayContains(newNode.tiles, node.tiles) &&
         differenceNew.length !== 0
       ) {
-        const inferredDataNode = {
-          tiles: differenceNew,
-          mineCount: newNode.mineCount - node.mineCount,
-        };
-        this.add(inferredDataNode);
+        const relation = getDifferenceRelation(newNode, node);
+
+        if (relation) {
+          const inferredDataNode = {
+            tiles: differenceNew,
+            mineCount: {
+              relation,
+              value: newNode.mines.value - node.mines.value,
+            },
+          };
+          this.add(inferredDataNode.tiles, inferredDataNode.mineCount);
+        }
       }
 
       if (
         arrayContains(node.tiles, newNode.tiles) &&
         differenceNotNew.length !== 0
       ) {
-        const inferredDataNode = {
-          tiles: differenceNotNew,
-          mineCount: node.mineCount - newNode.mineCount,
-        };
-        this.add(inferredDataNode);
+        const relation = getDifferenceRelation(node, newNode);
+
+        if (relation) {
+          const inferredDataNode = {
+            tiles: differenceNotNew,
+            mineCount: {
+              relation,
+              value: node.mines.value - newNode.mines.value,
+            },
+          };
+          this.add(inferredDataNode.tiles, inferredDataNode.mineCount);
+        }
       }
     });
 
-    if (newNode.mineCount === 0 || newNode.mineCount === newNode.tiles.length) {
+    if (newNode.mines.value === 0) {
+      this.meaningfulData.push(newNode);
+    } else if (
+      newNode.mines.relation === 'equals' ||
+      (newNode.mines.relation === 'minimum' &&
+        newNode.mines.value === newNode.tiles.length)
+    ) {
       this.meaningfulData.push(newNode);
     }
   }

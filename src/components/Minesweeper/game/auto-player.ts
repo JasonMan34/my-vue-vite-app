@@ -59,7 +59,6 @@ export class AutoPlayer {
     }
   }
 
-  /** Smart move. Does not think ahead */
   getSmartMove(): Move | undefined {
     const revealed = this.game.getTiles('revealed');
     const handled: MinesweeperTile[] = [];
@@ -101,7 +100,7 @@ export class AutoPlayer {
 
     if (foundMeaningfulData) {
       const data = information.meaningfulData[0];
-      if (data.mineCount === 0) {
+      if (data.mines === 0) {
         return {
           action: 'click',
           tiles: data.tiles,
