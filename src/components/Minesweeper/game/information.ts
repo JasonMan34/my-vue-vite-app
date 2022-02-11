@@ -99,11 +99,26 @@ export class Information {
     }
 
     // Check if we already have this information
-    const alreadyIn = this.data.find(node =>
+    const existingNodeIndex = this.data.findIndex(node =>
       arraysAreEqual(node.tiles, newNode.tiles)
     );
-    if (alreadyIn) {
-      return;
+    if (existingNodeIndex !== -1) {
+      const existingNode = this.data[existingNodeIndex];
+      // If there is already a node about the same relation type, or exactly how many mines there are,
+      // there's no new information to be gotten
+      if (
+        existingNode.mines.relation === 'equals' ||
+        existingNode.mines.relation === newNode.mines.relation
+      ) {
+        return;
+      }
+
+      // If there was already a node, and the above condition didn't happen, the options are:
+      // 1) existingNode.relation === 'minimum' && newNode.relation === 'maximum'
+      // 2) existingNode.relation === 'minimum' && newNode.relation === 'maximum'
+      // Either way, we can remove the old node, and change this one to 'equals'
+      this.data.splice(existingNodeIndex, 1);
+      newNode.mines.relation = 'equals';
     }
 
     // Add the new data node
