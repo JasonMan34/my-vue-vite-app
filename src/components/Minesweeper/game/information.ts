@@ -86,6 +86,18 @@ export class Information {
       return;
     }
 
+    // Minimum 0 mines is useless
+    if (newNode.mines.relation === 'minimum' && newNode.mines.value === 0) {
+      return;
+    }
+    // Maximum tiles.length mines useless
+    if (
+      newNode.mines.relation === 'maximum' &&
+      newNode.mines.value === newNode.tiles.length
+    ) {
+      return;
+    }
+
     // Check if we already have this information
     const alreadyIn = this.data.find(node =>
       arraysAreEqual(node.tiles, newNode.tiles)
@@ -148,7 +160,7 @@ export class Information {
         newNode.mines.relation === 'equals'
       ) {
         const inferredDataNode: DataNode = {
-          tiles: differenceNotNew,
+          tiles: intersection,
           mines: {
             relation: 'maximum',
             value: Math.min(node.mines.value, newNode.mines.value),
