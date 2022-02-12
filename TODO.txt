@@ -1,0 +1,9 @@
+1) Improve efficiency on searching for moves
+  -- First tile we should check for info on is a tile that changed since we last checked it
+  -- Once we have a piece of information, we should look for a tile that contains that info, than any tile that intersects it, and only then continue forward
+
+2) Better starting moves
+
+3) Better guessing
+
+4) Run the code without vue - I wanna see some statistics baby
