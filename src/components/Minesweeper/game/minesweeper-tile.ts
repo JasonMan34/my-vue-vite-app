@@ -15,6 +15,7 @@ export class MinesweeperTile {
   game: MinesweeperGame;
   isLosingTile: boolean = false;
 
+  private _flagCount: number = 0;
   private _status: TileStatus = 'hidden';
 
   public get status() {
@@ -47,10 +48,12 @@ export class MinesweeperTile {
   }
 
   private get flagCount() {
-    return this.getAdjacent().reduce(
-      (flagCount, tile) => flagCount + (tile.isFlagged ? 1 : 0),
-      0
-    );
+    return this._flagCount;
+
+    // return this.getAdjacent().reduce(
+    //   (flagCount, tile) => flagCount + (tile.isFlagged ? 1 : 0),
+    //   0
+    // );
   }
 
   constructor(row: number, col: number, game: MinesweeperGame) {
@@ -181,9 +184,11 @@ export class MinesweeperTile {
 
     if (this.isFlagged) {
       this._status = 'hidden';
+      this.forAdjacent(tile => tile._flagCount--);
       this.game.minesLeft++;
     } else {
       this._status = 'flagged';
+      this.forAdjacent(tile => tile._flagCount++);
       this.game.minesLeft--;
     }
   }
