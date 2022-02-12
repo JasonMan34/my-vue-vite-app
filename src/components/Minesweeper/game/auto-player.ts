@@ -20,19 +20,22 @@ type ClickMove = {
 type Move = FlagMove | ClickMove;
 
 export class AutoPlayer {
-  game: MinesweeperGame;
+  public nextMove?: Move;
+  private game: MinesweeperGame;
 
   constructor(game: MinesweeperGame) {
     this.game = game;
   }
 
   /** Flag all remaining adjacent tiles a tile that needs it */
-  getSimpleFlagMove(): FlagMove | undefined {
-    const tileToFlagAdjacent = this.game.getTiles('revealed').find(tile => {
-      const hiddenAdjacent = tile.getAdjacent('hidden').length;
-      const flagAdjacent = tile.getAdjacent('flagged').length;
-      return tile.value - flagAdjacent === hiddenAdjacent;
-    });
+  private getSimpleFlagMove(): FlagMove | undefined {
+    const tileToFlagAdjacent = this.game
+      .getActiveTiles('revealed')
+      .find(tile => {
+        const hiddenAdjacent = tile.getAdjacent('hidden').length;
+        const flagAdjacent = tile.getAdjacent('flagged').length;
+        return tile.value - flagAdjacent === hiddenAdjacent;
+      });
 
     if (tileToFlagAdjacent) {
       const tilesToFlag = tileToFlagAdjacent.getAdjacent('hidden');
@@ -44,9 +47,9 @@ export class AutoPlayer {
     }
   }
 
-  // Click a tile that is all flagged up
-  getSimpleClickMove(): ClickMove | undefined {
-    const tileToClick = this.game.getTiles('revealed').find(tile => {
+  /** Click a tile that is all flagged up */
+  private getSimpleClickMove(): ClickMove | undefined {
+    const tileToClick = this.game.getActiveTiles('revealed').find(tile => {
       const flagAdjacent = tile.getAdjacent('flagged').length;
       return tile.value === flagAdjacent;
     });
@@ -59,8 +62,8 @@ export class AutoPlayer {
     }
   }
 
-  getSmartMove(): Move | undefined {
-    const revealed = this.game.getTiles('revealed');
+  private getSmartMove(): Move | undefined {
+    const revealed = this.game.getActiveTiles('revealed');
     const handled: MinesweeperTile[] = [];
     const information = new Information();
 
@@ -114,37 +117,51 @@ export class AutoPlayer {
     }
   }
 
-  getNextMove() {
+  getNextMove(): Move | undefined {
+    if (this.game.isGameOver || this.game.isGameWon) return;
+
     const move =
       this.getSimpleFlagMove() ||
       this.getSimpleClickMove() ||
       this.getSmartMove();
 
-    if (!move) {
+    if (move) {
+      this.nextMove = move;
+    } else {
       console.log('No next move');
+
+      // TODO: REMOVE, completely random
+      const allTiles = this.game.getAllTiles('hidden');
+      const randomTile = allTiles[Math.floor(Math.random() * allTiles.length)];
+
+      this.nextMove = {
+        action: 'click',
+        tiles: [randomTile],
+      };
     }
-    return move;
+
+    return this.nextMove;
   }
 
   playNextMove() {
-    const move = this.getNextMove();
-    if (!move) return;
+    if (this.game.isGameOver || this.game.isGameWon || !this.nextMove) return;
 
-    if (move.action === 'flag') {
-      move.tiles.forEach(tile => tile.flag());
-    } else if (move.action === 'click') {
-      move.tiles.forEach(tile => tile.click());
+    if (this.nextMove.action === 'flag') {
+      this.nextMove.tiles.forEach(tile => tile.flag());
+    } else if (this.nextMove.action === 'click') {
+      this.nextMove.tiles.forEach(tile => tile.click());
     }
   }
 
-  async autoPlay(delay: number) {
-    let nextMove = this.getNextMove();
-    while (nextMove) {
+  async autoPlay(delay: number = 0) {
+    while (
+      !(this.game.isGameOver || this.game.isGameWon) &&
+      this.getNextMove()
+    ) {
       // eslint-disable-next-line no-await-in-loop
       await sleep(delay);
-      this.playNextMove();
 
-      nextMove = this.getNextMove();
+      this.playNextMove();
     }
   }
 }
