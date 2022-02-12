@@ -1,5 +1,14 @@
 <template>
   <div class="minesweeper-board">
+    <div class="flex flex-row ml-[28px]">
+      <div
+        v-for="(col, colIndex) in game.board[0]"
+        :key="colIndex"
+        class="w-[28px]"
+      >
+        {{ colIndex.toString().padStart(2, '0') }}
+      </div>
+    </div>
     <div
       v-for="(row, rowIndex) in game.board"
       :key="rowIndex"

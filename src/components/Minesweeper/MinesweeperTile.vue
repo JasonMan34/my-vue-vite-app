@@ -7,11 +7,13 @@
     @mouseenter="onMouseEnter"
     @contextmenu="$event.preventDefault()"
   >
-    <div v-if="tile.isRevealed" :class="textClass">
-      {{ tile.isMine ? '💣' : '' }}
-      {{ !tile.isMine && tile.value !== 0 ? tile.value : '' }}
+    <div :class="textClass">
+      <template v-if="tile.isFlagged">🚩</template>
+      <template v-else-if="tile.isRevealed">
+        {{ tile.isMine ? '💣' : '' }}
+        {{ !tile.isMine && tile.value !== 0 ? tile.value : '' }}
+      </template>
     </div>
-    <div v-else-if="tile.isFlagged">🚩</div>
   </div>
 </template>
 
@@ -74,7 +76,6 @@ export default defineComponent({
       } else if (e.button === RMC) {
         if (!props.tile.isRevealed) {
           props.tile.flag();
-          // context.emit('flag');
         }
       }
     };
