@@ -122,9 +122,13 @@ export class MinesweeperTile {
   public reveal() {
     this._status = 'revealed';
 
-    if (!this.game.isGameOver && this.isMine) {
+    if (this.game.isGameOver) return;
+
+    if (this.isMine) {
       this.isLosingTile = true;
       this.game.gameOver();
+    } else {
+      this.game.upRevealCount();
     }
   }
 

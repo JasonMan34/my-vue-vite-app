@@ -2,18 +2,23 @@ import shuffleArray from 'shuffle-array';
 import { MinesweeperTile, TileStatus } from './minesweeper-tile';
 
 export type GameOverCallback = () => void | Promise<void>;
+export type GameWinCallback = () => void | Promise<void>;
 
 export class MinesweeperGame {
   public readonly HEIGHT: number;
   public readonly WIDTH: number;
   public readonly MINE_COUNT: number;
 
+  private revealedCount: number = 0;
   public minesLeft: number;
   public board: MinesweeperTile[][];
+  private allTiles: MinesweeperTile[];
   private mines: MinesweeperTile[];
   public initiated: boolean = false;
   public isGameOver: boolean = false;
+  public isGameWon: boolean = false;
   private gameOverEventListeners: GameOverCallback[] = [];
+  private gameWinEventListeners: GameWinCallback[] = [];
 
   constructor(width: number, height: number, mineCount: number) {
     if (!Number.isInteger(width) || width <= 0) {
@@ -39,6 +44,7 @@ export class MinesweeperGame {
     // this.minesLeft = 2;
 
     this.board = this.getBoard();
+    this.allTiles = this.board.flat();
     this.mines = [];
   }
 
@@ -90,25 +96,37 @@ export class MinesweeperGame {
     this.gameOverEventListeners.forEach(cb => cb());
   }
 
-  public getTiles(...statuses: TileStatus[]) {
-    const allTiles = this.board.flat().filter(tile => !tile.isFinal);
+  public getActiveTiles(...statuses: TileStatus[]) {
+    const activeTiles = this.allTiles.filter(tile => !tile.isFinal);
+
     if (statuses.length === 0) {
-      return allTiles;
+      return activeTiles;
     }
 
-    return allTiles.filter(tile => statuses.includes(tile.status));
+    return activeTiles.filter(tile => statuses.includes(tile.status));
   }
 
   public getAllTiles(...statuses: TileStatus[]) {
-    const allTiles = this.board.flat();
     if (statuses.length === 0) {
-      return allTiles;
+      return this.allTiles;
     }
 
-    return allTiles.filter(tile => statuses.includes(tile.status));
+    return this.allTiles.filter(tile => statuses.includes(tile.status));
   }
 
   public onGameOver(cb: GameOverCallback) {
     this.gameOverEventListeners.push(cb);
+  }
+
+  public onGameWin(cb: GameWinCallback) {
+    this.gameWinEventListeners.push(cb);
+  }
+
+  public upRevealCount() {
+    this.revealedCount++;
+    if (this.revealedCount === this.allTiles.length - this.mines.length) {
+      this.isGameWon = true;
+      this.gameWinEventListeners.forEach(cb => cb());
+    }
   }
 }
