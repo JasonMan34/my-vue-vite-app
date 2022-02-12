@@ -1,6 +1,8 @@
 import shuffleArray from 'shuffle-array';
 import { MinesweeperTile, TileStatus } from './minesweeper-tile';
 
+export type GameOverCallback = () => void;
+
 export class MinesweeperGame {
   public readonly HEIGHT: number;
   public readonly WIDTH: number;
@@ -11,6 +13,7 @@ export class MinesweeperGame {
   private mines: MinesweeperTile[];
   public initiated: boolean = false;
   public isGameOver: boolean = false;
+  private gameOverEventListeners: GameOverCallback[] = [];
 
   constructor(width: number, height: number, mineCount: number) {
     if (!Number.isInteger(width) || width <= 0) {
@@ -83,6 +86,8 @@ export class MinesweeperGame {
   gameOver() {
     this.isGameOver = true;
     this.mines.forEach(mine => mine.reveal());
+
+    this.gameOverEventListeners.forEach(cb => cb());
   }
 
   public getTiles(...statuses: TileStatus[]) {
@@ -101,5 +106,9 @@ export class MinesweeperGame {
     }
 
     return allTiles.filter(tile => statuses.includes(tile.status));
+  }
+
+  public onGameOver(cb: GameOverCallback) {
+    this.gameOverEventListeners.push(cb);
   }
 }
