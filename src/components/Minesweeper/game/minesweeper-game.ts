@@ -1,7 +1,7 @@
 import shuffleArray from 'shuffle-array';
 import { MinesweeperTile, TileStatus } from './minesweeper-tile';
 
-export type GameOverCallback = () => void;
+export type GameOverCallback = () => void | Promise<void>;
 
 export class MinesweeperGame {
   public readonly HEIGHT: number;

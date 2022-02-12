@@ -189,6 +189,8 @@ export class MinesweeperTile {
   }
 
   public peak() {
+    if (this.isFlagged || this.isFinal) return;
+
     this.isPeaking = true;
 
     // If we are revealed, peaking means to also peak the unrevealed adjacent
@@ -200,6 +202,8 @@ export class MinesweeperTile {
   }
 
   public unpeak() {
+    if (this.isFlagged || this.isFinal) return;
+
     this.isPeaking = false;
 
     if (this.isRevealed) {
