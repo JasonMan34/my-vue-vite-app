@@ -88,10 +88,11 @@ export class Information {
       return;
     }
 
-    // Minimum 0 mines is useless
-    if (newNode.mines.relation === 'minimum' && newNode.mines.value === 0) {
+    // Minimum 0 mines (or less) is useless
+    if (newNode.mines.relation === 'minimum' && newNode.mines.value <= 0) {
       return;
     }
+
     // Maximum tiles.length mines useless
     if (
       newNode.mines.relation === 'maximum' &&
@@ -184,6 +185,7 @@ export class Information {
             value: node.mines.value - newNode.mines.value,
           },
         };
+
         this.add(inferredDataNode);
       } else if (
         node.mines.relation === 'equals' &&
