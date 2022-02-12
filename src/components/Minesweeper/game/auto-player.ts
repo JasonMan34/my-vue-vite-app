@@ -1,7 +1,6 @@
 import { Information } from './information';
 import { MinesweeperGame } from './minesweeper-game';
 import { MinesweeperTile } from './minesweeper-tile';
-import { arrayContains, arraysAreEqual } from './utils';
 
 const sleep = (ms: number) =>
   new Promise<void>(resolve => {
@@ -128,8 +127,6 @@ export class AutoPlayer {
     if (move) {
       this.nextMove = move;
     } else {
-      console.log('No next move');
-
       // TODO: REMOVE, completely random
       const allTiles = this.game.getAllTiles('hidden');
       const randomTile = allTiles[Math.floor(Math.random() * allTiles.length)];
@@ -153,13 +150,15 @@ export class AutoPlayer {
     }
   }
 
-  async autoPlay(delay: number = 0) {
+  async autoPlay(delay?: number) {
     while (
       !(this.game.isGameOver || this.game.isGameWon) &&
       this.getNextMove()
     ) {
-      // eslint-disable-next-line no-await-in-loop
-      await sleep(delay);
+      if (delay) {
+        // eslint-disable-next-line no-await-in-loop
+        await sleep(delay);
+      }
 
       this.playNextMove();
     }
