@@ -68,6 +68,8 @@ export class Information {
     tilesOrNode: MinesweeperTile[] | DataNode,
     mines?: MinesData | number
   ): void {
+    if (this.meaningfulData.length !== 0) return;
+
     let newNode: DataNode;
     if (Array.isArray(tilesOrNode) && mines) {
       if (typeof mines === 'number') {
@@ -98,31 +100,48 @@ export class Information {
       return;
     }
 
-    // Check if we already have this information
-    const existingNodeIndex = this.data.findIndex(node =>
+    // Check if we already have information about these tiles
+    const currTileInfoIndex = this.data.findIndex(node =>
       arraysAreEqual(node.tiles, newNode.tiles)
     );
-    if (existingNodeIndex !== -1) {
-      const existingNode = this.data[existingNodeIndex];
+    if (currTileInfoIndex !== -1) {
+      const currTileInfo = this.data[currTileInfoIndex];
       // If there is already a node about the same relation type, or exactly how many mines there are,
       // there's no new information to be gotten
       if (
-        existingNode.mines.relation === 'equals' ||
-        existingNode.mines.relation === newNode.mines.relation
+        currTileInfo.mines.relation === 'equals' ||
+        currTileInfo.mines.relation === newNode.mines.relation
       ) {
         return;
       }
 
-      // If there was already a node, and the above condition didn't happen, the options are:
-      // 1) existingNode.relation === 'minimum' && newNode.relation === 'maximum'
-      // 2) existingNode.relation === 'minimum' && newNode.relation === 'maximum'
-      // Either way, we can remove the old node, and change this one to 'equals'
-      this.data.splice(existingNodeIndex, 1);
-      newNode.mines.relation = 'equals';
+      if (currTileInfo.mines.value === newNode.mines.value) {
+        // There was already a node, that's not relation 'equals', and not relation of the new node
+        // So the options are:
+        // 1) existingNode.relation === 'minimum' && newNode.relation === 'maximum'
+        // 2) existingNode.relation === 'minimum' && newNode.relation === 'maximum'
+        // Either way, we can remove the old node, and change this one to 'equals'
+        this.data.splice(currTileInfoIndex, 1);
+        newNode.mines.relation = 'equals';
+      }
     }
 
     // Add the new data node
     this.data.push(newNode);
+
+    if (newNode.mines.value === 0) {
+      this.meaningfulData.push(newNode);
+      // TODO: Maybe remove later? No need to look for new data if we got meaningful
+      return;
+    }
+    if (
+      (newNode.mines.relation === 'equals' ||
+        newNode.mines.relation === 'minimum') &&
+      newNode.mines.value === newNode.tiles.length
+    ) {
+      this.meaningfulData.push(newNode);
+      // TODO: Maybe remove later? No need to look for new data if we got meaningful
+    }
 
     // And infer any new information from it
     this.data.forEach(node => {
@@ -153,9 +172,7 @@ export class Information {
           },
         };
         this.add(inferredDataNode);
-      }
-
-      if (
+      } else if (
         differenceNotNew.length !== 0 &&
         relationDifferenceNotNew &&
         arrayContains(node.tiles, newNode.tiles)
@@ -168,9 +185,7 @@ export class Information {
           },
         };
         this.add(inferredDataNode);
-      }
-
-      if (
+      } else if (
         node.mines.relation === 'equals' &&
         newNode.mines.relation === 'equals'
       ) {
@@ -184,15 +199,5 @@ export class Information {
         this.add(inferredDataNode);
       }
     });
-
-    if (newNode.mines.value === 0) {
-      this.meaningfulData.push(newNode);
-    } else if (
-      (newNode.mines.relation === 'equals' ||
-        newNode.mines.relation === 'minimum') &&
-      newNode.mines.value === newNode.tiles.length
-    ) {
-      this.meaningfulData.push(newNode);
-    }
   }
 }

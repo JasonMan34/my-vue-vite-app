@@ -49,13 +49,25 @@ export default defineComponent({
     ) as Ref<MinesweeperGame>;
     const player = ref(new AutoPlayer(game.value)) as Ref<AutoPlayer>;
 
+    let autoPlayOneMove: () => Promise<void>;
+
     const newGame = () => {
       game.value = new MinesweeperGame(WIDTH, HEIGHT, MINE_COUNT);
       player.value = new AutoPlayer(game.value);
+
+      game.value.onGameOver(autoPlayOneMove);
+      game.value.onGameWin(autoPlayOneMove);
     };
 
-    const autoPlayOneMove = async () => {
-      await player.value.autoPlay(10);
+    autoPlayOneMove = async () => {
+      if (
+        game.value.isGameWon ||
+        game.value.isGameOver ||
+        !game.value.initiated
+      ) {
+        newGame();
+      }
+      await player.value.autoPlay();
     };
 
     newGame();
