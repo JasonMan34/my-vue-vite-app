@@ -102,27 +102,40 @@ export class Information {
     }
 
     // Check if we already have information about these tiles
-    const currTileInfoIndex = this.data.findIndex(node =>
+    const existingTilesInfo = this.data.filter(node =>
       arraysAreEqual(node.tiles, newNode.tiles)
     );
-    if (currTileInfoIndex !== -1) {
-      const currTileInfo = this.data[currTileInfoIndex];
-      // If there is already a node about the same relation type, or exactly how many mines there are,
+
+    for (let i = 0; i < existingTilesInfo.length; i++) {
+      const existingInfo = existingTilesInfo[i];
+
+      // If there is already information about exactly how many mines there are,
       // there's no new information to be gotten
-      if (
-        currTileInfo.mines.relation === 'equals' ||
-        currTileInfo.mines.relation === newNode.mines.relation
-      ) {
+      if (existingInfo.mines.relation === 'equals') {
         return;
       }
 
-      if (currTileInfo.mines.value === newNode.mines.value) {
+      // If it's the same relation, we'll only continue if the new info is more accurate
+      if (existingInfo.mines.relation === newNode.mines.relation) {
+        if (
+          (newNode.mines.relation === 'maximum' &&
+            newNode.mines.value < existingInfo.mines.value) ||
+          (newNode.mines.relation === 'minimum' &&
+            newNode.mines.value > existingInfo.mines.value)
+        ) {
+          const existingInfoIndex = this.data.indexOf(existingInfo);
+          this.data.splice(existingInfoIndex, 1);
+        }
+      }
+
+      if (existingInfo.mines.value === newNode.mines.value) {
         // There was already a node, that's not relation 'equals', and not relation of the new node
         // So the options are:
         // 1) existingNode.relation === 'minimum' && newNode.relation === 'maximum'
         // 2) existingNode.relation === 'minimum' && newNode.relation === 'maximum'
         // Either way, we can remove the old node, and change this one to 'equals'
-        this.data.splice(currTileInfoIndex, 1);
+        const existingInfoIndex = this.data.indexOf(existingInfo);
+        this.data.splice(existingInfoIndex, 1);
         newNode.mines.relation = 'equals';
       }
     }
