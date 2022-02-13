@@ -155,6 +155,7 @@ export class Information {
     ) {
       this.meaningfulData.push(newNode);
       // TODO: Maybe remove later? No need to look for new data if we got meaningful
+      return;
     }
 
     // And infer any new information from it
