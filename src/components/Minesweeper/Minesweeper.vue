@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, Ref, ref } from 'vue';
+import { defineComponent, Ref, ref } from 'vue';
 import useStopwatch from './use-stopwatch';
 import MinesweeperBoard from './MinesweeperBoard.vue';
 import { MinesweeperGame } from './game/minesweeper-game';

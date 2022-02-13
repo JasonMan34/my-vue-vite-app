@@ -4,23 +4,21 @@ import { MinesweeperGame } from './minesweeper-game';
 const HEIGHT = 16;
 const WIDTH = 30;
 const MINE_COUNT = 99;
-const TestAutoPlayer = async (runs: number = 800) => {
-  let runCount = 0;
-  let game;
-  let player;
-
+const TestAutoPlayer = async () => {
+  let runs = 0;
   let wins = 0;
-
+  let time = 0;
   const start = new Date();
 
   const win = () => {
     wins++;
   };
 
-  while (runCount < runs) {
-    runCount++;
-    game = new MinesweeperGame(WIDTH, HEIGHT, MINE_COUNT);
-    player = new AutoPlayer(game);
+  while (time < 30) {
+    time = (new Date().getTime() - start.getTime()) / 1000;
+    runs++;
+    const game = new MinesweeperGame(WIDTH, HEIGHT, MINE_COUNT);
+    const player = new AutoPlayer(game);
 
     game.onGameWin(win);
 
@@ -28,8 +26,7 @@ const TestAutoPlayer = async (runs: number = 800) => {
     await player.autoPlay();
   }
 
-  const time = (new Date().getTime() - start.getTime()) / 1000;
-  console.log({ wins, time });
+  console.log({ runs, wins, time, winRate: (runs / wins).toFixed(2) });
 };
 
 TestAutoPlayer();
