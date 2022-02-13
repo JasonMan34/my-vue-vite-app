@@ -31,7 +31,7 @@ export class MinesweeperTile {
   }
 
   public get isFinal() {
-    return this.getAdjacent('hidden').length === 0;
+    return this._status !== 'hidden' && this.getAdjacent('hidden').length === 0;
 
     // TODO: Not calculate evrey time
     // return (
