@@ -31,9 +31,9 @@ export class MinesweeperTile {
   }
 
   public get isFinal() {
+    // TODO: Not calculate evrey time
     return this._status !== 'hidden' && this.getAdjacent('hidden').length === 0;
 
-    // TODO: Not calculate evrey time
     // return (
     //   this._status === 'final_revealed' || this._status === 'final_flagged'
     // );

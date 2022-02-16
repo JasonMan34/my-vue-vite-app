@@ -27,6 +27,7 @@ export class AutoPlayer {
   constructor(game: MinesweeperGame) {
     this.game = game;
     this.info = new Information(game);
+    (window as any).info = this.info;
   }
 
   /** Flag all remaining adjacent tiles a tile that needs it */
@@ -64,55 +65,48 @@ export class AutoPlayer {
     }
   }
 
+  private removeStaleInfo() {
+    // if (!this.lastMove) return;
+
+    // this.info.invalidate(this.lastMove.tiles);
+
+    // TODO: Only invalidate actual stale data
+    this.info.data = [];
+    this.info.meaningfulData = [];
+  }
+
   private getSmartMove(): Move | undefined {
     const revealed = this.game.getActiveTiles('revealed');
     const handled: MinesweeperTile[] = [];
 
-    // TODO: Remove for efficiency
-    this.info.data = [];
-    this.info.meaningfulData = [];
+    this.removeStaleInfo();
 
-    revealed.some(srcTile => {
-      if (handled.includes(srcTile)) return;
+    if (this.lastMove && false) {
+      console.log('test');
+    } else {
+      revealed.some(srcTile => {
+        if (handled.includes(srcTile)) return;
 
-      const srcHiddenTiles = srcTile.getAdjacent('hidden');
-      const srcPotentialMines =
-        srcTile.value - srcTile.getAdjacent('flagged').length;
-      this.info.add(srcHiddenTiles, srcPotentialMines);
-      handled.push(srcTile);
+        const srcHiddenTiles = srcTile.getAdjacent('hidden');
+        const srcPotentialMines =
+          srcTile.value - srcTile.getAdjacent('flagged').length;
+        this.info.add(srcHiddenTiles, srcPotentialMines);
+        handled.push(srcTile);
 
-      if (this.info.meaningfulData[0]) {
-        return true;
-      }
-
-      // TODO: forAdjacent without finals
-      return srcTile
-        .getAdjacent('revealed')
-        .filter(a => !a.isFinal)
-        .some(targetTile => {
-          if (handled.includes(targetTile)) return;
-
-          const targetHiddenTiles = targetTile.getAdjacent('hidden');
-          const targetPotentialMines =
-            targetTile.value - targetTile.getAdjacent('flagged').length;
-          this.info.add(targetHiddenTiles, targetPotentialMines);
-          handled.push(targetTile);
-
-          if (this.info.meaningfulData[0]) {
-            return true;
-          }
-
-          return false;
-        });
-    });
+        if (this.info.meaningfulData[0]) {
+          return true;
+        }
+        return false;
+      });
+    }
 
     // If no meaningful data found, check mines left
-    if (this.info.meaningfulData.length === 0) {
-      this.info.checkMinesLeft();
+    if (!this.info.foundMeaningfulData) {
+      // this.info.checkMinesLeft();
     }
 
     // If meaningful data found, we can make a 100% certain move
-    if (this.info.meaningfulData.length !== 0) {
+    if (this.info.foundMeaningfulData) {
       const data = this.info.meaningfulData[0];
       if (data.mines.value === 0) {
         return {

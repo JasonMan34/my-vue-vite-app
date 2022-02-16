@@ -62,12 +62,13 @@ export default defineComponent({
     };
 
     autoPlayOneMove = async () => {
-      if (game.value.isGameOver || !game.value.initiated) {
+      if (!game.value.initiated) {
         newGame();
       }
 
       player.value.getNextMove();
       player.value.playNextMove();
+      // await player.value.autoPlay(1);
     };
 
     newGame();

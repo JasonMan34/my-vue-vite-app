@@ -38,10 +38,10 @@ export class MinesweeperGame {
     this.MINE_COUNT = mineCount;
     this.minesLeft = mineCount;
 
-    this.WIDTH = 5;
-    this.HEIGHT = 5;
-    this.MINE_COUNT = 3;
-    this.minesLeft = 3;
+    // this.WIDTH = 5;
+    // this.HEIGHT = 5;
+    // this.MINE_COUNT = 3;
+    // this.minesLeft = 3;
 
     this.board = this.getBoard();
     this.allTiles = this.board.flat();
@@ -67,9 +67,9 @@ export class MinesweeperGame {
     const mines: MinesweeperTile[] = [];
     const potentialMines = this.board.flat().filter(tile => tile !== firstTile);
 
-    // shuffleArray(potentialMines);
-    // const minePoints = potentialMines.slice(0, this.MINE_COUNT);
-    const minePoints = [this.board[1][1], this.board[2][2], this.board[3][3]];
+    shuffleArray(potentialMines);
+    const minePoints = potentialMines.slice(0, this.MINE_COUNT);
+    // const minePoints = [this.board[1][1], this.board[2][2], this.board[3][3]];
 
     minePoints.forEach(tile => {
       tile.isMine = true;
