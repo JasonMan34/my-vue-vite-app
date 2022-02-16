@@ -183,8 +183,14 @@ export class MinesweeperTile {
     }
   }
 
-  public flag() {
+  public flag(flagOnly = false) {
     if (this.game.isGameOver) return;
+
+    // For game over, just flag it, nothing else
+    if (flagOnly) {
+      this._status = 'flagged';
+      return;
+    }
 
     if (this.isFlagged) {
       this._status = 'hidden';
