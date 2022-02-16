@@ -141,9 +141,8 @@ export class AutoPlayer {
     const move =
       this.getSimpleFlagMove() ||
       this.getSimpleClickMove() ||
-      this.getSmartMove();
-    // ||
-    // this.getGuessMove();
+      this.getSmartMove() ||
+      this.getGuessMove();
 
     this.nextMove = move;
 
