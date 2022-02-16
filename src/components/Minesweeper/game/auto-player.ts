@@ -27,7 +27,9 @@ export class AutoPlayer {
   constructor(game: MinesweeperGame) {
     this.game = game;
     this.info = new Information(game);
-    (window as any).info = this.info;
+
+    // TODO: Remove this
+    (globalThis as any).info = this.info;
   }
 
   /** Flag all remaining adjacent tiles a tile that needs it */

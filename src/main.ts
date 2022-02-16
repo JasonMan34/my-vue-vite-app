@@ -14,11 +14,13 @@ app.use(i18n);
 app.use(router);
 app.mount('#app');
 
-(window as any).log = (data: any) => {
+// TODO: Remove these
+
+(globalThis as any).log = (data: any) => {
   console.log(cloneDeep(data));
 };
 
-(window as any).logInfo = ({ data }: Information) => {
+(globalThis as any).logInfo = ({ data }: Information) => {
   data.forEach(node => {
     console.log({
       ...node.mines,

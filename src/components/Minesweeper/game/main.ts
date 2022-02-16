@@ -14,7 +14,7 @@ const TestAutoPlayer = async () => {
     wins++;
   };
 
-  while (time < 30) {
+  while (time < 10) {
     time = (new Date().getTime() - start.getTime()) / 1000;
     runs++;
     const game = new MinesweeperGame(WIDTH, HEIGHT, MINE_COUNT);
