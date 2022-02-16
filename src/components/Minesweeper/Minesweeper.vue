@@ -66,9 +66,9 @@ export default defineComponent({
         newGame();
       }
 
-      player.value.getNextMove();
-      player.value.playNextMove();
-      // await player.value.autoPlay(1);
+      // player.value.getNextMove();
+      // player.value.playNextMove();
+      await player.value.autoPlay(1);
     };
 
     newGame();

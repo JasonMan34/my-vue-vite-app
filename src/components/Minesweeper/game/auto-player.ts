@@ -73,6 +73,7 @@ export class AutoPlayer {
     // TODO: Only invalidate actual stale data
     this.info.data = [];
     this.info.meaningfulData = [];
+    this.info.lastInferIndex = -1;
   }
 
   private getSmartMove(): Move | undefined {
@@ -100,9 +101,10 @@ export class AutoPlayer {
       });
     }
 
-    // If no meaningful data found, check mines left
-    if (!this.info.foundMeaningfulData) {
-      // this.info.checkMinesLeft();
+    // If no meaningful data found, start inferring data
+    let inferData = true;
+    while (!this.info.foundMeaningfulData && inferData) {
+      inferData = this.info.inferData();
     }
 
     // If meaningful data found, we can make a 100% certain move

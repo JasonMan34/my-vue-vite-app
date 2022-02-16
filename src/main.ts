@@ -22,7 +22,7 @@ app.mount('#app');
   data.forEach(node => {
     console.log({
       ...node.mines,
-      tiles: cloneDeep(node.tiles),
+      tiles: JSON.stringify(node.tiles.map(a => ({ row: a.row, col: a.col }))),
     });
   });
 };
