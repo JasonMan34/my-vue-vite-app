@@ -1,4 +1,5 @@
 /* eslint-disable max-classes-per-file */
+import { MinesweeperGame } from './minesweeper-game';
 import { MinesweeperTile } from './minesweeper-tile';
 import {
   arrayContains,
@@ -60,6 +61,11 @@ const getDifferenceRelation = (
 export class Information {
   data: DataNode[] = [];
   meaningfulData: DataNode[] = [];
+  game: MinesweeperGame;
+
+  constructor(game: MinesweeperGame) {
+    this.game = game;
+  }
 
   add(tiles: MinesweeperTile[], mines: MinesData): void;
   add(tiles: MinesweeperTile[], mines: number): void;
@@ -213,6 +219,49 @@ export class Information {
           },
         };
         this.add(inferredDataNode);
+      }
+    });
+  }
+
+  /** Try to infer anything we can from the minesLeft data we have */
+  checkMinesLeft() {
+    const allHiddenTiles = this.game.getAllTiles('hidden');
+    const { minesLeft } = this.game;
+
+    this.data.forEach(node => {
+      // We know there are no mines in the difference
+      const hiddenDifference = arrayDifference(allHiddenTiles, node.tiles);
+
+      if (
+        node.mines.relation === 'minimum' ||
+        (node.mines.relation === 'equals' && node.mines.value === minesLeft)
+      ) {
+        const newData: DataNode = {
+          mines: {
+            relation: 'equals',
+            value: 0,
+          },
+          tiles: hiddenDifference,
+        };
+
+        this.add(newData);
+      }
+
+      // We know there are only mines in the difference
+      if (
+        node.mines.relation === 'maximum' ||
+        (node.mines.relation === 'equals' &&
+          hiddenDifference.length === minesLeft - node.mines.value)
+      ) {
+        const newData: DataNode = {
+          mines: {
+            relation: 'equals',
+            value: hiddenDifference.length,
+          },
+          tiles: hiddenDifference,
+        };
+
+        this.add(newData);
       }
     });
   }
