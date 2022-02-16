@@ -85,7 +85,7 @@ export class MinesweeperGame {
 
   gameOver() {
     this.isGameOver = true;
-    this.mines.forEach(mine => mine.reveal());
+    this.mines.forEach(mine => mine.isFlagged || mine.reveal());
 
     this.gameOverEventListeners.forEach(cb => cb());
   }
