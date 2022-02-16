@@ -8,6 +8,9 @@
         Auto play
       </button>
       <div class="minesweeper-container" @contextmenu="$event.preventDefault()">
+        <span class="text-black">{{
+          game.isGameWon ? 'Woohoo you win :)' : ''
+        }}</span>
         <div class="minesweeper-inner">
           <div class="minesweeper-score-header">
             <div class="minesweeper-score">
@@ -62,7 +65,9 @@ export default defineComponent({
       if (game.value.isGameOver || !game.value.initiated) {
         newGame();
       }
-      await player.value.autoPlay(1);
+
+      player.value.getNextMove();
+      player.value.playNextMove();
     };
 
     newGame();
