@@ -18,6 +18,7 @@ export type MinesData = {
 export interface DataNode {
   tiles: MinesweeperTile[];
   mines: MinesData;
+  history: DataNode[];
 }
 
 /** Returns relation for the difference between two data nodes, if such relation exists */
@@ -81,7 +82,9 @@ export class Information {
       newNode = {
         tiles: tilesOrNode,
         mines: { relation: 'equals', value: mines },
+        history: [],
       };
+      newNode.history = [newNode];
     } else if (!Array.isArray(tilesOrNode)) {
       newNode = tilesOrNode;
     } else {
@@ -208,6 +211,7 @@ export class Information {
           relation: relationDifferenceNew,
           value: otherNode.mines.value - node.mines.value,
         },
+        history: node.history.concat(otherNode.history),
       };
       this.add(inferredDataNode);
     } else if (
@@ -222,6 +226,7 @@ export class Information {
           relation: relationDifferenceOld,
           value: node.mines.value - otherNode.mines.value,
         },
+        history: otherNode.history.concat(node.history),
       };
 
       this.add(inferredDataNode);
@@ -237,6 +242,7 @@ export class Information {
           relation: 'maximum',
           value: Math.min(node.mines.value, otherNode.mines.value),
         },
+        history: node.history.concat(otherNode.history),
       };
       this.add(inferredDataNode);
     }
@@ -278,6 +284,7 @@ export class Information {
           value: 0,
         },
         tiles: hiddenDifference,
+        history: node.history,
       };
 
       this.add(newData);
@@ -294,6 +301,7 @@ export class Information {
           value: hiddenDifference.length,
         },
         tiles: hiddenDifference,
+        history: node.history,
       };
 
       this.add(newData);
@@ -312,9 +320,13 @@ export class Information {
         relation: 'equals',
         value: node.mines.value + otherNode.mines.value,
       },
+      history: node.history.concat(otherNode.history),
     };
 
     this.add(newNode);
+    this.inferMinesLeft(newNode);
+
+    return this.foundMeaningfulData;
   }
   /**
    * Infers data for minesLeft. Returns false if no new information can be
@@ -324,12 +336,14 @@ export class Information {
     // For each node, starting at lastInferIndex+1, infer against all other nodes
     const originalDataCount = this.data.length;
     const start = this.lastInferIndex + 1;
-    // TODO: How does this work with saving data from last time?
-    this.data.slice(start).forEach((node, index) => {
-      this.data.slice(0, start + index).forEach(otherNode => {
-        this.inferSum(node, otherNode);
-      });
-    });
+
+    this.data
+      .slice(start)
+      .some((node, index) =>
+        this.data
+          .slice(0, start + index)
+          .some(otherNode => this.inferSum(node, otherNode))
+      );
 
     this.lastInferIndex = originalDataCount;
 
@@ -338,16 +352,15 @@ export class Information {
 
   /** Try to infer anything we can from the minesLeft data we have */
   checkMinesLeft() {
-    this.lastInferIndex = -1;
-    let inferData = true;
-    this.data = this.data.filter(node => node.mines.relation === 'equals');
-    while (inferData) {
-      // TODO: Check if we reached a conclusion while inferring data
-      inferData = this.inferMinesLeftData();
-    }
+    // TODO: Calculate if I can check minesleft rather than check for >6
+    if (this.game.minesLeft > 6) return;
 
-    this.data.forEach(node => {
-      this.inferMinesLeft(node);
-    });
+    this.lastInferIndex = -1;
+    let canInferMoreData = true;
+    this.data = this.data.filter(node => node.mines.relation === 'equals');
+    while (!this.foundMeaningfulData && canInferMoreData) {
+      // TODO: Check if we reached a conclusion while inferring data
+      canInferMoreData = this.inferMinesLeftData();
+    }
   }
 }
