@@ -54,25 +54,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style>
-.minesweeper-container {
-  @apply bg-gray-200 p-4 select-none;
-}
-
-.minesweeper-inner {
-  @apply bg-black;
-}
-
-.minesweeper-score-header {
-  @apply bg-black flex flex-row justify-between p-1 items-center border-b-8;
-}
-
-.minesweeper-score {
-  @apply text-red-700 font-bold text-4xl px-1;
-}
-
-.minesweeper-new-game-wrapper {
-  @apply bg-gray-200 text-2xl p-1;
-}
-</style>

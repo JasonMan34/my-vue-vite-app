@@ -1,0 +1,29 @@
+.ms-tile-hidden {
+  background-image: url(/assets/hidden.svg);
+}
+
+.ms-tile-mine {
+  background-image: url(/assets/mine.svg);
+}
+
+.ms-tile-mine-red {
+  background-image: url(/assets/mine_red.svg);
+}
+
+.ms-tile-flag {
+  background-image: url(/assets/flag.svg);
+}
+
+.ms-tile-flag-wrong {
+  background-image: url(/assets/flag_wrong.svg);
+}
+
+.ms-tile-peaking {
+  background-image: url(/assets/pressed.svg);
+}
+
+@for $i from 0 to 8 {
+  .ms-tile-$i {
+    background-image: url(/assets/type$(i).svg);
+  }
+}

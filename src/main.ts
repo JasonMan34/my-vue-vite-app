@@ -1,4 +1,5 @@
 import './tailwind.css';
+import './index.pcss';
 import 'chart.js/auto';
 import { createApp } from 'vue';
 import { createI18n } from 'vue-i18n';

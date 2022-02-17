@@ -94,18 +94,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style>
-.minesweeper-tile {
-  @apply bg-gray-200 h-[28px] w-[28px] text-center font-bold text-xl cursor-default border-[1px] border-black;
-}
-
-.minesweeper-tile.revealed,
-.minesweeper-tile.peaking {
-  @apply bg-gray-400;
-}
-
-.minesweeper-tile.revealed.losing-tile {
-  @apply bg-red-600;
-}
-</style>

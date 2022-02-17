@@ -1,8 +1,6 @@
 import { defineAsyncComponent } from 'vue';
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import Loading from './components/Loading.vue';
-import Minesweeper from './components/Minesweeper/Minesweeper.vue';
-import MinesweeperSandbox from './components/Minesweeper/Sandbox/Sandbox.vue';
 
 const AsyncComponent = (route: string) =>
   defineAsyncComponent({
@@ -23,6 +21,8 @@ const AsyncComponent = (route: string) =>
 const CovidMainPage = AsyncComponent('CovidMainPage');
 const MainPage = AsyncComponent('MainPage');
 const CovidBetResults = AsyncComponent('CovidBetResults');
+const Minesweeper = AsyncComponent('Minesweeper/Minesweeper');
+const MinesweeperSandbox = AsyncComponent('Minesweeper/MinesweeperSandbox');
 
 const IS_COVID = import.meta.env.VITE_IS_COVID === 'true';
 

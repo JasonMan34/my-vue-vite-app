@@ -7,13 +7,13 @@
     @mouseenter="onMouseEnter"
     @contextmenu="$event.preventDefault()"
   >
-    <div :class="textClass">
+    <!-- <div :class="textClass">
       <template v-if="tile.isFlagged">🚩</template>
       <template v-else-if="tile.isRevealed">
         {{ tile.isMine ? '💣' : '' }}
         {{ !tile.isMine && tile.value !== 0 ? tile.value : '' }}
       </template>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -55,20 +55,41 @@ export default defineComponent({
       return 'text-black';
     });
 
-    const tileClass = computed(() => {
-      const classes = ['minesweeper-tile'];
-      if (props.tile.isLosingTile) {
-        classes.push('losing-tile');
+    const idfk = () => {
+      if (props.tile.isFlagged) {
+        if (props.tile.game.isGameLost && !props.tile.isMine) {
+          return 'ms-tile-flag-wrong';
+        }
+
+        return 'ms-tile-flag';
       }
 
-      if (props.tile.isRevealed) {
-        classes.push('revealed');
-      } else if (props.tile.isPeaking) {
-        classes.push('peaking');
+      if (!props.tile.isRevealed) {
+        if (props.tile.isPeaking) return 'ms-tile-peaking';
+        return 'ms-tile-hidden';
       }
 
-      return classes.join(' ');
-    });
+      if (props.tile.isMine) {
+        if (props.tile.isLosingTile) {
+          return 'ms-tile-mine-red';
+        }
+
+        return 'ms-tile-mine';
+      }
+
+      if (props.tile.value === 0) return 'ms-tile-0';
+      if (props.tile.value === 1) return 'ms-tile-1';
+      if (props.tile.value === 2) return 'ms-tile-2';
+      if (props.tile.value === 3) return 'ms-tile-3';
+      if (props.tile.value === 4) return 'ms-tile-4';
+      if (props.tile.value === 5) return 'ms-tile-5';
+      if (props.tile.value === 6) return 'ms-tile-6';
+      if (props.tile.value === 7) return 'ms-tile-7';
+
+      return 'ms-tile-8';
+    };
+
+    const tileClass = computed(() => `minesweeper-tile ${idfk()}`);
 
     const onMouseDown = (e: MouseEvent) => {
       if (e.button === LMC) {
@@ -122,15 +143,6 @@ export default defineComponent({
 
 <style>
 .minesweeper-tile {
-  @apply bg-gray-200 h-[28px] w-[28px] text-center font-bold text-xl cursor-default border-[1px] border-black;
-}
-
-.minesweeper-tile.revealed,
-.minesweeper-tile.peaking {
-  @apply bg-gray-400;
-}
-
-.minesweeper-tile.revealed.losing-tile {
-  @apply bg-red-600;
+  @apply h-[28px] w-[28px] cursor-default bg-contain;
 }
 </style>
