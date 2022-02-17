@@ -41,13 +41,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style>
-.minesweeper-board {
-  @apply p-1;
-}
-
-.minesweeper-row {
-  @apply flex flex-row;
-}
-</style>

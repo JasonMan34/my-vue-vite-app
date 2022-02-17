@@ -1,6 +1,7 @@
 <template>
   <div class="flex flex-col justify-center">
     <div class="flex flex-row justify-center px-4 space-x-3">
+      <!-- Options -->
       <div class="flex flex-col space-y-2">
         <div>
           <input
@@ -57,24 +58,61 @@
           Auto play
         </button>
       </div>
-      <div class="minesweeper-container" @contextmenu="$event.preventDefault()">
-        <span class="text-black">{{
-          game.isGameWon ? 'Woohoo you win :)' : ''
-        }}</span>
-        <div class="minesweeper-inner">
-          <div class="minesweeper-score-header">
-            <div class="minesweeper-score">
-              {{ game.minesLeft.toString().padStart(3, '0') }}
-            </div>
-            <div class="minesweeper-new-game-wrapper">
-              <button @click="newGame">🙂</button>
-            </div>
-            <div class="minesweeper-score">
-              {{ time.toString().padStart(3, '0') }}
-            </div>
+
+      <!-- Minesweeper -->
+      <div class="ms-container" @contextmenu="$event.preventDefault()">
+        <span>{{ game.isGameWon ? 'You win! 🥳🥳🥳' : '' }}</span>
+        <!-- Top border -->
+        <div class="flex flex-row">
+          <div class="ms-border-corner ms-border-top-left" />
+          <div class="flex-1 ms-border-horizontal" />
+          <div class="ms-border-corner ms-border-top-right" />
+        </div>
+
+        <!-- scoreboard -->
+        <div class="bg-black flex flex-row justify-center items-center">
+          <div class="ms-border-vertical self-stretch" />
+          <div class="ms-score">
+            <div :class="getDigitClass(game.minesLeft, 0)" />
+            <div :class="getDigitClass(game.minesLeft, 1)" />
+            <div :class="getDigitClass(game.minesLeft, 2)" />
           </div>
 
-          <MinesweeperBoard :game="game!" />
+          <div class="ms-new-game-wrapper flex-1 flex justify-center">
+            <button :class="smileyClass" @click="newGame" />
+          </div>
+
+          <div class="ms-score">
+            <div :class="getDigitClass(time, 0)" />
+            <div :class="getDigitClass(time, 1)" />
+            <div :class="getDigitClass(time, 2)" />
+          </div>
+
+          <div class="ms-border-vertical self-stretch" />
+        </div>
+
+        <!-- Middle border -->
+        <div class="flex flex-row">
+          <div class="ms-border-corner ms-border-middle-left" />
+          <div class="flex-1 ms-border-horizontal" />
+          <div class="ms-border-corner ms-border-middle-right" />
+        </div>
+
+        <div class="flex flex-row">
+          <div class="ms-border-vertical" />
+
+          <div class="ms-inner">
+            <MinesweeperBoard :game="game!" />
+          </div>
+
+          <div class="ms-border-vertical" />
+        </div>
+
+        <!-- Bottom border -->
+        <div class="flex flex-row">
+          <div class="ms-border-corner ms-border-bottom-left" />
+          <div class="flex-1 ms-border-horizontal" />
+          <div class="ms-border-corner ms-border-bottom-right" />
         </div>
       </div>
     </div>
@@ -83,7 +121,7 @@
 
 <script lang="ts">
 import './minesweeper.pcss';
-import { defineComponent, provide, Ref, ref, watch } from 'vue';
+import { computed, defineComponent, provide, Ref, ref, watch } from 'vue';
 import useStopwatch from './use-stopwatch';
 import MinesweeperBoard from './MinesweeperBoard.vue';
 import { MinesweeperGame } from './game/minesweeper-game';
@@ -146,6 +184,16 @@ export default defineComponent({
 
     newGame();
 
+    const getDigitClass = (value: number, index: number) =>
+      `ms-digit ms-digit-${value.toString().padStart(3, '0')[index]}`;
+
+    const smileyClass = computed(() => {
+      if (game.value.isGameWon) return 'ms-face ms-face-won';
+      if (game.value.isGameLost) return 'ms-face ms-face-lost';
+
+      return 'ms-face ms-face-neutral';
+    });
+
     return {
       game,
       time,
@@ -155,32 +203,14 @@ export default defineComponent({
       autoPlaySafe,
       playerSpeed,
       restartOnFailure,
+      getDigitClass,
+      smileyClass,
     };
   },
 });
 </script>
 
-<style>
-.minesweeper-container {
-  @apply bg-gray-200 p-4 select-none;
-}
-
-.minesweeper-inner {
-  @apply bg-black;
-}
-
-.minesweeper-score-header {
-  @apply bg-black flex flex-row justify-between p-1 items-center border-b-8;
-}
-
-.minesweeper-score {
-  @apply text-red-700 font-bold text-4xl px-1;
-}
-
-.minesweeper-new-game-wrapper {
-  @apply bg-gray-200 text-2xl p-1;
-}
-
+<style scoped>
 .checkbox {
   @apply w-4 h-4 bg-gray-50 rounded border border-gray-300 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 cursor-pointer mr-1;
 }

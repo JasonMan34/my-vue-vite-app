@@ -1,3 +1,4 @@
+/* assets */
 .ms-tile-hidden {
   background-image: url(/assets/hidden.svg);
 }
@@ -22,13 +23,101 @@
   background-image: url(/assets/pressed.svg);
 }
 
+.ms-face-neutral {
+  background-image: url(/assets/face_neutral.svg);
+}
+
+.ms-face-won {
+  background-image: url(/assets/face_won.svg);
+}
+
+.ms-face-lost {
+  background-image: url(/assets/face_lost.svg);
+}
+
+.ms-face-neutral:active,
+.ms-face-won:active,
+.ms-face-lost:active {
+  background-image: url(/assets/face_pressed.svg);
+}
+
+.ms-border-top-left {
+  background-image: url(/assets/corner_up_left_2x.png);
+}
+
+.ms-border-top-right {
+  background-image: url(/assets/corner_up_right_2x.png);
+}
+
+.ms-border-bottom-right {
+  background-image: url(/assets/corner_bottom_right_2x.png);
+}
+
+.ms-border-bottom-left {
+  background-image: url(/assets/corner_bottom_left_2x.png);
+}
+
+.ms-border-middle-left {
+  background-image: url(/assets/border_middle_left_2x.png);
+}
+
+.ms-border-middle-right {
+  background-image: url(/assets/border_middle_right_2x.png);
+}
+
+.ms-border-horizontal {
+  background-image: url(/assets/border_hor_2x.png);
+}
+
+.ms-border-vertical {
+  width: 24px;
+  background-image: url(/assets/border_vert_2x.png);
+}
+
 @for $i from 0 to 8 {
   .ms-tile-$i {
     background-image: url(/assets/type$(i).svg);
   }
 }
 
+@for $i from 0 to 9 {
+  .ms-digit-$i {
+    background-image: url(/assets/d$(i).svg);
+  }
+}
+
+/* Other */
+
 .ms-tile {
   @apply h-[28px] w-[28px] cursor-default;
   background-size: 100%;
+}
+
+.ms-digit {
+  height: 34px;
+  width: 18px;
+  background-size: 100%;
+}
+
+.ms-face {
+  width: 42px;
+  height: 42px;
+  background-size: 100%;
+}
+
+.ms-border-corner {
+  width: 24px;
+  height: 22px;
+}
+
+.ms-container {
+  @apply select-none;
+}
+
+.ms-inner {
+  @apply bg-black;
+}
+
+.ms-score {
+  @apply flex flex-row px-1 space-x-1;
 }
