@@ -112,14 +112,30 @@ export class AutoPlayer {
   }
 
   getGuessMove(): Move {
-    // TODO: Smart guess. Right now it is completely random
-    const allTiles = this.game.getAllTiles('hidden');
-    const randomTile = allTiles[Math.floor(Math.random() * allTiles.length)];
-
-    return {
+    // First, we see if there are double-hidden corners:
+    const move: Partial<ClickMove> = {
       action: 'click',
-      tiles: [randomTile],
     };
+
+    this.game.getCorners().some(tile => {
+      if (tile.isDoubleHidden()) {
+        move.tiles = [tile];
+        return true;
+      }
+
+      return false;
+    });
+
+    // TODO: Smart guess. Right now it is completely random
+
+    if (!move.tiles) {
+      const allTiles = this.game.getAllTiles('hidden');
+      const randomTile = allTiles[Math.floor(Math.random() * allTiles.length)];
+
+      move.tiles = [randomTile];
+    }
+
+    return move as Move;
   }
 
   getNextMove(): Move | undefined {
