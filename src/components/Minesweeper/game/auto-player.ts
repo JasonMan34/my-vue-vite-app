@@ -90,6 +90,10 @@ export class AutoPlayer {
       inferData = info.inferData();
     }
 
+    if (!info.foundMeaningfulData) {
+      info.checkMinesLeft();
+    }
+
     // If meaningful data found, we can make a 100% certain move
     if (info.foundMeaningfulData) {
       const data = info.meaningfulData[0];
@@ -124,8 +128,9 @@ export class AutoPlayer {
     const move =
       this.getSimpleFlagMove() ||
       this.getSimpleClickMove() ||
-      this.getSmartMove() ||
-      this.getGuessMove();
+      this.getSmartMove();
+    //  ||
+    // this.getGuessMove();
 
     this.nextMove = move;
 

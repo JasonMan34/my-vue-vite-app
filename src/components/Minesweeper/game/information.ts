@@ -58,13 +58,16 @@ const getDifferenceRelation = (
   }
 };
 
-/** Returns relation for the difference between two data nodes, if such relation exists */
+/** Returns relation for the sum of two data nodes, if such relation exists */
 const getSumRelation = (
   node1: DataNode,
   node2: DataNode
 ): MineDataRelation | undefined => {
   const a = node1.mines;
   const b = node2.mines;
+
+  // Summing intersecting nodes is pointless
+  if (arrayIntersection(node1.tiles, node2.tiles).length !== 0) return;
 
   // a = A
   if (a.relation === 'equals') {
@@ -94,8 +97,6 @@ export class Information {
   meaningfulData: DataNode[] = [];
   game: MinesweeperGame;
   lastInferIndex = -1;
-
-  private isCheckingMinesLeft = false;
 
   get foundMeaningfulData() {
     return !!this.meaningfulData[0];
@@ -219,7 +220,7 @@ export class Information {
 
     // Empty intersection = no data to infer
     const intersection = arrayIntersection(node.tiles, otherNode.tiles);
-    if (intersection.length === 0 && !this.isCheckingMinesLeft) {
+    if (intersection.length === 0) {
       return;
     }
 
@@ -290,10 +291,12 @@ export class Information {
       });
     });
 
+    this.lastInferIndex = originalDataCount;
+
     return originalDataCount !== this.data.length;
   }
 
-  checkMinesLeftForSingleNode(node: DataNode) {
+  inferMinesLeft(node: DataNode) {
     const allHiddenTiles = this.game.getAllTiles('hidden');
     const { minesLeft } = this.game;
     const hiddenDifference = arrayDifference(allHiddenTiles, node.tiles);
@@ -332,40 +335,53 @@ export class Information {
     }
   }
 
+  inferSum(node: DataNode, otherNode: DataNode) {
+    if (node === otherNode) return;
+
+    const sumRelation = getSumRelation(node, otherNode);
+    if (!sumRelation) return;
+
+    const newNode = {
+      tiles: node.tiles.concat(otherNode.tiles),
+      mines: {
+        relation: sumRelation,
+        value: node.mines.value + otherNode.mines.value,
+      },
+    };
+
+    this.add(newNode);
+  }
+  /**
+   * Infers data for minesLeft. Returns false if no new information can be
+   * inferred. True otherwise
+   */
+  inferMinesLeftData() {
+    // For each node, starting at lastInferIndex+1, infer against all other nodes
+    const originalDataCount = this.data.length;
+    const start = this.lastInferIndex + 1;
+    // TODO: How does this work with saving data from last time?
+    this.data.slice(start).forEach((node, index) => {
+      this.data.slice(0, start + index).forEach(otherNode => {
+        this.inferSum(node, otherNode);
+      });
+    });
+
+    this.lastInferIndex = originalDataCount;
+
+    return originalDataCount !== this.data.length;
+  }
+
   /** Try to infer anything we can from the minesLeft data we have */
   checkMinesLeft() {
-    this.isCheckingMinesLeft = true;
-    this.data.some((node, index) => {
-      // Most simply, can we infer minesLeft from the already available nodes?
-      this.checkMinesLeftForSingleNode(node);
-      if (this.foundMeaningfulData) {
-        return true;
-      }
+    this.lastInferIndex = -1;
+    let inferData = true;
+    while (inferData) {
+      // TODO: Check if we reached a conclusion while inferring data
+      inferData = this.inferMinesLeftData();
+    }
 
-      // If not, we need to infer all possible data nodes, by summing each pair of nodes, recursively
-
-      // Sum is one-directional, so no need to go over each pair twice
-      const remainingNodes = this.data.slice(index + 1);
-      return remainingNodes.some(otherNode => {
-        const sumRelation = getSumRelation(node, otherNode);
-        if (!sumRelation) return;
-
-        const newNode = {
-          tiles: node.tiles.concat(otherNode.tiles),
-          mines: {
-            relation: sumRelation,
-            value: node.mines.value + otherNode.mines.value,
-          },
-        };
-
-        this.add(newNode);
-
-        if (this.foundMeaningfulData) {
-          return true;
-        }
-
-        return false;
-      });
+    this.data.forEach(node => {
+      this.inferMinesLeft(node);
     });
   }
 }
