@@ -161,7 +161,7 @@ export class MinesweeperGame {
       this.board[0][0],
       this.board[0][this.WIDTH - 1],
       this.board[this.HEIGHT - 1][0],
-      this.board[this.WIDTH - 1][this.HEIGHT - 1],
+      this.board[this.HEIGHT - 1][this.WIDTH - 1],
     ];
   }
 }
