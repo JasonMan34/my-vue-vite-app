@@ -129,6 +129,56 @@ import { AutoPlayer } from './game/auto-player';
 import { ShowIndexesKey } from './keys';
 import { sleep } from './game/utils';
 
+// Little hack to load all images here
+const assets = [
+  'border_hor_2x.png',
+  'border_middle_left_2x.png',
+  'border_middle_right_2x.png',
+  'border_vert_2x.png',
+  'corner_bottom_left_2x.png',
+  'corner_bottom_right_2x.png',
+  'corner_up_left_2x.png',
+  'corner_up_right_2x.png',
+  'd0.svg',
+  'd1.svg',
+  'd2.svg',
+  'd3.svg',
+  'd4.svg',
+  'd5.svg',
+  'd6.svg',
+  'd7.svg',
+  'd8.svg',
+  'd9.svg',
+  'face_active.svg',
+  'face_lost.svg',
+  'face_neutral.svg',
+  'face_pressed.svg',
+  'face_won.svg',
+  'flag_wrong.svg',
+  'flag.svg',
+  'hidden.svg',
+  'logo.png',
+  'mine_red.svg',
+  'mine.svg',
+  'nums_background.svg',
+  'pressed.svg',
+  'type0.svg',
+  'type1.svg',
+  'type2.svg',
+  'type3.svg',
+  'type4.svg',
+  'type5.svg',
+  'type6.svg',
+  'type7.svg',
+  'type8.svg',
+];
+const images = [];
+assets.forEach(asset => {
+  const img = new Image();
+  img.src = `assets/${asset}`;
+  images.push(img);
+});
+
 const HEIGHT = 16;
 const WIDTH = 30;
 const MINE_COUNT = 99;
