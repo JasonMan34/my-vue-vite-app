@@ -240,21 +240,4 @@ export class MinesweeperTile {
       return unrevealedAdjacent;
     }
   }
-
-  /**
-   * Check if the current tile is completely hidden, and if all they're adjacent
-   * tiles are completely hidden\
-   * Completely hidden = Hidden, and all adjacent tiles are hidden
-   */
-  public isDoubleHidden() {
-    // TODO: Efficiency
-    return (
-      this._status === 'hidden' &&
-      this.getAdjacent().every(
-        tile =>
-          tile._status === 'hidden' &&
-          this.getAdjacent().every(tile2 => tile2._status === 'hidden')
-      )
-    );
-  }
 }

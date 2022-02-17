@@ -118,7 +118,7 @@ export class AutoPlayer {
     };
 
     this.game.getCorners().some(tile => {
-      if (tile.isDoubleHidden()) {
+      if (tile.status === 'hidden') {
         move.tiles = [tile];
         return true;
       }
