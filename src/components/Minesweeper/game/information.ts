@@ -256,7 +256,7 @@ export class Information {
     // For each node, starting at lastInferIndex+1, infer against all other nodes
     const originalDataCount = this.data.length;
     const start = this.lastInferIndex + 1;
-    // TODO: How does this work with saving data from last time?
+
     this.data.slice(start).forEach((node, index) => {
       this.data.slice(0, start + index).forEach(otherNode => {
         this.infer(node, otherNode);

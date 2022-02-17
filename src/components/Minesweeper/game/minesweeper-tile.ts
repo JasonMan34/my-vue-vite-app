@@ -3,8 +3,6 @@ import type { MinesweeperGame } from './minesweeper-game';
 
 // Final = Revealed tile, and all adjacent tiles are also revealed / flagged
 export type TileStatus = 'hidden' | 'flagged' | 'revealed';
-// | 'final_revealed'
-// | 'final_flagged';
 
 export class MinesweeperTile {
   row: number;
@@ -14,29 +12,16 @@ export class MinesweeperTile {
   isPeaking: boolean = false;
   game: MinesweeperGame;
   isLosingTile: boolean = false;
-
-  private _flagCount: number = 0;
-  private _status: TileStatus = 'hidden';
-
-  public get status() {
-    return this._status;
-  }
+  status: TileStatus = 'hidden';
+  flagCount: number = 0;
+  isFinal: boolean = false;
 
   public get isRevealed() {
-    return this._status === 'revealed';
+    return this.status === 'revealed';
   }
 
   public get isFlagged() {
-    return this._status === 'flagged';
-  }
-
-  public get isFinal() {
-    // TODO: Not calculate evrey time
-    return this._status !== 'hidden' && this.getAdjacent('hidden').length === 0;
-
-    // return (
-    //   this._status === 'final_revealed' || this._status === 'final_flagged'
-    // );
+    return this.status === 'flagged';
   }
 
   public get BOARD_WIDTH() {
@@ -45,15 +30,6 @@ export class MinesweeperTile {
 
   public get BOARD_HEIGHT() {
     return this.game.HEIGHT;
-  }
-
-  private get flagCount() {
-    return this._flagCount;
-
-    // return this.getAdjacent().reduce(
-    //   (flagCount, tile) => flagCount + (tile.isFlagged ? 1 : 0),
-    //   0
-    // );
   }
 
   constructor(row: number, col: number, game: MinesweeperGame) {
@@ -81,7 +57,7 @@ export class MinesweeperTile {
         // Don't count self as a tile
         if (
           tile !== this &&
-          (statuses.length === 0 || statuses.includes(tile._status))
+          (statuses.length === 0 || statuses.includes(tile.status))
         ) {
           adjacent.push(tile);
         }
@@ -108,19 +84,15 @@ export class MinesweeperTile {
     this.value = value;
   }
 
-  // private updateFinalStatus() {
-  // const hiddenAdjacent = this.getAdjacent('hidden');
-  // if (hiddenAdjacent.length === 0 && !this.isFinal) {
-  //   this._status =
-  //     this.status === 'flagged' ? 'final_flagged' : 'final_revealed';
-  // } else if (hiddenAdjacent.length !== 0 && this.isFinal) {
-  //   // impossible to have been final and also revealed
-  //   this._status = this.status === 'final_flagged' ? 'flagged' : 'revealed';
-  // }
-  // }
+  public updateIsFinal() {
+    this.isFinal =
+      this.status !== 'hidden' && this.getAdjacent('hidden').length === 0;
+  }
 
   public reveal() {
-    this._status = 'revealed';
+    this.status = 'revealed';
+    this.updateIsFinal();
+    this.forAdjacent(tile => tile.updateIsFinal());
 
     if (this.game.isGameLost) return;
 
@@ -153,7 +125,7 @@ export class MinesweeperTile {
 
   public click() {
     if (this.game.isSandbox) {
-      this._status = this.isRevealed ? 'hidden' : 'revealed';
+      this.status = this.isRevealed ? 'hidden' : 'revealed';
       return;
     }
 
@@ -190,7 +162,7 @@ export class MinesweeperTile {
 
   public flag(flagOnly = false) {
     if (this.game.isSandbox) {
-      this._status = this.isFlagged ? 'hidden' : 'flagged';
+      this.status = this.isFlagged ? 'hidden' : 'flagged';
       this.isMine = !this.isMine;
       this.forAdjacent(tile => tile.calculateValue());
       return;
@@ -200,17 +172,19 @@ export class MinesweeperTile {
 
     // For game over, just flag it, nothing else
     if (flagOnly) {
-      this._status = 'flagged';
+      this.status = 'flagged';
       return;
     }
 
     if (this.isFlagged) {
-      this._status = 'hidden';
-      this.forAdjacent(tile => tile._flagCount--);
+      this.status = 'hidden';
+      this.forAdjacent(tile => tile.flagCount--);
       this.game.minesLeft++;
     } else {
-      this._status = 'flagged';
-      this.forAdjacent(tile => tile._flagCount++);
+      this.status = 'flagged';
+      this.updateIsFinal();
+      this.forAdjacent(tile => tile.flagCount++);
+      this.forAdjacent(tile => tile.updateIsFinal());
       this.game.minesLeft--;
     }
   }

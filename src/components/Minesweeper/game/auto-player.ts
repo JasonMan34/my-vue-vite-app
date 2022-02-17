@@ -124,7 +124,10 @@ export class AutoPlayer {
       return false;
     });
 
-    // TODO: Smart guess. Right now it is completely random
+    // TODO: Smart guess
+    // After corners - do walls
+    // If there's a closed area and an open area, guess the open area
+    // Always guess new info, so on [x-x-x] guess rightmost or leftmost
 
     if (!move.tiles) {
       const allTiles = this.game.getAllTiles('hidden');
