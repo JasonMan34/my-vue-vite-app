@@ -1,22 +1,58 @@
 <template>
   <div class="flex flex-col justify-center">
     <div class="flex flex-row justify-center px-4 space-x-3">
-      <div class="flex flex-col">
+      <div class="flex flex-col space-y-2">
         <div>
           <input
-            id="flexCheckDefault"
+            id="showIndexesCheckbox"
             v-model="showIndexes"
-            class="w-4 h-4 bg-gray-50 rounded border border-gray-300 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 cursor-pointer mr-1"
+            class="checkbox"
             type="checkbox"
           />
-          <label class="inline-block" for="flexCheckDefault">
+          <label class="inline-block" for="showIndexesCheckbox">
             Show indexes
           </label>
         </div>
 
+        <div>
+          <input
+            id="autoPlayerShouldGuessCheckbox"
+            v-model="autoPlaySafe"
+            class="checkbox"
+            type="checkbox"
+          />
+          <label class="inline-block" for="autoPlayerShouldGuessCheckbox">
+            Only play safe moves
+          </label>
+        </div>
+        <div v-if="!autoPlaySafe">
+          <input
+            id="restartOnFailureCheckbox"
+            v-model="restartOnFailure"
+            class="checkbox"
+            type="checkbox"
+          />
+          <label class="inline-block" for="restartOnFailureCheckbox">
+            Restart on failure
+          </label>
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm font-bold mb-2" for="playerSpeed">
+            Player speed
+          </label>
+          <input
+            id="playerSpeed"
+            v-model="playerSpeed"
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            type="number"
+            max="10"
+            min="1"
+          />
+        </div>
+
         <button
-          class="self-start bg-blue-600 hover:bg-blue-800 font-semibold rounded-lg p-4 text-white;"
-          @click="autoPlayOneMove"
+          class="bg-blue-600 hover:bg-blue-800 font-semibold rounded-lg p-4 text-white"
+          @click="autoPlay"
         >
           Auto play
         </button>
@@ -46,12 +82,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, provide, Ref, ref } from 'vue';
+import { defineComponent, provide, Ref, ref, watch } from 'vue';
 import useStopwatch from './use-stopwatch';
 import MinesweeperBoard from './MinesweeperBoard.vue';
 import { MinesweeperGame } from './game/minesweeper-game';
 import { AutoPlayer } from './game/auto-player';
 import { ShowIndexesKey } from './keys';
+import { sleep } from './game/utils';
 
 const HEIGHT = 16;
 const WIDTH = 30;
@@ -62,36 +99,54 @@ export default defineComponent({
   components: { MinesweeperBoard },
   setup() {
     const showIndexes = ref(false);
-    provide(ShowIndexesKey, showIndexes);
+    const autoPlaySafe = ref(true);
+    const restartOnFailure = ref(true);
+    const playerSpeed = ref(10);
 
-    const { time } = useStopwatch();
+    provide(ShowIndexesKey, showIndexes);
+    const { time, start, stop } = useStopwatch();
     const game = ref(
       new MinesweeperGame(WIDTH, HEIGHT, MINE_COUNT)
     ) as Ref<MinesweeperGame>;
-    const player = ref(new AutoPlayer(game.value)) as Ref<AutoPlayer>;
-
-    let autoPlayOneMove: () => Promise<void>;
+    const player = ref(
+      new AutoPlayer(game.value, !autoPlaySafe.value)
+    ) as Ref<AutoPlayer>;
 
     const newGame = () => {
       game.value = new MinesweeperGame(WIDTH, HEIGHT, MINE_COUNT);
-      player.value = new AutoPlayer(game.value);
-
-      game.value.onGameOver(autoPlayOneMove);
+      player.value = new AutoPlayer(game.value, !autoPlaySafe.value);
     };
 
-    autoPlayOneMove = async () => {
-      if (!game.value.initiated) {
-        newGame();
+    watch(autoPlaySafe, () => {
+      player.value.shouldGuess = !autoPlaySafe.value;
+    });
+
+    const autoPlay = async () => {
+      while (!game.value.isGameOver && player.value.getNextMove()) {
+        // eslint-disable-next-line no-await-in-loop
+        await sleep(Math.round(101 - 10 * playerSpeed.value));
+        player.value.playNextMove();
       }
 
-      // player.value.getNextMove();
-      // player.value.playNextMove();
-      await player.value.autoPlay(1);
+      if (game.value.isGameLost && restartOnFailure.value) {
+        await sleep(200);
+        newGame();
+        autoPlay();
+      }
     };
 
     newGame();
 
-    return { game, time, newGame, autoPlayOneMove, showIndexes };
+    return {
+      game,
+      time,
+      newGame,
+      autoPlay,
+      showIndexes,
+      autoPlaySafe,
+      playerSpeed,
+      restartOnFailure,
+    };
   },
 });
 </script>
@@ -115,5 +170,9 @@ export default defineComponent({
 
 .minesweeper-new-game-wrapper {
   @apply bg-gray-200 text-2xl p-1;
+}
+
+.checkbox {
+  @apply w-4 h-4 bg-gray-50 rounded border border-gray-300 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 cursor-pointer mr-1;
 }
 </style>

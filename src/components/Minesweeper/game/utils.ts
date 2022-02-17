@@ -9,3 +9,8 @@ export const arrayIntersection = <T>(a: T[], b: T[]) =>
 
 export const arrayDifference = <T>(a: T[], b: T[]) =>
   a.filter(value => !b.includes(value));
+
+export const sleep = (ms: number) =>
+  new Promise<void>(resolve => {
+    setTimeout(() => resolve(), ms);
+  });

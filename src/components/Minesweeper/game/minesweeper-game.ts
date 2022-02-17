@@ -1,8 +1,7 @@
 import shuffleArray from 'shuffle-array';
 import { MinesweeperTile, TileStatus } from './minesweeper-tile';
 
-export type GameOverCallback = () => void | Promise<void>;
-export type GameWinCallback = () => void | Promise<void>;
+export type Callback = () => void | Promise<void>;
 
 export class MinesweeperGame {
   public readonly HEIGHT: number;
@@ -16,10 +15,15 @@ export class MinesweeperGame {
   private allTiles: MinesweeperTile[];
   private mines: MinesweeperTile[];
   public initiated: boolean = false;
-  public isGameOver: boolean = false;
+  public isGameLost: boolean = false;
   public isGameWon: boolean = false;
-  private gameOverEventListeners: GameOverCallback[] = [];
-  private gameWinEventListeners: GameWinCallback[] = [];
+  private gameInitEventListeners: Callback[] = [];
+  private gameLostEventListeners: Callback[] = [];
+  private gameWinEventListeners: Callback[] = [];
+
+  public get isGameOver() {
+    return this.isGameLost || this.isGameWon;
+  }
 
   constructor(
     width: number,
@@ -111,13 +115,15 @@ export class MinesweeperGame {
 
     this.mines = mines;
     this.initiated = true;
+
+    this.gameInitEventListeners.forEach(cb => cb());
   }
 
   gameOver() {
-    this.isGameOver = true;
+    this.isGameLost = true;
     this.mines.forEach(mine => mine.isFlagged || mine.reveal());
 
-    this.gameOverEventListeners.forEach(cb => cb());
+    this.gameLostEventListeners.forEach(cb => cb());
   }
 
   public getActiveTiles(...statuses: TileStatus[]) {
@@ -138,12 +144,16 @@ export class MinesweeperGame {
     return this.allTiles.filter(tile => statuses.includes(tile.status));
   }
 
-  public onGameOver(cb: GameOverCallback) {
-    this.gameOverEventListeners.push(cb);
+  public onGameLost(cb: Callback) {
+    this.gameLostEventListeners.push(cb);
   }
 
-  public onGameWin(cb: GameWinCallback) {
+  public onGameWin(cb: Callback) {
     this.gameWinEventListeners.push(cb);
+  }
+
+  public onGameInit(cb: Callback) {
+    this.gameInitEventListeners.push(cb);
   }
 
   public upRevealCount() {

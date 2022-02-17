@@ -122,7 +122,7 @@ export class MinesweeperTile {
   public reveal() {
     this._status = 'revealed';
 
-    if (this.game.isGameOver) return;
+    if (this.game.isGameLost) return;
 
     if (this.isMine) {
       this.isLosingTile = true;
@@ -157,7 +157,7 @@ export class MinesweeperTile {
       return;
     }
 
-    if (this.game.isGameOver) return;
+    if (this.game.isGameLost) return;
 
     if (!this.game.initiated) {
       this.game.initBoard(this.row, this.col);
@@ -196,7 +196,7 @@ export class MinesweeperTile {
       return;
     }
 
-    if (this.game.isGameOver) return;
+    if (this.game.isGameLost) return;
 
     // For game over, just flag it, nothing else
     if (flagOnly) {

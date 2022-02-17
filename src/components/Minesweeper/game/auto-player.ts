@@ -1,11 +1,7 @@
 import { Information } from './information';
 import { MinesweeperGame } from './minesweeper-game';
 import { MinesweeperTile } from './minesweeper-tile';
-
-const sleep = (ms: number) =>
-  new Promise<void>(resolve => {
-    setTimeout(() => resolve(), ms);
-  });
+import { sleep } from './utils';
 
 type FlagMove = {
   action: 'flag';
@@ -19,9 +15,9 @@ type ClickMove = {
 type Move = FlagMove | ClickMove;
 
 export class AutoPlayer {
-  private nextMove?: Move;
   private game: MinesweeperGame;
-  private readonly shouldGuess: boolean;
+  public nextMove?: Move;
+  public shouldGuess: boolean;
 
   constructor(game: MinesweeperGame, shouldGuess = false) {
     this.game = game;
@@ -141,7 +137,7 @@ export class AutoPlayer {
   }
 
   getNextMove(): Move | undefined {
-    if (this.game.isGameOver || this.game.isGameWon) return;
+    if (this.game.isGameLost || this.game.isGameWon) return;
 
     let move =
       this.getSimpleFlagMove() ||
@@ -158,7 +154,7 @@ export class AutoPlayer {
   }
 
   playNextMove() {
-    if (this.game.isGameOver || this.game.isGameWon || !this.nextMove) return;
+    if (this.game.isGameLost || this.game.isGameWon || !this.nextMove) return;
 
     if (this.nextMove.action === 'flag') {
       this.nextMove.tiles.forEach(tile => tile.flag());
@@ -168,10 +164,7 @@ export class AutoPlayer {
   }
 
   async autoPlay(delay?: number) {
-    while (
-      !(this.game.isGameOver || this.game.isGameWon) &&
-      this.getNextMove()
-    ) {
+    while (!this.game.isGameOver && this.getNextMove()) {
       if (delay) {
         // eslint-disable-next-line no-await-in-loop
         await sleep(delay);
