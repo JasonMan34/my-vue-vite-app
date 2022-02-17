@@ -1,12 +1,12 @@
 <template>
   <div class="minesweeper-board">
-    <div class="flex flex-row ml-[28px]">
+    <div v-if="showIndexes" class="flex flex-row ml-[28px]">
       <div
         v-for="(col, colIndex) in game.board[0]"
         :key="colIndex"
-        class="w-[28px]"
+        class="w-[28px] text-center"
       >
-        {{ colIndex.toString().padStart(2, '0') }}
+        {{ colIndex }}
       </div>
     </div>
     <div
@@ -14,16 +14,17 @@
       :key="rowIndex"
       class="flex flex-row justify-center"
     >
-      {{ rowIndex.toString().padStart(2, '0') }}
+      <div v-if="showIndexes" class="w-[28px] text-center">{{ rowIndex }}</div>
       <Tile v-for="(tile, colIndex) in row" :key="colIndex" :tile="tile" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent, inject, PropType, ref } from 'vue';
 import Tile from './MinesweeperTile.vue';
 import { MinesweeperGame } from './game/minesweeper-game';
+import { ShowIndexesKey } from './keys';
 
 export default defineComponent({
   name: 'MinesweeperGame',
@@ -34,7 +35,10 @@ export default defineComponent({
       required: true,
     },
   },
-  setup() {},
+  setup() {
+    const showIndexes = inject(ShowIndexesKey, ref(false));
+    return { showIndexes };
+  },
 });
 </script>
 

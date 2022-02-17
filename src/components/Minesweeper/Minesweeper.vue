@@ -1,12 +1,26 @@
 <template>
   <div class="flex flex-col justify-center">
     <div class="flex flex-row justify-center px-4 space-x-3">
-      <button
-        class="self-start bg-blue-600 hover:bg-blue-800 font-semibold rounded-lg p-4 text-white;"
-        @click="autoPlayOneMove"
-      >
-        Auto play
-      </button>
+      <div class="flex flex-col">
+        <div>
+          <input
+            id="flexCheckDefault"
+            v-model="showIndexes"
+            class="w-4 h-4 bg-gray-50 rounded border border-gray-300 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 cursor-pointer mr-1"
+            type="checkbox"
+          />
+          <label class="inline-block" for="flexCheckDefault">
+            Show indexes
+          </label>
+        </div>
+
+        <button
+          class="self-start bg-blue-600 hover:bg-blue-800 font-semibold rounded-lg p-4 text-white;"
+          @click="autoPlayOneMove"
+        >
+          Auto play
+        </button>
+      </div>
       <div class="minesweeper-container" @contextmenu="$event.preventDefault()">
         <span class="text-black">{{
           game.isGameWon ? 'Woohoo you win :)' : ''
@@ -32,11 +46,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, Ref, ref } from 'vue';
+import { defineComponent, provide, Ref, ref } from 'vue';
 import useStopwatch from './use-stopwatch';
 import MinesweeperBoard from './MinesweeperBoard.vue';
 import { MinesweeperGame } from './game/minesweeper-game';
 import { AutoPlayer } from './game/auto-player';
+import { ShowIndexesKey } from './keys';
 
 const HEIGHT = 16;
 const WIDTH = 30;
@@ -46,6 +61,9 @@ export default defineComponent({
   name: 'Minesweeper',
   components: { MinesweeperBoard },
   setup() {
+    const showIndexes = ref(false);
+    provide(ShowIndexesKey, showIndexes);
+
     const { time } = useStopwatch();
     const game = ref(
       new MinesweeperGame(WIDTH, HEIGHT, MINE_COUNT)
@@ -73,7 +91,7 @@ export default defineComponent({
 
     newGame();
 
-    return { game, time, newGame, autoPlayOneMove };
+    return { game, time, newGame, autoPlayOneMove, showIndexes };
   },
 });
 </script>

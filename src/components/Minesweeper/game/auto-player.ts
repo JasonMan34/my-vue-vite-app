@@ -21,9 +21,11 @@ type Move = FlagMove | ClickMove;
 export class AutoPlayer {
   private nextMove?: Move;
   private game: MinesweeperGame;
+  private readonly shouldGuess: boolean;
 
-  constructor(game: MinesweeperGame) {
+  constructor(game: MinesweeperGame, shouldGuess = false) {
     this.game = game;
+    this.shouldGuess = shouldGuess;
   }
 
   /** Flag all remaining adjacent tiles a tile that needs it */
@@ -141,11 +143,14 @@ export class AutoPlayer {
   getNextMove(): Move | undefined {
     if (this.game.isGameOver || this.game.isGameWon) return;
 
-    const move =
+    let move =
       this.getSimpleFlagMove() ||
       this.getSimpleClickMove() ||
-      this.getSmartMove() ||
-      this.getGuessMove();
+      this.getSmartMove();
+
+    if (!move && this.shouldGuess) {
+      move = this.getGuessMove();
+    }
 
     this.nextMove = move;
 
