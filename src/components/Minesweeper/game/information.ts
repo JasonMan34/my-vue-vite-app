@@ -163,9 +163,8 @@ export class Information {
     tilesOrNode: MinesweeperTile[] | DataNode,
     mines?: MinesData | number
   ): void {
-    // Disable adding if we already found meaningful data
+    // Disable adding if we already found meaningful data or the data is invalid
     if (this.meaningfulData.length !== 0) return;
-
     const newNode = Information.normalizeNode(tilesOrNode, mines);
     if (!Information.isValidNode(newNode)) return;
 
@@ -173,7 +172,6 @@ export class Information {
     const existingTilesInfo = this.data.filter(node =>
       arraysAreEqual(node.tiles, newNode.tiles)
     );
-
     for (let i = 0; i < existingTilesInfo.length; i++) {
       const existingInfo = existingTilesInfo[i];
 
@@ -225,13 +223,14 @@ export class Information {
    * false if no new information can be inferred. True otherwise
    */
   inferData(): boolean {
-    // For each node, starting at lastInferIndex+1 infer against all other nodes
+    // For each node, starting at lastInferIndex+1, infer against all other nodes
     const originalDataCount = this.data.length;
     const start = this.lastInferIndex + 1;
+    // TODO: This currently infers a full level every time, maybe stop once we found something?
+    // TODO: How does this work with saving data from last time?
     this.data.slice(start).forEach((node, index) => {
       this.data.slice(0, start + index).forEach(otherNode => {
-        if (this.foundMeaningfulData) return true;
-        if (node === otherNode) return false;
+        if (node === otherNode) return;
 
         // Empty intersection = no data to infer
         const intersection = arrayIntersection(node.tiles, otherNode.tiles);
@@ -289,10 +288,10 @@ export class Information {
           };
           this.add(inferredDataNode);
         }
+
+        return false;
       });
     });
-
-    this.lastInferIndex = originalDataCount - 1;
 
     return originalDataCount !== this.data.length;
   }

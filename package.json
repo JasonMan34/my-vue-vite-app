@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
-    "metric": "tsc -p tsms.json && node dist/main.js",
+    "metric": "tsc -p tsms.json && node dist/metric.js",
     "serve": "vite preview",
     "lint": "eslint src/**/*.{ts,tsx,js,jsx,vue}",
     "lint:fix": "npm run lint --fix"
