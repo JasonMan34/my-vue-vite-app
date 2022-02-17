@@ -112,9 +112,17 @@ export default defineComponent({
       new AutoPlayer(game.value, !autoPlaySafe.value)
     ) as Ref<AutoPlayer>;
 
+    game.value.onGameInit(start);
+    game.value.onGameLose(stop);
+    game.value.onGameWin(stop);
+
     const newGame = () => {
       game.value = new MinesweeperGame(WIDTH, HEIGHT, MINE_COUNT);
       player.value = new AutoPlayer(game.value, !autoPlaySafe.value);
+
+      game.value.onGameInit(start);
+      game.value.onGameLose(stop);
+      game.value.onGameWin(stop);
     };
 
     watch(autoPlaySafe, () => {

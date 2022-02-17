@@ -144,7 +144,7 @@ export class MinesweeperGame {
     return this.allTiles.filter(tile => statuses.includes(tile.status));
   }
 
-  public onGameLost(cb: Callback) {
+  public onGameLose(cb: Callback) {
     this.gameLostEventListeners.push(cb);
   }
 
