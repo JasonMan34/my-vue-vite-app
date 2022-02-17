@@ -85,9 +85,9 @@ export class AutoPlayer {
     });
 
     // If no meaningful data found, start inferring data
-    let inferData = true;
-    while (!info.foundMeaningfulData && inferData) {
-      inferData = info.inferData();
+    let canInferMoreData = true;
+    while (!info.foundMeaningfulData && canInferMoreData) {
+      canInferMoreData = info.inferData();
     }
 
     if (!info.foundMeaningfulData) {
@@ -128,9 +128,8 @@ export class AutoPlayer {
     const move =
       this.getSimpleFlagMove() ||
       this.getSimpleClickMove() ||
-      this.getSmartMove();
-    //  ||
-    // this.getGuessMove();
+      this.getSmartMove() ||
+      this.getGuessMove();
 
     this.nextMove = move;
 

@@ -357,9 +357,16 @@ export class Information {
 
     this.lastInferIndex = -1;
     let canInferMoreData = true;
+
+    // TODO: We should do this another way
+    // Instead of inferring all possible combinations (which is quite inefficient...)
+    // Start at one node, and calculate the maximum combination for it
+    // If a single maximum combination still didn't yield meaningful info, move to the next one
+    // Do this until we've been through all nodes
+    // Should be much faster, especially if we have to go 3+ levels deep
+    // We can finish with 15 data nodes instead of 2000+ to reach the conclusion
     this.data = this.data.filter(node => node.mines.relation === 'equals');
     while (!this.foundMeaningfulData && canInferMoreData) {
-      // TODO: Check if we reached a conclusion while inferring data
       canInferMoreData = this.inferMinesLeftData();
     }
   }

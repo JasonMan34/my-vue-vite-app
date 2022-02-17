@@ -8,6 +8,6 @@
 
 ✅ 4) Run the code without vue - I wanna see some statistics baby
 
-5) Consider minesLeft when searching for no-guess moves
+✅ 5) Consider minesLeft when searching for no-guess moves
 
-6) Sandbox mode
+✅ 6) Sandbox mode
