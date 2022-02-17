@@ -82,6 +82,7 @@
 </template>
 
 <script lang="ts">
+import './minesweeper.pcss';
 import { defineComponent, provide, Ref, ref, watch } from 'vue';
 import useStopwatch from './use-stopwatch';
 import MinesweeperBoard from './MinesweeperBoard.vue';

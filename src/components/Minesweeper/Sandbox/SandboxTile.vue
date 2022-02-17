@@ -55,7 +55,7 @@ export default defineComponent({
     });
 
     const tileClass = computed(() => {
-      const classes = ['minesweeper-tile'];
+      const classes = ['ms-tile'];
       if (props.tile.isLosingTile) {
         classes.push('losing-tile');
       }

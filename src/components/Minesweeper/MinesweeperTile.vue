@@ -89,7 +89,7 @@ export default defineComponent({
       return 'ms-tile-8';
     };
 
-    const tileClass = computed(() => `minesweeper-tile ${idfk()}`);
+    const tileClass = computed(() => `ms-tile ${idfk()}`);
 
     const onMouseDown = (e: MouseEvent) => {
       if (e.button === LMC) {
@@ -140,9 +140,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style>
-.minesweeper-tile {
-  @apply h-[28px] w-[28px] cursor-default bg-contain;
-}
-</style>
