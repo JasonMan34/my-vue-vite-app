@@ -58,40 +58,6 @@ const getDifferenceRelation = (
   }
 };
 
-/** Returns relation for the sum of two data nodes, if such relation exists */
-const getSumRelation = (
-  node1: DataNode,
-  node2: DataNode
-): MineDataRelation | undefined => {
-  const a = node1.mines;
-  const b = node2.mines;
-
-  // Summing intersecting nodes is pointless
-  if (arrayIntersection(node1.tiles, node2.tiles).length !== 0) return;
-
-  // a = A
-  if (a.relation === 'equals') {
-    // b = B -> [a+b = A+B]
-    // b <= B -> [a+b <= A+B]
-    // b >= B -> [a+b >= A+B]
-    return b.relation;
-  }
-
-  // a <= A
-  if (a.relation === 'maximum' && b.relation !== 'minimum') {
-    // b = B -> [a+b <= A+B]
-    // b <= B -> [a+b <= A+B]
-    return 'maximum';
-  }
-
-  // a >= A
-  if (a.relation === 'minimum' && b.relation !== 'maximum') {
-    // b = B -> [a+b >= A+B]
-    // b >= B -> [a+b >= A+B]
-    return 'minimum';
-  }
-};
-
 export class Information {
   data: DataNode[] = [];
   meaningfulData: DataNode[] = [];
@@ -303,8 +269,8 @@ export class Information {
 
     // We know there are no mines in the difference
     if (
-      node.mines.relation === 'minimum' ||
-      (node.mines.relation === 'equals' && node.mines.value === minesLeft)
+      (node.mines.relation === 'minimum' || node.mines.relation === 'equals') &&
+      node.mines.value === minesLeft
     ) {
       const newData: DataNode = {
         mines: {
@@ -319,9 +285,8 @@ export class Information {
 
     // We know there are only mines in the difference
     if (
-      node.mines.relation === 'maximum' ||
-      (node.mines.relation === 'equals' &&
-        hiddenDifference.length === minesLeft - node.mines.value)
+      (node.mines.relation === 'maximum' || node.mines.relation === 'equals') &&
+      hiddenDifference.length === minesLeft - node.mines.value
     ) {
       const newData: DataNode = {
         mines: {
@@ -338,13 +303,13 @@ export class Information {
   inferSum(node: DataNode, otherNode: DataNode) {
     if (node === otherNode) return;
 
-    const sumRelation = getSumRelation(node, otherNode);
-    if (!sumRelation) return;
+    // Summing intersecting nodes is pointless
+    if (arrayIntersection(node.tiles, otherNode.tiles).length !== 0) return;
 
-    const newNode = {
+    const newNode: DataNode = {
       tiles: node.tiles.concat(otherNode.tiles),
       mines: {
-        relation: sumRelation,
+        relation: 'equals',
         value: node.mines.value + otherNode.mines.value,
       },
     };
@@ -375,6 +340,7 @@ export class Information {
   checkMinesLeft() {
     this.lastInferIndex = -1;
     let inferData = true;
+    this.data = this.data.filter(node => node.mines.relation === 'equals');
     while (inferData) {
       // TODO: Check if we reached a conclusion while inferring data
       inferData = this.inferMinesLeftData();
