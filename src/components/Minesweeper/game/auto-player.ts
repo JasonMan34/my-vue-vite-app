@@ -19,17 +19,11 @@ type ClickMove = {
 type Move = FlagMove | ClickMove;
 
 export class AutoPlayer {
-  private lastMove?: Move;
   private nextMove?: Move;
   private game: MinesweeperGame;
-  private info: Information;
 
   constructor(game: MinesweeperGame) {
     this.game = game;
-    this.info = new Information(game);
-
-    // TODO: Remove this
-    (globalThis as any).info = this.info;
   }
 
   /** Flag all remaining adjacent tiles a tile that needs it */
@@ -67,51 +61,38 @@ export class AutoPlayer {
     }
   }
 
-  private removeStaleInfo() {
-    // if (!this.lastMove) return;
-
-    // this.info.invalidate(this.lastMove.tiles);
-
-    // TODO: Only invalidate actual stale data
-    this.info.data = [];
-    this.info.meaningfulData = [];
-    this.info.lastInferIndex = -1;
-  }
-
   private getSmartMove(): Move | undefined {
     const revealed = this.game.getActiveTiles('revealed');
     const handled: MinesweeperTile[] = [];
 
-    this.removeStaleInfo();
+    const info = new Information(this.game);
+    // TODO: Remove this
+    (globalThis as any).info = info;
 
-    if (this.lastMove && false) {
-      console.log('test');
-    } else {
-      revealed.some(srcTile => {
-        if (handled.includes(srcTile)) return;
+    revealed.some(srcTile => {
+      if (handled.includes(srcTile)) return;
 
-        const srcHiddenTiles = srcTile.getAdjacent('hidden');
-        const srcPotentialMines =
-          srcTile.value - srcTile.getAdjacent('flagged').length;
-        this.info.add(srcHiddenTiles, srcPotentialMines);
-        handled.push(srcTile);
+      const srcHiddenTiles = srcTile.getAdjacent('hidden');
+      const srcPotentialMines =
+        srcTile.value - srcTile.getAdjacent('flagged').length;
+      info.add(srcHiddenTiles, srcPotentialMines);
+      handled.push(srcTile);
 
-        if (this.info.meaningfulData[0]) {
-          return true;
-        }
-        return false;
-      });
-    }
+      if (info.meaningfulData[0]) {
+        return true;
+      }
+      return false;
+    });
 
     // If no meaningful data found, start inferring data
     let inferData = true;
-    while (!this.info.foundMeaningfulData && inferData) {
-      inferData = this.info.inferData();
+    while (!info.foundMeaningfulData && inferData) {
+      inferData = info.inferData();
     }
 
     // If meaningful data found, we can make a 100% certain move
-    if (this.info.foundMeaningfulData) {
-      const data = this.info.meaningfulData[0];
+    if (info.foundMeaningfulData) {
+      const data = info.meaningfulData[0];
       if (data.mines.value === 0) {
         return {
           action: 'click',
@@ -159,7 +140,6 @@ export class AutoPlayer {
     } else {
       this.nextMove.tiles.forEach(tile => tile.click());
     }
-    this.lastMove = this.nextMove;
   }
 
   async autoPlay(delay?: number) {
