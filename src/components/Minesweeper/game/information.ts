@@ -107,14 +107,14 @@ export class Information {
 
   static normalizeNode(
     tilesOrNode: MinesweeperTile[] | DataNode,
-    mines?: MinesData | number
+    mines?: number
   ) {
     let newNode: DataNode;
-    if (Array.isArray(tilesOrNode) && mines) {
-      if (typeof mines === 'number') {
-        mines = { relation: 'equals', value: mines };
-      }
-      newNode = { tiles: tilesOrNode, mines };
+    if (Array.isArray(tilesOrNode) && mines !== undefined) {
+      newNode = {
+        tiles: tilesOrNode,
+        mines: { relation: 'equals', value: mines },
+      };
     } else if (!Array.isArray(tilesOrNode)) {
       newNode = tilesOrNode;
     } else {
@@ -156,13 +156,9 @@ export class Information {
     );
   }
 
-  add(tiles: MinesweeperTile[], mines: MinesData): void;
   add(tiles: MinesweeperTile[], mines: number): void;
   add(node: DataNode): void;
-  add(
-    tilesOrNode: MinesweeperTile[] | DataNode,
-    mines?: MinesData | number
-  ): void {
+  add(tilesOrNode: MinesweeperTile[] | DataNode, mines?: number): void {
     // Disable adding if we already found meaningful data or the data is invalid
     if (this.meaningfulData.length !== 0) return;
     const newNode = Information.normalizeNode(tilesOrNode, mines);
@@ -218,6 +214,67 @@ export class Information {
     }
   }
 
+  infer(node: DataNode, otherNode: DataNode) {
+    if (node === otherNode) return;
+
+    // Empty intersection = no data to infer
+    const intersection = arrayIntersection(node.tiles, otherNode.tiles);
+    if (intersection.length === 0 && !this.isCheckingMinesLeft) {
+      return;
+    }
+
+    const differenceNew = arrayDifference(otherNode.tiles, node.tiles);
+    const differenceOld = arrayDifference(node.tiles, otherNode.tiles);
+
+    const relationDifferenceNew = getDifferenceRelation(otherNode, node);
+    const relationDifferenceOld = getDifferenceRelation(node, otherNode);
+
+    if (
+      differenceNew.length !== 0 &&
+      relationDifferenceNew &&
+      arrayContains(otherNode.tiles, node.tiles)
+    ) {
+      // Inferred data from differenceNew
+      const inferredDataNode: DataNode = {
+        tiles: differenceNew,
+        mines: {
+          relation: relationDifferenceNew,
+          value: otherNode.mines.value - node.mines.value,
+        },
+      };
+      this.add(inferredDataNode);
+    } else if (
+      differenceOld.length !== 0 &&
+      relationDifferenceOld &&
+      arrayContains(node.tiles, otherNode.tiles)
+    ) {
+      // Inferred data from differenceOld
+      const inferredDataNode: DataNode = {
+        tiles: differenceOld,
+        mines: {
+          relation: relationDifferenceOld,
+          value: node.mines.value - otherNode.mines.value,
+        },
+      };
+
+      this.add(inferredDataNode);
+    } else if (
+      node.mines.relation !== 'minimum' &&
+      otherNode.mines.relation !== 'minimum'
+    ) {
+      // We only care about this if the arrays don't contain each other
+      // Inferring data from intersection
+      const inferredDataNode: DataNode = {
+        tiles: intersection,
+        mines: {
+          relation: 'maximum',
+          value: Math.min(node.mines.value, otherNode.mines.value),
+        },
+      };
+      this.add(inferredDataNode);
+    }
+  }
+
   /**
    * Infers data based on available data and what was already inferred. Returns
    * false if no new information can be inferred. True otherwise
@@ -226,84 +283,14 @@ export class Information {
     // For each node, starting at lastInferIndex+1, infer against all other nodes
     const originalDataCount = this.data.length;
     const start = this.lastInferIndex + 1;
-    // TODO: This currently infers a full level every time, maybe stop once we found something?
     // TODO: How does this work with saving data from last time?
     this.data.slice(start).forEach((node, index) => {
       this.data.slice(0, start + index).forEach(otherNode => {
-        if (node === otherNode) return;
-
-        // Empty intersection = no data to infer
-        const intersection = arrayIntersection(node.tiles, otherNode.tiles);
-        if (intersection.length === 0 && !this.isCheckingMinesLeft) {
-          return;
-        }
-
-        const differenceNew = arrayDifference(otherNode.tiles, node.tiles);
-        const differenceOld = arrayDifference(node.tiles, otherNode.tiles);
-
-        const relationDifferenceNew = getDifferenceRelation(otherNode, node);
-        const relationDifferenceOld = getDifferenceRelation(node, otherNode);
-
-        if (
-          differenceNew.length !== 0 &&
-          relationDifferenceNew &&
-          arrayContains(otherNode.tiles, node.tiles)
-        ) {
-          // Inferred data from differenceNew
-          const inferredDataNode: DataNode = {
-            tiles: differenceNew,
-            mines: {
-              relation: relationDifferenceNew,
-              value: otherNode.mines.value - node.mines.value,
-            },
-          };
-          this.add(inferredDataNode);
-        } else if (
-          differenceOld.length !== 0 &&
-          relationDifferenceOld &&
-          arrayContains(node.tiles, otherNode.tiles)
-        ) {
-          // Inferred data from differenceOld
-          const inferredDataNode: DataNode = {
-            tiles: differenceOld,
-            mines: {
-              relation: relationDifferenceOld,
-              value: node.mines.value - otherNode.mines.value,
-            },
-          };
-
-          this.add(inferredDataNode);
-        } else if (
-          node.mines.relation !== 'minimum' &&
-          otherNode.mines.relation !== 'minimum'
-        ) {
-          // We only care about this if the arrays don't contain each other
-          // Inferring data from intersection
-          const inferredDataNode: DataNode = {
-            tiles: intersection,
-            mines: {
-              relation: 'maximum',
-              value: Math.min(node.mines.value, otherNode.mines.value),
-            },
-          };
-          this.add(inferredDataNode);
-        }
-
-        return false;
+        this.infer(node, otherNode);
       });
     });
 
     return originalDataCount !== this.data.length;
-  }
-
-  /** Remove all data nodes that intersect with the tiles */
-  invalidate(tiles: MinesweeperTile[]) {
-    this.data.forEach((node, index) => {
-      const intersection = arrayIntersection(node.tiles, tiles);
-      if (intersection.length !== 0) {
-        this.data.splice(index, 1);
-      }
-    });
   }
 
   checkMinesLeftForSingleNode(node: DataNode) {
