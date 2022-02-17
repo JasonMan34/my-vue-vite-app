@@ -95,12 +95,12 @@ export default defineComponent({
 
     const onMouseUp = (e: MouseEvent) => {
       if (e.button === LMC) {
-        if (!props.tile.isFlagged) {
-          props.tile.click();
-        }
-
         if (props.tile.isPeaking) {
           props.tile.unpeak();
+        }
+
+        if (!props.tile.isFlagged) {
+          props.tile.click();
         }
       }
     };

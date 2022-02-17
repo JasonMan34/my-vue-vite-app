@@ -122,6 +122,7 @@
 <script lang="ts">
 import './minesweeper.pcss';
 import { computed, defineComponent, provide, Ref, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 import useStopwatch from './use-stopwatch';
 import MinesweeperBoard from './MinesweeperBoard.vue';
 import { MinesweeperGame } from './game/minesweeper-game';
@@ -187,6 +188,9 @@ export default defineComponent({
   name: 'Minesweeper',
   components: { MinesweeperBoard },
   setup() {
+    const route = useRoute();
+    const isSandbox = route.path.includes('sandbox');
+
     const showIndexes = ref(false);
     const autoPlaySafe = ref(true);
     const restartOnFailure = ref(true);
@@ -195,7 +199,7 @@ export default defineComponent({
     provide(ShowIndexesKey, showIndexes);
     const { time, start, stop } = useStopwatch();
     const game = ref(
-      new MinesweeperGame(WIDTH, HEIGHT, MINE_COUNT)
+      new MinesweeperGame(WIDTH, HEIGHT, MINE_COUNT, isSandbox)
     ) as Ref<MinesweeperGame>;
     const player = ref(
       new AutoPlayer(game.value, !autoPlaySafe.value)
@@ -206,7 +210,7 @@ export default defineComponent({
     game.value.onGameWin(stop);
 
     const newGame = () => {
-      game.value = new MinesweeperGame(WIDTH, HEIGHT, MINE_COUNT);
+      game.value = new MinesweeperGame(WIDTH, HEIGHT, MINE_COUNT, isSandbox);
       player.value = new AutoPlayer(game.value, !autoPlaySafe.value);
 
       game.value.onGameInit(start);

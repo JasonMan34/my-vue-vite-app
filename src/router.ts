@@ -28,12 +28,6 @@ const Minesweeper = defineAsyncComponent({
   delay: 200,
 });
 
-const MinesweeperSandbox = defineAsyncComponent({
-  loader: () => import(`./components/Minesweeper/Sandbox/Sandbox.vue`),
-  loadingComponent: Loading,
-  delay: 200,
-});
-
 const IS_COVID = import.meta.env.VITE_IS_COVID === 'true';
 
 const routes: RouteRecordRaw[] = [
@@ -67,7 +61,7 @@ const routes: RouteRecordRaw[] = [
     meta: {
       title: 'Minesweeper Sandbox',
     },
-    component: MinesweeperSandbox,
+    component: Minesweeper,
   },
 ];
 
