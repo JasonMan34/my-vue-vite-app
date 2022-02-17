@@ -2,6 +2,7 @@ import { defineAsyncComponent } from 'vue';
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import Loading from './components/Loading.vue';
 import Minesweeper from './components/Minesweeper/Minesweeper.vue';
+import MinesweeperSandbox from './components/Minesweeper/Sandbox/Sandbox.vue';
 
 const AsyncComponent = (route: string) =>
   defineAsyncComponent({
@@ -49,6 +50,14 @@ const routes: RouteRecordRaw[] = [
       title: 'Minesweeper',
     },
     component: Minesweeper,
+  },
+  {
+    path: '/minesweeper/sandbox',
+    name: 'MinesweeperSandbox',
+    meta: {
+      title: 'Minesweeper Sandbox',
+    },
+    component: MinesweeperSandbox,
   },
 ];
 

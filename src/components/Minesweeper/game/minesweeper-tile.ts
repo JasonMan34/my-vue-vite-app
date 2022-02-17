@@ -152,6 +152,11 @@ export class MinesweeperTile {
   }
 
   public click() {
+    if (this.game.isSandbox) {
+      this._status = this.isRevealed ? 'hidden' : 'revealed';
+      return;
+    }
+
     if (this.game.isGameOver) return;
 
     if (!this.game.initiated) {
@@ -184,6 +189,13 @@ export class MinesweeperTile {
   }
 
   public flag(flagOnly = false) {
+    if (this.game.isSandbox) {
+      this._status = this.isFlagged ? 'hidden' : 'flagged';
+      this.isMine = !this.isMine;
+      this.forAdjacent(tile => tile.calculateValue());
+      return;
+    }
+
     if (this.game.isGameOver) return;
 
     // For game over, just flag it, nothing else
