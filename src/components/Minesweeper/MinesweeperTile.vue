@@ -6,15 +6,7 @@
     @mouseout="onMouseOut"
     @mouseenter="onMouseEnter"
     @contextmenu="$event.preventDefault()"
-  >
-    <!-- <div :class="textClass">
-      <template v-if="tile.isFlagged">🚩</template>
-      <template v-else-if="tile.isRevealed">
-        {{ tile.isMine ? '💣' : '' }}
-        {{ !tile.isMine && tile.value !== 0 ? tile.value : '' }}
-      </template>
-    </div> -->
-  </div>
+  ></div>
 </template>
 
 <script lang="ts">

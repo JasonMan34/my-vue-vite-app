@@ -21,8 +21,18 @@ const AsyncComponent = (route: string) =>
 const CovidMainPage = AsyncComponent('CovidMainPage');
 const MainPage = AsyncComponent('MainPage');
 const CovidBetResults = AsyncComponent('CovidBetResults');
-const Minesweeper = AsyncComponent('Minesweeper/Minesweeper');
-const MinesweeperSandbox = AsyncComponent('Minesweeper/MinesweeperSandbox');
+
+const Minesweeper = defineAsyncComponent({
+  loader: () => import(`./components/Minesweeper/Minesweeper.vue`),
+  loadingComponent: Loading,
+  delay: 200,
+});
+
+const MinesweeperSandbox = defineAsyncComponent({
+  loader: () => import(`./components/Minesweeper/Sandbox/Sandbox.vue`),
+  loadingComponent: Loading,
+  delay: 200,
+});
 
 const IS_COVID = import.meta.env.VITE_IS_COVID === 'true';
 
