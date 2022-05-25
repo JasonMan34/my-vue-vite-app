@@ -1,6 +1,11 @@
 <template>
   <div>
-    <DoughnutChart ref="chartRef" :chart-data="chartData" :options="options" />
+    <DoughnutChart
+      ref="chartRef"
+      :chart-data="chartData"
+      :options="options"
+      class="min-w-[400px]"
+    />
     <div class="flex flex-row justify-between">
       <div
         class="rounded-xl p-2 hover:bg-black hover:bg-opacity-20 dark:hover:bg-opacity-40"

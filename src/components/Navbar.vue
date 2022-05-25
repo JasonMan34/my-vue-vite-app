@@ -8,6 +8,7 @@
     >
       <SelectLocale v-if="routeName !== 'CovidBetResults' || true" />
       <DarkThemeToggleButton class="ms-auto" />
+      <HomeButton />
     </div>
   </div>
 </template>
@@ -17,10 +18,11 @@ import { computed, defineComponent } from 'vue';
 import { useRoute } from 'vue-router';
 import DarkThemeToggleButton from './DarkThemeToggleButton.vue';
 import SelectLocale from './SelectLocale.vue';
+import HomeButton from './HomeButton.vue';
 
 export default defineComponent({
   name: 'ShowcaseChart',
-  components: { DarkThemeToggleButton, SelectLocale },
+  components: { DarkThemeToggleButton, SelectLocale, HomeButton },
   setup() {
     const route = useRoute();
     const routeName = computed(() => route.name);

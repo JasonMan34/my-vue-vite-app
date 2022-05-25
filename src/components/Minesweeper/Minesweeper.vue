@@ -78,8 +78,11 @@
             <div :class="getDigitClass(game.minesLeft, 2)" />
           </div>
 
-          <div class="ms-new-game-wrapper flex-1 flex justify-center">
-            <button :class="smileyClass" @click="newGame" />
+          <div
+            class="ms-new-game-wrapper flex-1 flex justify-center"
+            @click="newGame"
+          >
+            <button :class="smileyClass" />
           </div>
 
           <div class="ms-score">

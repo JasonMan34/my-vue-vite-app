@@ -9,9 +9,8 @@
     <p class="text-lg dark:text-gray-400">
       {{ t('text') }}
     </p>
-    <div class="flex flex-row justify-between space-s-16">
-      <button class="button" @click="onClick">{{ t('clickMe') }}</button>
-      <button class="button" @click="onClick">{{ t('orMe') }}!</button>
+    <div class="flex flex-row justify-start">
+      <button class="button" @click="onClick">{{ t('minesweeper') }}</button>
     </div>
   </div>
 </template>
@@ -19,14 +18,15 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'ImJason',
   setup() {
     const { t } = useI18n();
+    const router = useRouter();
     const onClick = () => {
-      // eslint-disable-next-line no-alert
-      alert('TODO: idk something cool');
+      router.push('/minesweeper');
     };
 
     return { t, onClick };
@@ -41,9 +41,7 @@ export default defineComponent({
           font-semibold
           rounded-lg
           p-4
-          text-white
-          w-[40%]
-          md:w-44;
+          text-white;
 }
 </style>
 
@@ -57,18 +55,16 @@ export default defineComponent({
     },
     "text": "There's nothing too interesting here, just me messing around with stuff and learning",
 
-    "clickMe": "Click Me",
-    "orMe": "Or Me"
+    "minesweeper": "Minesweeper"
   },
   "he": {
     "title": {
       "iAm": "אני",
       "jason": "איתמר",
-      "myWebsite": "זה האתר שלי"
+      "myWebsite": "וזה האתר שלי"
     },
-    "text": "שלום לך, אורח יקר. אתה כנראה שאתה שואל את עצמך, מה זה הטקסט הזה? ובכן, הטקסט הזה אינו אלא ממלא מקום כמובן. למעשה, מטרת הטקסט הזה אפילו לא ידועה ",
-    "clickMe": "לחץ עלי",
-    "orMe": "או עלי"
+    "text": "אין פה שום דבר מעניין, זה בעיקר מקום שבו אני משחק בדברים חדשים ולומד",
+    "minesweeper": "שולה מוקשים"
   }
 }
 </i18n>
