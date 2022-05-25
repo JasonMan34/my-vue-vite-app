@@ -53,9 +53,9 @@ export default defineComponent({
     "title": {
       "iAm": "I am",
       "jason": "Jason",
-      "myWebsite": "this is my website"
+      "myWebsite": "and this is my website"
     },
-    "text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse, inventore officia. Quas, accusamus consectetur? Earum, nostrum, commodi ullam impedit architecto error animi veniam quasi quo praesentium totam incidunt unde corporis?",
+    "text": "There's nothing too interesting here, just me messing around with stuff and learning",
 
     "clickMe": "Click Me",
     "orMe": "Or Me"

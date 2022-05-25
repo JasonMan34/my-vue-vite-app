@@ -1,21 +1,9 @@
 <template>
   <div
-    class="
-      rounded-b-2xl
-      border-b-4 border-gray-200
-      dark:bg-blue-900 dark:border-transparent
-    "
+    class="rounded-b-2xl border-b-4 border-gray-200 dark:bg-blue-900 dark:border-transparent"
   >
     <div
-      class="
-        flex
-        px-2
-        justify-start
-        items-center
-        mx-auto
-        max-w-[1400px]
-        min-h-[48px]
-      "
+      class="flex px-2 justify-start items-center mx-auto max-w-[1400px] min-h-[56px]"
       dir="ltr"
     >
       <SelectLocale v-if="routeName !== 'CovidBetResults' || true" />

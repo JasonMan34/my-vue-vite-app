@@ -5,18 +5,9 @@ import Showcase from './Showcase/Showcase.vue';
 
 <template>
   <div
-    class="
-      flex flex-row flex-wrap
-      px-4
-      md:space-s-8
-      items-center
-      mx-auto
-      max-w-[1400px]
-    "
+    class="flex flex-row flex-wrap px-4 md:space-s-8 mt-20 mx-auto max-w-[1400px]"
   >
-    <ImJason
-      class="flex-fixed-12 md:flex-fixed-7 lg:flex-fixed-6 xl:flex-fixed-4"
-    />
+    <ImJason />
     <Showcase class="flex-1 self-start pt-8" />
   </div>
 </template>
