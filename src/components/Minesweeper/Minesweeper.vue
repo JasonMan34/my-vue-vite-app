@@ -1,6 +1,6 @@
 <template>
   <div id="minesweeper-wrapper" class="flex flex-col justify-center">
-    <teleport to="head">
+    <!-- <teleport to="head">
       <link
         v-for="(asset, index) in assets"
         :key="index"
@@ -8,7 +8,7 @@
         as="image"
         :href="`/assets/${asset}`"
       />
-    </teleport>
+    </teleport> -->
     <div class="flex flex-row justify-center px-4 space-x-3">
       <!-- Options -->
       <div class="flex flex-col space-y-2">
@@ -201,7 +201,11 @@ export default defineComponent({
 
       while (restartOnFailure.value && !game.value.isGameWon) {
         await game.value.waitForEnd();
-        if (restartOnFailure.value) {
+        if (
+          !autoPlaySafe.value &&
+          restartOnFailure.value &&
+          game.value.isGameLost
+        ) {
           await sleep(200);
           newGame();
           player.value.autoPlay(autoPlayerDelay.value);
@@ -285,10 +289,8 @@ export default defineComponent({
 .checkbox {
   @apply w-4 h-4 bg-gray-50 rounded border border-gray-300 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 cursor-pointer mr-1;
 }
-</style>
 
-<!-- 
-  #minesweeper-wrapper::after {
+#minesweeper-wrapper::after {
   position: absolute;
   width: 0;
   height: 0;
@@ -314,4 +316,4 @@ export default defineComponent({
     url('/assets/type3.svg') url('/assets/type4.svg') url('/assets/type5.svg')
     url('/assets/type6.svg') url('/assets/type7.svg') url('/assets/type8.svg');
 }
- -->
+</style>
