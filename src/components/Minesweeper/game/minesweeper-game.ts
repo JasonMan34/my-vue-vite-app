@@ -156,6 +156,19 @@ export class MinesweeperGame {
     this.gameInitEventListeners.push(cb);
   }
 
+  public async waitForEnd(timeout?: number) {
+    return new Promise<void>((resolve, reject) => {
+      this.onGameLose(() => resolve());
+      this.onGameWin(() => resolve());
+
+      if (timeout) {
+        setTimeout(() => {
+          reject();
+        }, timeout);
+      }
+    });
+  }
+
   public upRevealCount() {
     this.revealedCount++;
     if (this.revealedCount === this.allTiles.length - this.mines.length) {

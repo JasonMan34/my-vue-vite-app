@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col justify-center">
+  <div id="minesweeper-wrapper" class="flex flex-col justify-center">
     <teleport to="head">
       <link
         v-for="(asset, index) in assets"
@@ -132,6 +132,7 @@
 </template>
 
 <script lang="ts">
+/* eslint-disable no-await-in-loop */
 import './minesweeper.pcss';
 import { computed, defineComponent, provide, Ref, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
@@ -157,6 +158,9 @@ export default defineComponent({
     const autoPlaySafe = ref(false);
     const restartOnFailure = ref(true);
     const playerSpeed = ref(10);
+    const autoPlayerDelay = computed(() =>
+      Math.round(101 - 10 * playerSpeed.value)
+    );
 
     provide(ShowIndexesKey, showIndexes);
     const { time, start, stop } = useStopwatch();
@@ -184,17 +188,24 @@ export default defineComponent({
       player.value.shouldGuess = !autoPlaySafe.value;
     });
 
+    watch(autoPlayerDelay, () => {
+      player.value.delay = autoPlayerDelay.value;
+    });
+
     const autoPlay = async () => {
-      while (!game.value.isGameOver && player.value.getNextMove()) {
-        // eslint-disable-next-line no-await-in-loop
-        await sleep(Math.round(101 - 10 * playerSpeed.value));
-        player.value.playNextMove();
+      if (game.value.isGameLost) {
+        newGame();
       }
 
-      if (game.value.isGameLost && restartOnFailure.value) {
-        await sleep(200);
-        newGame();
-        autoPlay();
+      player.value.autoPlay(autoPlayerDelay.value);
+
+      while (restartOnFailure.value && !game.value.isGameWon) {
+        await game.value.waitForEnd();
+        if (restartOnFailure.value) {
+          await sleep(200);
+          newGame();
+          player.value.autoPlay(autoPlayerDelay.value);
+        }
       }
     };
 
@@ -275,3 +286,32 @@ export default defineComponent({
   @apply w-4 h-4 bg-gray-50 rounded border border-gray-300 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 cursor-pointer mr-1;
 }
 </style>
+
+<!-- 
+  #minesweeper-wrapper::after {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  z-index: -1;
+  content: url('/assets/border_hor_2x.png')
+    url('/assets/border_middle_left_2x.png')
+    url('/assets/border_middle_right_2x.png') url('/assets/border_vert_2x.png')
+    url('/assets/corner_bottom_left_2x.png')
+    url('/assets/corner_bottom_right_2x.png')
+    url('/assets/corner_up_left_2x.png') url('/assets/corner_up_right_2x.png')
+    url('/assets/d0.svg') url('/assets/d1.svg') url('/assets/d2.svg')
+    url('/assets/d3.svg') url('/assets/d4.svg') url('/assets/d5.svg')
+    url('/assets/d6.svg') url('/assets/d7.svg') url('/assets/d8.svg')
+    url('/assets/d9.svg') url('/assets/face_active.svg')
+    url('/assets/face_lost.svg') url('/assets/face_neutral.svg')
+    url('/assets/face_pressed.svg') url('/assets/face_won.svg')
+    url('/assets/flag_wrong.svg') url('/assets/flag.svg')
+    url('/assets/hidden.svg') url('/assets/logo.png')
+    url('/assets/mine_red.svg') url('/assets/mine.svg')
+    url('/assets/nums_background.svg') url('/assets/pressed.svg')
+    url('/assets/type0.svg') url('/assets/type1.svg') url('/assets/type2.svg')
+    url('/assets/type3.svg') url('/assets/type4.svg') url('/assets/type5.svg')
+    url('/assets/type6.svg') url('/assets/type7.svg') url('/assets/type8.svg');
+}
+ -->

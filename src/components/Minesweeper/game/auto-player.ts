@@ -5,19 +5,20 @@ import { sleep } from './utils';
 
 type FlagMove = {
   action: 'flag';
-  tiles: MinesweeperTile[];
+  tile: MinesweeperTile;
 };
 type ClickMove = {
   action: 'click';
-  tiles: MinesweeperTile[];
+  tile: MinesweeperTile;
 };
 
 type Move = FlagMove | ClickMove;
 
 export class AutoPlayer {
   private game: MinesweeperGame;
-  public nextMove?: Move;
   public shouldGuess: boolean;
+  public moveQueue: Move[] = [];
+  public delay: number = 0;
 
   constructor(game: MinesweeperGame, shouldGuess = false) {
     this.game = game;
@@ -25,7 +26,7 @@ export class AutoPlayer {
   }
 
   /** Flag all remaining adjacent tiles a tile that needs it */
-  private getSimpleFlagMove(): FlagMove | undefined {
+  private getSimpleFlagMoves(): FlagMove[] {
     const tileToFlagAdjacent = this.game
       .getActiveTiles('revealed')
       .find(tile => {
@@ -37,36 +38,39 @@ export class AutoPlayer {
     if (tileToFlagAdjacent) {
       const tilesToFlag = tileToFlagAdjacent.getAdjacent('hidden');
 
-      return {
+      return tilesToFlag.map(tile => ({
         action: 'flag',
-        tiles: tilesToFlag,
-      };
+        tile,
+      }));
     }
+
+    return [];
   }
 
   /** Click a tile that is all flagged up */
-  private getSimpleClickMove(): ClickMove | undefined {
+  private getSimpleClickMoves(): ClickMove[] {
     const tileToClick = this.game.getActiveTiles('revealed').find(tile => {
       const flagAdjacent = tile.getAdjacent('flagged').length;
       return tile.value === flagAdjacent;
     });
 
     if (tileToClick) {
-      return {
-        action: 'click',
-        tiles: [tileToClick],
-      };
+      return [
+        {
+          action: 'click',
+          tile: tileToClick,
+        },
+      ];
     }
+
+    return [];
   }
 
-  private getSmartMove(): Move | undefined {
+  private getSmartMoves(): Move[] {
     const revealed = this.game.getActiveTiles('revealed');
     const handled: MinesweeperTile[] = [];
 
     const info = new Information(this.game);
-    // TODO: Remove this
-    (globalThis as any).info = info;
-
     revealed.some(srcTile => {
       if (handled.includes(srcTile)) return;
 
@@ -96,17 +100,19 @@ export class AutoPlayer {
     if (info.foundMeaningfulData) {
       const data = info.meaningfulData[0];
       if (data.mines.value === 0) {
-        return {
+        return data.tiles.map(tile => ({
           action: 'click',
-          tiles: data.tiles,
-        };
+          tile,
+        }));
       }
 
-      return {
+      return data.tiles.map(tile => ({
         action: 'flag',
-        tiles: data.tiles,
-      };
+        tile,
+      }));
     }
+
+    return [];
   }
 
   getGuessMove(): Move {
@@ -117,60 +123,87 @@ export class AutoPlayer {
 
     this.game.getCorners().some(tile => {
       if (tile.status === 'hidden') {
-        move.tiles = [tile];
+        move.tile = tile;
         return true;
       }
 
       return false;
     });
 
-    // TODO: Smart guess
-    // After corners - do walls
-    // If there's a closed area and an open area, guess the open area
-    // Always guess new info, so on [x-x-x] guess rightmost or leftmost
-
-    if (!move.tiles) {
+    // Pick a random tile
+    if (!move.tile) {
+      // TODO: Smart guess
+      // After corners - do walls
+      // Calculate % that a tile will be a mine maybe?
+      // If there's a closed area and an open area, guess the open area
+      // Always guess new info, so on [x-x-x] guess rightmost or leftmost
       const allTiles = this.game.getAllTiles('hidden');
       const randomTile = allTiles[Math.floor(Math.random() * allTiles.length)];
 
-      move.tiles = [randomTile];
+      move.tile = randomTile;
     }
 
     return move as Move;
   }
 
-  getNextMove(): Move | undefined {
-    if (this.game.isGameLost || this.game.isGameWon) return;
+  /**
+   * Fills the move queue
+   *
+   * @returns True if the queue is not empty, false otherwise
+   */
+  fillMoveQueue(): boolean {
+    if (this.game.isGameLost || this.game.isGameWon) return false;
+    if (this.moveQueue.length > 0) return true;
 
-    let move =
-      this.getSimpleFlagMove() ||
-      this.getSimpleClickMove() ||
-      this.getSmartMove();
-
-    if (!move && this.shouldGuess) {
-      move = this.getGuessMove();
+    this.moveQueue = this.getSimpleFlagMoves();
+    if (this.moveQueue.length === 0) {
+      this.moveQueue = this.getSimpleClickMoves();
+    }
+    if (this.moveQueue.length === 0) {
+      this.moveQueue = this.getSmartMoves();
     }
 
-    this.nextMove = move;
+    if (this.moveQueue.length === 0 && this.shouldGuess) {
+      this.moveQueue = [this.getGuessMove()];
+    }
 
-    return this.nextMove;
+    return this.moveQueue.length !== 0;
   }
 
   playNextMove() {
-    if (this.game.isGameLost || this.game.isGameWon || !this.nextMove) return;
+    if (
+      this.game.isGameLost ||
+      this.game.isGameWon ||
+      this.moveQueue.length === 0
+    ) {
+      return;
+    }
 
-    if (this.nextMove.action === 'flag') {
-      this.nextMove.tiles.forEach(tile => tile.flag());
+    const nextMove = this.moveQueue.shift()!;
+
+    if (nextMove.action === 'flag') {
+      nextMove.tile.flag();
     } else {
-      this.nextMove.tiles.forEach(tile => tile.click());
+      nextMove.tile.click();
     }
   }
 
-  async autoPlay(delay?: number) {
-    while (!this.game.isGameOver && this.getNextMove()) {
-      if (delay) {
+  hasNextMove() {
+    return this.moveQueue.length > 0;
+  }
+
+  async autoPlay(delay = 0) {
+    if (delay) {
+      this.delay = delay;
+    }
+
+    while (
+      !this.game.isGameOver &&
+      (this.hasNextMove() || this.fillMoveQueue())
+    ) {
+      if (this.delay) {
         // eslint-disable-next-line no-await-in-loop
-        await sleep(delay);
+        await sleep(this.delay);
       }
 
       this.playNextMove();
