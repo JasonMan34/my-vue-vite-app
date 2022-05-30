@@ -154,7 +154,7 @@ export default defineComponent({
     const isSandbox = route.path.includes('sandbox');
 
     const showIndexes = ref(false);
-    const autoPlaySafe = ref(true);
+    const autoPlaySafe = ref(false);
     const restartOnFailure = ref(true);
     const playerSpeed = ref(10);
 
