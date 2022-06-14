@@ -1,5 +1,5 @@
 <template>
-  <div id="minesweeper-wrapper" class="flex flex-col justify-center">
+  <div id="minesweeper-wrapper" class="flex flex-col justify-center" dir="ltr">
     <!-- <teleport to="head">
       <link
         v-for="(asset, index) in assets"
