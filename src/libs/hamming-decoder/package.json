@@ -1,0 +1,13 @@
+{
+  "name": "hamming-decoder",
+  "version": "0.1.0",
+  "files": [
+    "hamming_decoder_bg.wasm",
+    "hamming_decoder.js",
+    "hamming_decoder_bg.js",
+    "hamming_decoder.d.ts"
+  ],
+  "module": "hamming_decoder.js",
+  "types": "hamming_decoder.d.ts",
+  "sideEffects": false
+}

@@ -1,0 +1,13 @@
+{
+  "name": "hamming-corruptor",
+  "version": "0.1.0",
+  "files": [
+    "hamming_corruptor_bg.wasm",
+    "hamming_corruptor.js",
+    "hamming_corruptor_bg.js",
+    "hamming_corruptor.d.ts"
+  ],
+  "module": "hamming_corruptor.js",
+  "types": "hamming_corruptor.d.ts",
+  "sideEffects": false
+}
