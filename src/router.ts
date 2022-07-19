@@ -21,6 +21,7 @@ const AsyncComponent = (route: string) =>
 const CovidMainPage = AsyncComponent('CovidMainPage');
 const MainPage = AsyncComponent('MainPage');
 const CovidBetResults = AsyncComponent('CovidBetResults');
+const Hamming = AsyncComponent('Hamming');
 
 const Minesweeper = defineAsyncComponent({
   loader: () => import(`./components/Minesweeper/Minesweeper.vue`),
@@ -62,6 +63,14 @@ const routes: RouteRecordRaw[] = [
       title: 'Minesweeper Sandbox',
     },
     component: Minesweeper,
+  },
+  {
+    path: '/hamming',
+    name: 'Hamming',
+    meta: {
+      title: 'Hamming',
+    },
+    component: Hamming,
   },
 ];
 

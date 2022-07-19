@@ -9,8 +9,13 @@
     <p class="text-lg dark:text-gray-400">
       {{ t('text') }}
     </p>
-    <div class="flex flex-row justify-start">
-      <button class="button" @click="onClick">{{ t('minesweeper') }}</button>
+    <div class="flex flex-row justify-between">
+      <button class="button" @click="push('/minesweeper')">
+        {{ t('minesweeper') }}
+      </button>
+      <button class="button" @click="push('/hamming')">
+        {{ t('hamming') }}
+      </button>
     </div>
   </div>
 </template>
@@ -24,12 +29,9 @@ export default defineComponent({
   name: 'ImJason',
   setup() {
     const { t } = useI18n();
-    const router = useRouter();
-    const onClick = () => {
-      router.push('/minesweeper');
-    };
+    const { push } = useRouter();
 
-    return { t, onClick };
+    return { t, push };
   },
 });
 </script>
@@ -55,7 +57,8 @@ export default defineComponent({
     },
     "text": "There's nothing too interesting here, just me messing around with stuff and learning",
 
-    "minesweeper": "Minesweeper"
+    "minesweeper": "Minesweeper",
+    "hamming": "Hamming Encoder"
   },
   "he": {
     "title": {
@@ -64,7 +67,8 @@ export default defineComponent({
       "myWebsite": "וזה האתר שלי"
     },
     "text": "אין פה שום דבר מעניין, זה בעיקר מקום שבו אני משחק בדברים חדשים ולומד",
-    "minesweeper": "שולה מוקשים"
+    "minesweeper": "שולה מוקשים",
+    "hamming": "מקודד האמינג"
   }
 }
 </i18n>
