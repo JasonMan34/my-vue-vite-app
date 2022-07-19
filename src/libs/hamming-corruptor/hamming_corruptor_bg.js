@@ -1,4 +1,14 @@
-import * as wasm from './hamming_corruptor_bg.wasm';
+import init from './hamming_corruptor_bg.wasm?init';
+
+let wasm;
+
+init().then(instance => {
+    wasm = instance.exports;
+    cachedInt32Memory0 = new Int32Array(wasm.memory.buffer);
+    cachedUint8Memory0 = new Uint8Array(wasm.memory.buffer);
+}).catch(e => {
+    console.error(e);
+});
 
 const heap = new Array(32).fill(undefined);
 
@@ -230,7 +240,4 @@ export function __wbindgen_memory() {
     const ret = wasm.memory;
     return addHeapObject(ret);
 };
-
-cachedInt32Memory0 = new Int32Array(wasm.memory.buffer);
-cachedUint8Memory0 = new Uint8Array(wasm.memory.buffer);
 

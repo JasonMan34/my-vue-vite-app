@@ -39,6 +39,7 @@ export default defineComponent({
 
     const decode = () => {
       decoded.value = hamming_decode(new Uint8Array([...encoded.value]), true);
+      console.log(new TextDecoder().decode(decoded.value));
     };
 
     const decodeCorrupted = () => {

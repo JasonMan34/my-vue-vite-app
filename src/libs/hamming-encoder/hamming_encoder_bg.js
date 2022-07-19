@@ -1,4 +1,12 @@
-import * as wasm from './hamming_encoder_bg.wasm';
+import init from './hamming_encoder_bg.wasm?init';
+
+let wasm;
+
+init().then(instance => {
+    wasm = instance.exports;
+    cachedInt32Memory0 = new Int32Array(wasm.memory.buffer);
+    cachedUint8Memory0 = new Uint8Array(wasm.memory.buffer);
+});
 
 let cachedUint8Memory0;
 function getUint8Memory0() {
@@ -47,7 +55,3 @@ export function encode_8_4(file) {
         wasm.__wbindgen_add_to_stack_pointer(16);
     }
 }
-
-cachedInt32Memory0 = new Int32Array(wasm.memory.buffer);
-cachedUint8Memory0 = new Uint8Array(wasm.memory.buffer);
-
