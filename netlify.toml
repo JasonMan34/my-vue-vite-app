@@ -2,3 +2,8 @@
   from = "/*"
   to = "/index.html"
   status = 200
+
+[[redirects]]
+  from = "/hamming/*"
+  to = "https://beautiful-lolly-6d6c91.netlify.app/"
+  status = 200

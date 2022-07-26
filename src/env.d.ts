@@ -8,6 +8,7 @@ declare module '*.vue' {
 }
 interface ImportMetaEnv {
   readonly VITE_IS_COVID: string;
+  readonly VITE_HAMMING_URL: string;
 }
 
 interface ImportMeta {
