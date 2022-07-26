@@ -1,6 +1,6 @@
 [[redirects]]
   from = "/hamming-encoder/*"
-  to = "https://beautiful-lolly-6d6c91.netlify.app/"
+  to = "https://beautiful-lolly-6d6c91.netlify.app/:splat"
   status = 200
 
 [[redirects]]
