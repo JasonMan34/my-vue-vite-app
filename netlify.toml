@@ -1,9 +1,9 @@
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
+  from = "/hamming-encoder/*"
+  to = "https://beautiful-lolly-6d6c91.netlify.app/"
   status = 200
 
 [[redirects]]
-  from = "/hamming/*"
-  to = "https://beautiful-lolly-6d6c91.netlify.app/"
+  from = "/*"
+  to = "/index.html"
   status = 200
