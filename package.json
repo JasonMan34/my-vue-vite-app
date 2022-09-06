@@ -2,8 +2,8 @@
   "name": "my-vue-vite-app",
   "version": "0.0.0",
   "scripts": {
-    "start": "vite",
-    "dev": "vite",
+    "start": "vite --host",
+    "dev": "vite --host",
     "build": "vue-tsc --noEmit && vite build",
     "metric": "tsc -p tsms.json && node dist/metric.js",
     "serve": "vite preview",
