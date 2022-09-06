@@ -18,6 +18,7 @@
     "@vueuse/core": "^8.6.0",
     "autoprefixer": "^10.3.7",
     "chart.js": "^3.6.0",
+    "ics": "^2.40.0",
     "lodash.clonedeep": "^4.5.0",
     "postcss": "^8.4.6",
     "postcss-for": "^2.1.1",
