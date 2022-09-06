@@ -22,6 +22,7 @@ const CovidMainPage = AsyncComponent('CovidMainPage');
 const MainPage = AsyncComponent('MainPage');
 const CovidBetResults = AsyncComponent('CovidBetResults');
 const Hamming = AsyncComponent('Hamming');
+const AddToCalendar = AsyncComponent('AddToCalendar');
 
 const Minesweeper = defineAsyncComponent({
   loader: () => import(`./components/Minesweeper/Minesweeper.vue`),
@@ -39,6 +40,14 @@ const routes: RouteRecordRaw[] = [
       title: 'Jason Web',
     },
     component: MainPage,
+  },
+  {
+    path: '/add-to-calendar',
+    name: 'Add To Calendar',
+    meta: {
+      title: 'Jason Web',
+    },
+    component: AddToCalendar,
   },
   {
     path: '/covid-bet-results',
