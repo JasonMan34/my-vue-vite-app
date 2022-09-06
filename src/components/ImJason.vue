@@ -1,6 +1,6 @@
 <template>
   <div class="space-y-8 max-w-lg">
-    <p class="text-6xl font-bold">
+    <p class="xl:text-6xl md:text-5xl text-4xl font-bold">
       {{ t('title.iAm') }}
       <span class="text-blue-500">{{ t('title.jason') }}</span
       >,

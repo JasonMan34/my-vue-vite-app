@@ -4,7 +4,7 @@
       ref="chartRef"
       :chart-data="chartData"
       :options="options"
-      class="min-w-[400px]"
+      :class="`w-[${size}px]`"
     />
     <div class="flex flex-row justify-between">
       <div
@@ -20,6 +20,7 @@
 import { ChartData, ChartOptions } from 'chart.js';
 import { computed, defineComponent, reactive, ref } from 'vue';
 import { DoughnutChart, ExtractComponentData } from 'vue-chart-3';
+import useScreenWidth from '../../hooks/use-screen-width';
 import { useDarkTheme } from '../../utils/dark-theme';
 
 // https://stackoverflow.com/a/18194993
@@ -87,6 +88,7 @@ export default defineComponent({
   name: 'ShowcaseChart',
   components: { DoughnutChart },
   setup() {
+    const screenWidth = useScreenWidth();
     const isDark = useDarkTheme(true);
     const chartRef = ref<ExtractComponentData<typeof DoughnutChart>>();
     const chartData = reactive<ChartData<'doughnut', number[]>>({
@@ -135,7 +137,9 @@ export default defineComponent({
 
     generateNewData();
 
-    return { chartData, newData: generateNewData, options, chartRef };
+    const size = computed(() => Math.min(screenWidth.value, 400));
+
+    return { chartData, newData: generateNewData, options, chartRef, size };
   },
 });
 </script>
